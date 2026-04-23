@@ -3,22 +3,21 @@
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useEditorStore } from "@/store/useEditorStore";
 import { useCallback, useRef, useState } from "react";
-import MenuBar from "./MenuBar/MenuBar";
-import OptionsBar from "./MenuBar/OptionsBar";
-import CanvasArea from "./CanvasArea/CanvasArea";
-import Toolbar from "./Toolbar/Toolbar";
-import ColorPanel from "./Panels/ColorPanel";
-import AdjustmentsPanel from "./Panels/AdjustmentsPanel";
-import LayersPanel from "./Panels/LayersPanel";
-import StatusBar from "./StatusBar";
-import NewDocumentDialog from "./NewDocumentDialog";
+import MenuBar from "@/components/MenuBar/MenuBar";
+import OptionsBar from "@/components/MenuBar/OptionsBar";
+import CanvasArea from "@/components/CanvasArea/CanvasArea";
+import Toolbar from "@/components/Toolbar/Toolbar";
+import ColorPanel from "@/components/Panels/ColorPanel";
+import AdjustmentsPanel from "@/components/Panels/AdjustmentsPanel";
+import LayersPanel from "@/components/Panels/LayersPanel";
+import StatusBar from "@/components/StatusBar";
+import NewDocumentDialog from "@/components/NewDocumentDialog";
 
 const EditorShell = () => {
   useKeyboardShortcuts();
 
   const { setCanvasSize } = useEditorStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const [showNewDoc, setShowNewDoc] = useState(false);
 
   // File operations

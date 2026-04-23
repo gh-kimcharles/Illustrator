@@ -1,93 +1,348 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-* {
-  box-sizing: border-box;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   SHADCN ZINC THEME — dark mode is the editor default
+   ============================================================ */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.141 0.005 285.823);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.141 0.005 285.823);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.141 0.005 285.823);
+  --primary: oklch(0.21 0.006 285.885);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
+  --accent: oklch(0.967 0.001 286.375);
+  --accent-foreground: oklch(0.21 0.006 285.885);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
+  --ring: oklch(0.705 0.015 286.067);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.141 0.005 285.823);
+  --sidebar-primary: oklch(0.21 0.006 285.885);
+  --sidebar-primary-fg: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.967 0.001 286.375);
+  --sidebar-accent-fg: oklch(0.21 0.006 285.885);
+  --sidebar-border: oklch(0.92 0.004 286.32);
+  --sidebar-ring: oklch(0.705 0.015 286.067);
 }
+
+.dark {
+  --background: oklch(0.141 0.005 285.823);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.21 0.006 285.885);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.21 0.006 285.885);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.92 0.004 286.32);
+  --primary-foreground: oklch(0.21 0.006 285.885);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.274 0.006 286.033);
+  --muted-foreground: oklch(0.705 0.015 286.067);
+  --accent: oklch(0.274 0.006 286.033);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.552 0.016 285.938);
+  --sidebar: oklch(0.21 0.006 285.885);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-fg: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.274 0.006 286.033);
+  --sidebar-accent-fg: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.552 0.016 285.938);
+}
+
+/* ============================================================
+   EDITOR-SPECIFIC TOKENS
+   Mapped from the Zinc dark palette above.
+   These drive every editor component — toolbar, panels, canvas.
+   ============================================================ */
+
+:root {
+  /* Surfaces — from darkest to lightest */
+  --editor-bg: oklch(0.141 0.005 285.823); /* app background */
+  --editor-panel: oklch(0.18 0.005 285.823); /* panel background */
+  --editor-panel-header: oklch(0.21 0.006 285.885); /* panel header / card */
+  --editor-toolbar: oklch(0.19 0.005 285.823); /* left toolbar */
+  --editor-menubar: oklch(0.21 0.006 285.885); /* top menu bar */
+  --editor-optbar: oklch(0.23 0.006 285.885); /* options bar */
+  --editor-canvas-bg: oklch(0.25 0.005 285.823); /* canvas surround */
+  --editor-hover: oklch(0.274 0.006 286.033); /* hover state */
+  --editor-input-bg: oklch(0.16 0.005 285.823); /* input background */
+
+  /* Accent — editor blue (same family as sidebar-primary in dark) */
+  --editor-accent: oklch(0.55 0.18 240);
+  --editor-accent-hover: oklch(0.5 0.18 240);
+  --editor-accent-subtle: oklch(0.55 0.18 240 / 15%);
+  --editor-accent-border: oklch(0.55 0.18 240 / 40%);
+
+  /* Text */
+  --editor-text: oklch(0.985 0 0); /* primary text */
+  --editor-text-muted: oklch(0.705 0.015 286.067); /* muted / labels */
+  --editor-text-disabled: oklch(0.439 0 0); /* disabled */
+
+  /* Borders */
+  --editor-border: oklch(1 0 0 / 8%); /* subtle separator */
+  --editor-border-light: oklch(1 0 0 / 12%); /* slightly visible */
+  --editor-border-focus: var(--editor-accent);
+
+  /* Semantic */
+  --editor-danger: oklch(0.704 0.191 22.216);
+  --editor-danger-subtle: oklch(0.704 0.191 22.216 / 15%);
+  --editor-success: oklch(0.696 0.17 162.48);
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+
+  /* Radius — from shadcn */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ============================================================
+   TAILWIND V4 THEME MAPPING
+   Exposes all tokens as Tailwind utilities:
+     bg-editor-panel, text-editor-muted, border-editor-border …
+   ============================================================ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Geist fonts (loaded via next/font in layout.tsx) */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* shadcn semantic tokens */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Editor surface tokens */
+  --color-editor-bg: var(--editor-bg);
+  --color-editor-panel: var(--editor-panel);
+  --color-editor-panel-header: var(--editor-panel-header);
+  --color-editor-toolbar: var(--editor-toolbar);
+  --color-editor-menubar: var(--editor-menubar);
+  --color-editor-optbar: var(--editor-optbar);
+  --color-editor-canvas-bg: var(--editor-canvas-bg);
+  --color-editor-hover: var(--editor-hover);
+  --color-editor-input-bg: var(--editor-input-bg);
+
+  /* Editor accent */
+  --color-editor-accent: var(--editor-accent);
+  --color-editor-accent-hover: var(--editor-accent-hover);
+  --color-editor-accent-subtle: var(--editor-accent-subtle);
+  --color-editor-accent-border: var(--editor-accent-border);
+
+  /* Editor text */
+  --color-editor-text: var(--editor-text);
+  --color-editor-text-muted: var(--editor-text-muted);
+  --color-editor-text-disabled: var(--editor-text-disabled);
+
+  /* Editor borders */
+  --color-editor-border: var(--editor-border);
+  --color-editor-border-light: var(--editor-border-light);
+
+  /* Editor semantic */
+  --color-editor-danger: var(--editor-danger);
+  --color-editor-danger-subtle: var(--editor-danger-subtle);
+  --color-editor-success: var(--editor-success);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ============================================================
+   BASE LAYER
+   ============================================================ */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+    /* Force dark mode — editor is always dark */
+    @apply bg-editor-bg text-editor-text;
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--editor-border-light);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--editor-text-disabled);
+  }
+
+  /* Range inputs */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--editor-border-light);
+    cursor: pointer;
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--editor-text);
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--editor-text);
+    cursor: pointer;
+    border: none;
+  }
+
+  /* Number inputs — hide spinners */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  /* Select */
+  select {
+    background-color: var(--editor-input-bg);
+    color: var(--editor-text);
+    border-color: var(--editor-border-light);
   }
 }
 
-html,
-body {
-  height: 100%;
-  overflow: hidden;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* ============================================================
+   EDITOR COMPONENT UTILITIES
+   Reusable classes used across editor components.
+   ============================================================ */
 
-/* Scrollbar styling for panels */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
+@layer components {
+  /* Panel section wrapper */
+  .editor-panel-section {
+    @apply border-b border-editor-border flex-shrink-0;
+  }
 
-::-webkit-scrollbar-track {
-  background: #1a1a1a;
-}
+  /* Panel section header button */
+  .editor-panel-header {
+    @apply w-full h-[26px] flex items-center justify-between px-2.5
+           bg-editor-panel-header hover:bg-editor-hover
+           transition-colors border-b border-editor-border;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: #3a3a3a;
-  border-radius: 3px;
-}
+  .editor-panel-title {
+    @apply text-[11px] font-semibold uppercase tracking-wide text-editor-text-muted;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #4a4a4a;
-}
+  /* Tool button in left toolbar */
+  .editor-tool-btn {
+    @apply w-9 h-9 flex items-center justify-center rounded-sm
+           border border-transparent text-editor-text-muted
+           transition-all hover:bg-editor-hover hover:text-editor-text
+           hover:border-editor-border-light;
+  }
 
-/* Range slider */
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 4px;
-  border-radius: 2px;
-  background: #3a3a3a;
-  cursor: pointer;
-  outline: none;
-}
+  .editor-tool-btn-active {
+    @apply bg-editor-accent-subtle border-editor-accent-border text-editor-accent;
+  }
 
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #cccccc;
-  cursor: pointer;
-}
+  /* Input fields inside panels */
+  .editor-input {
+    @apply bg-editor-input-bg border border-editor-border-light
+           text-editor-text text-[11px] px-1.5 py-0.5 outline-none
+           focus:border-editor-accent transition-colors;
+  }
 
-input[type="range"]::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #cccccc;
-  cursor: pointer;
-  border: none;
-}
+  /* Menu bar item */
+  .editor-menu-item {
+    @apply px-3 h-7 text-[12px] text-editor-text transition-colors
+           hover:bg-editor-hover;
+  }
 
-/* Number input */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+  .editor-menu-item-open {
+    @apply bg-editor-accent text-white;
+  }
 
-input[type="number"] {
-  -moz-appearance: textfield;
+  /* Layer list item */
+  .editor-layer-item {
+    @apply flex items-center gap-1.5 px-1.5 py-1 cursor-pointer
+           border border-transparent min-h-[36px] transition-colors
+           bg-editor-panel-header hover:bg-editor-hover;
+  }
+
+  .editor-layer-item-active {
+    @apply bg-editor-accent-subtle border-editor-accent-border;
+  }
+
+  /* Small icon button used in panel footers */
+  .editor-icon-btn {
+    @apply w-6 h-6 flex items-center justify-center bg-transparent
+           border border-editor-border-light text-editor-text-muted text-[11px]
+           hover:bg-editor-hover hover:text-editor-text transition-colors;
+  }
+
+  /* Separator line */
+  .editor-sep {
+    @apply w-px h-5 bg-editor-border-light flex-shrink-0;
+  }
 }
