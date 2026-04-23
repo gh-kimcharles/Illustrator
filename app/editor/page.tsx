@@ -1,7 +1,8 @@
+import EditorShell from "@/components/EditorShell";
 import React from "react";
 
 const EditorPage = () => {
-  return <div>EditorPage</div>;
+  return <EditorShell />;
 };
 
 export default EditorPage;
