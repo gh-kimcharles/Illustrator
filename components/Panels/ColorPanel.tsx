@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { hexToRgb, rgbToCss, rgbToHex } from "@/utils/color";
-import { useState } from "react";
+import { Panel, Slider } from "@/components/ui";
 
 const SWATCHES = [
   "#000000",
@@ -47,35 +48,6 @@ const SWATCHES = [
   "#6b4226",
 ];
 
-function PanelSection({
-  title,
-  children,
-  defaultOpen = true,
-}: {
-  title: string;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-
-  return (
-    <div className="border-b border-editor-border flex-shrink-0">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full h-[26px] flex items-center justify-between px-2.5 bg-editor-panelHeader border-b border-editor-border hover:bg-editor-hover transition-colors"
-      >
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-editor-textMuted">
-          {title}
-        </span>
-        <span className="text-[10px] text-editor-textMuted">
-          {open ? "▾" : "▸"}
-        </span>
-      </button>
-      {open && <div className="p-2.5">{children}</div>}
-    </div>
-  );
-}
-
 const ColorPanel = () => {
   const { fgColor, bgColor, setFgColor, setBgColor, swapColors } =
     useEditorStore();
@@ -117,17 +89,16 @@ const ColorPanel = () => {
 
   return (
     <>
-      <PanelSection title="Color">
-        {/* FG / BG swatches */}
+      <Panel title="Color">
         <div className="flex items-start gap-2 mb-2">
+          {/* FG / BG boxes */}
           <div
             className="relative w-12 h-12 flex-shrink-0 cursor-pointer"
             onClick={swapColors}
-            title="Click to swap"
+            title="Click to swap colors"
           >
-            {/* BG swatch */}
             <div
-              className={`absolute bottom-0 right-0 w-8 h-8 border-2 cursor-pointer ${editingBg ? "border-white" : "border-[#555]"}`}
+              className={`absolute bottom-0 right-0 w-8 h-8 border-2 cursor-pointer transition-colors ${editingBg ? "border-editor-text" : "border-editor-border-light"}`}
               style={{ background: rgbToCss(bgColor) }}
               onClick={(e) => {
                 e.stopPropagation();
@@ -135,9 +106,8 @@ const ColorPanel = () => {
                 setHexInput(rgbToHex(bgColor));
               }}
             />
-            {/* FG swatch */}
             <div
-              className={`absolute top-0 left-0 w-8 h-8 border-2 z-10 cursor-pointer ${!editingBg ? "border-white" : "border-[#555]"}`}
+              className={`absolute top-0 left-0 w-8 h-8 border-2 z-10 cursor-pointer transition-colors ${!editingBg ? "border-editor-text" : "border-editor-border-light"}`}
               style={{ background: rgbToCss(fgColor) }}
               onClick={(e) => {
                 e.stopPropagation();
@@ -145,54 +115,45 @@ const ColorPanel = () => {
                 setHexInput(rgbToHex(fgColor));
               }}
             />
-            <span className="absolute bottom-0 left-0 text-[8px] text-editor-textMuted leading-none z-20">
+            <span className="absolute bottom-0 left-0 text-[8px] text-editor-text-muted leading-none z-20">
               ↺
             </span>
           </div>
 
-          {/* Sliders */}
+          {/* RGB sliders */}
           <div className="flex-1 space-y-1">
             {sliders.map(({ label, key, grad }) => (
-              <div key={key} className="flex items-center gap-1.5">
-                <span className="w-2.5 text-[10px] text-editor-textMuted">
-                  {label}
-                </span>
-                <input
-                  type="range"
-                  min={0}
-                  max={255}
-                  value={activeColor[key]}
-                  onChange={(e) => handleSlider(key, Number(e.target.value))}
-                  style={{ background: grad }}
-                  className="flex-1 h-1.5"
-                />
-                <span className="w-7 text-[10px] text-editor-textMuted text-right">
-                  {activeColor[key]}
-                </span>
-              </div>
+              <Slider
+                key={key}
+                label={label}
+                min={0}
+                max={255}
+                value={activeColor[key]}
+                onChange={(v) => handleSlider(key, v)}
+                gradient={grad}
+              />
             ))}
           </div>
         </div>
 
-        {/* Hex input */}
+        {/* Hex */}
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] text-editor-textMuted">#</span>
+          <span className="text-[10px] text-editor-text-muted">#</span>
           <input
             value={hexInput}
             onChange={(e) => handleHex(e.target.value)}
             maxLength={6}
-            className="flex-1 bg-[#1e1e1e] border border-editor-borderLight text-editor-textPrimary px-1.5 py-0.5 text-[11px] font-mono outline-none focus:border-editor-active"
+            className="editor-input flex-1 font-mono"
             placeholder="000000"
           />
-          {/* Preview dot */}
           <div
-            className="w-5 h-5 border border-editor-borderLight"
+            className="w-5 h-5 border border-editor-border-light flex-shrink-0"
             style={{ background: rgbToCss(activeColor) }}
           />
         </div>
-      </PanelSection>
+      </Panel>
 
-      <PanelSection title="Swatches">
+      <Panel title="Swatches">
         <div className="grid grid-cols-10 gap-0.5">
           {SWATCHES.map((color) => (
             <button
@@ -210,7 +171,7 @@ const ColorPanel = () => {
             />
           ))}
         </div>
-      </PanelSection>
+      </Panel>
     </>
   );
 };

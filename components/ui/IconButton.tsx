@@ -5,7 +5,7 @@ interface IconButtonProps {
   title?: string;
   danger?: boolean;
   children: React.ReactNode;
-  className: string;
+  className?: string;
   size?: "sm" | "md";
 }
 

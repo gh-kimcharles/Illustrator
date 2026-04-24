@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
-import React, { useEffect, useRef, useState } from "react";
 
 interface MenuItem {
   label: string;
@@ -25,7 +25,6 @@ interface MenuBarProps {
 const MenuBar = ({ onNewDocument, onOpenFile, onExportPNG }: MenuBarProps) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
-
   const { zoomIn, zoomOut, zoomFit, zoom100, toggleRulers, addLayer } =
     useEditorStore();
 
@@ -116,18 +115,14 @@ const MenuBar = ({ onNewDocument, onOpenFile, onExportPNG }: MenuBarProps) => {
       className="flex items-center h-7 bg-editor-menubar border-b border-editor-border select-none z-50 flex-shrink-0"
     >
       {/* Logo */}
-      <div className="w-9 h-full flex items-center justify-center bg-[#001e36] text-editor-active text-[11px] font-bold tracking-wide flex-shrink-0">
+      <div className="w-9 h-full flex items-center justify-center bg-[oklch(0.10_0.05_240)] text-editor-accent text-[11px] font-bold tracking-wide flex-shrink-0 flex-shrink-0">
         Ill
       </div>
 
       {menus.map((menu) => (
         <div key={menu.label} className="relative">
           <button
-            className={`px-3 h-7 text-[12px] text-editor-textPrimary transition-colors ${
-              openMenu === menu.label
-                ? "bg-editor-active text-white"
-                : "hover:bg-editor-hover"
-            }`}
+            className={`editor-menu-item ${openMenu === menu.label ? "editor-menu-item-open" : ""}`}
             onMouseDown={() =>
               setOpenMenu(openMenu === menu.label ? null : menu.label)
             }
@@ -137,18 +132,18 @@ const MenuBar = ({ onNewDocument, onOpenFile, onExportPNG }: MenuBarProps) => {
           </button>
 
           {openMenu === menu.label && (
-            <div className="absolute top-full left-0 min-w-[200px] bg-[#2a2a2a] border border-editor-border shadow-[4px_4px_12px_rgba(0,0,0,0.5)] z-[200]">
+            <div className="absolute top-full left-0 min-w-[200px] bg-editor-panel-header border border-editor-border shadow-2xl z-[200]">
               {menu.items.map((item, i) =>
                 item.separator ? (
-                  <div key={i} className="h-px bg-editor-borderLight my-0.5" />
+                  <div key={i} className="h-px bg-editor-border-light my-0.5" />
                 ) : (
                   <button
                     key={i}
                     disabled={item.disabled}
-                    className={`w-full flex justify-between items-center gap-6 px-4 py-1.5 text-[12px] text-left ${
+                    className={`w-full flex justify-between items-center gap-6 px-4 py-1.5 text-[12px] text-left transition-colors ${
                       item.disabled
-                        ? "text-editor-textMuted cursor-default"
-                        : "text-editor-textPrimary hover:bg-editor-active hover:text-white"
+                        ? "text-editor-text-disabled cursor-default"
+                        : "text-editor-text hover:bg-editor-accent hover:text-white"
                     }`}
                     onClick={() => {
                       if (!item.disabled && item.action) {
@@ -159,7 +154,7 @@ const MenuBar = ({ onNewDocument, onOpenFile, onExportPNG }: MenuBarProps) => {
                   >
                     <span>{item.label}</span>
                     {item.shortcut && (
-                      <span className="text-[11px] text-editor-textMuted">
+                      <span className="text-[11px] opacity-60">
                         {item.shortcut}
                       </span>
                     )}

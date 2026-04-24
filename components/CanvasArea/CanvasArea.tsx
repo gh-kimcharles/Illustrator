@@ -1,13 +1,13 @@
 "use client";
 
+import { useRef, useEffect, useState, useCallback } from "react";
+import { useEditorStore } from "@/store/useEditorStore";
 import {
-  drawBrushDot,
   drawBrushStroke,
+  drawBrushDot,
   floodFill,
   pickColor,
 } from "@/lib/tools/drawingEngine";
-import { useEditorStore } from "@/store/useEditorStore";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const CURSOR_MAP: Record<string, string> = {
   Move: "default",
@@ -24,7 +24,6 @@ const CURSOR_MAP: Record<string, string> = {
   Hand: "grab",
 };
 
-// Ruler tick marks
 function RulerH({ width }: { width: number }) {
   const ticks = [];
   for (let i = 0; i <= width; i += 50) {
@@ -35,7 +34,7 @@ function RulerH({ width }: { width: number }) {
           position: "absolute",
           left: i,
           fontSize: 9,
-          color: "#555",
+          color: "var(--editor-text-muted)",
           bottom: 2,
         }}
       >
@@ -51,8 +50,8 @@ function RulerH({ width }: { width: number }) {
         left: 20,
         right: 0,
         height: 20,
-        background: "#2a2a2a",
-        borderBottom: "1px solid #111",
+        background: "var(--editor-panel-header)",
+        borderBottom: "1px solid var(--editor-border)",
         overflow: "hidden",
       }}
     >
@@ -71,7 +70,7 @@ function RulerV({ height }: { height: number }) {
           position: "absolute",
           top: i,
           fontSize: 8,
-          color: "#555",
+          color: "var(--editor-text-muted)",
           right: 2,
           writingMode: "vertical-rl",
         }}
@@ -88,8 +87,8 @@ function RulerV({ height }: { height: number }) {
         left: 0,
         width: 20,
         bottom: 0,
-        background: "#2a2a2a",
-        borderRight: "1px solid #111",
+        background: "var(--editor-panel-header)",
+        borderRight: "1px solid var(--editor-border)",
         overflow: "hidden",
       }}
     >
@@ -98,9 +97,11 @@ function RulerV({ height }: { height: number }) {
   );
 }
 
-const CanvasArea = () => {
+export const CanvasArea = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const drawing = useRef(false);
+  const lastPosition = useRef({ x: 0, y: 0 });
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
   const {
     activeTool,
@@ -113,27 +114,26 @@ const CanvasArea = () => {
     setFgColor,
   } = useEditorStore();
 
-  const drawing = useRef(false);
-  const lastPosition = useRef({ x: 0, y: 0 });
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-
-  // Initialize canvas
+  // Init white canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }, []);
 
-  const getCanvasPosition = useCallback(
+  // Expose canvas globally for EditorShell file I/O
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).__editorCanvas = canvasRef.current;
+  });
+
+  const getCanvasPos = useCallback(
     (e: React.MouseEvent) => {
       const wrapper = canvasRef.current?.parentElement;
       if (!wrapper) return { x: 0, y: 0 };
-
       const rect = wrapper.getBoundingClientRect();
       return {
         x: (e.clientX - rect.left) / zoom,
@@ -146,51 +146,44 @@ const CanvasArea = () => {
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (e.button !== 0) return;
-
-      const position = getCanvasPosition(e);
+      const pos = getCanvasPos(e);
       drawing.current = true;
-      lastPosition.current = position;
+      lastPosition.current = pos;
 
       const canvas = canvasRef.current;
       if (!canvas) return;
-
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
       if (activeTool === "Brush" || activeTool === "Eraser") {
         drawBrushDot(
           ctx,
-          position.x,
-          position.y,
+          pos.x,
+          pos.y,
           brush,
           fgColor,
           activeTool === "Eraser",
         );
       }
       if (activeTool === "Fill") {
-        floodFill(ctx, position.x, position.y, fgColor);
+        floodFill(ctx, pos.x, pos.y, fgColor);
       }
       if (activeTool === "Eyedropper") {
-        const color = pickColor(ctx, position.x, position.y);
+        const color = pickColor(ctx, pos.x, pos.y);
         if (color) setFgColor(color);
       }
     },
-    [activeTool, brush, fgColor, getCanvasPosition, setFgColor],
+    [activeTool, brush, fgColor, getCanvasPos, setFgColor],
   );
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
-      const position = getCanvasPosition(e);
-      setCursorPosition({
-        x: Math.round(position.x),
-        y: Math.round(position.y),
-      });
+      const pos = getCanvasPos(e);
+      setCursorPosition({ x: Math.round(pos.x), y: Math.round(pos.y) });
 
       if (!drawing.current) return;
-
       const canvas = canvasRef.current;
       if (!canvas) return;
-
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
@@ -199,17 +192,16 @@ const CanvasArea = () => {
           ctx,
           lastPosition.current.x,
           lastPosition.current.y,
-          position.x,
-          position.y,
+          pos.x,
+          pos.y,
           brush,
           fgColor,
           activeTool === "Eraser",
         );
       }
-
-      lastPosition.current = position;
+      lastPosition.current = pos;
     },
-    [activeTool, brush, fgColor, getCanvasPosition],
+    [activeTool, brush, fgColor, getCanvasPos],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -227,22 +219,13 @@ const CanvasArea = () => {
     [zoom, setZoom],
   );
 
-  // Export canvas (called from parent via ref - see EditorShell)
-  // (accessed globally in EditorShell via canvasRef)
-  useEffect(() => {
-    // Expose canvas ref globally
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).__editorCanvas = canvasRef.current;
-  });
-
   const rulerOffset = showRulers ? 20 : 0;
 
   return (
     <div
-      ref={containerRef}
       className="relative flex-1 overflow-hidden"
       style={{
-        background: "#404040",
+        background: "var(--editor-canvas-bg)",
         cursor: CURSOR_MAP[activeTool] || "crosshair",
       }}
       onMouseMove={handleMouseMove}
@@ -250,12 +233,12 @@ const CanvasArea = () => {
       onMouseLeave={handleMouseUp}
       onWheel={handleWheel}
     >
-      {/* Checker background */}
+      {/* Checker pattern */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
-            "repeating-conic-gradient(#383838 0% 25%, #404040 0% 50%)",
+            "repeating-conic-gradient(oklch(0.22 0.005 285) 0% 25%, oklch(0.25 0.005 285) 0% 50%)",
           backgroundSize: "16px 16px",
         }}
       />
@@ -263,13 +246,20 @@ const CanvasArea = () => {
       {/* Rulers */}
       {showRulers && (
         <>
-          <div className="absolute top-0 left-0 w-5 h-5 bg-[#232323] border-r border-b border-editor-border z-10" />
+          <div
+            className="absolute top-0 left-0 w-5 h-5 z-10"
+            style={{
+              background: "var(--editor-toolbar)",
+              borderRight: "1px solid var(--editor-border)",
+              borderBottom: "1px solid var(--editor-border)",
+            }}
+          />
           <RulerH width={canvasSize.width} />
           <RulerV height={canvasSize.height} />
         </>
       )}
 
-      {/* Canvas wrapper - center, zoomable */}
+      {/* Zoomable canvas */}
       <div
         className="absolute inset-0 flex items-center justify-center"
         style={{ paddingLeft: rulerOffset, paddingTop: rulerOffset }}
@@ -279,7 +269,7 @@ const CanvasArea = () => {
           style={{
             transform: `scale(${zoom})`,
             transformOrigin: "center center",
-            boxShadow: "0 4px 24px rgba(0,0,0,0.6)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.7)",
           }}
         >
           <canvas
@@ -292,8 +282,8 @@ const CanvasArea = () => {
       </div>
 
       {/* Cursor position */}
-      <div className="absolute bottom-1 right-2 text-[10px] text-editor-textMuted pointer-events-none">
-        {cursorPosition.x}, {cursorPosition.y}
+      <div className="absolute bottom-1.5 right-2 text-[10px] text-editor-text-disabled pointer-events-none select-none">
+        {cursorPosition.x}, {cursorPosition.y} px
       </div>
     </div>
   );

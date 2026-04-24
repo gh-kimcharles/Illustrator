@@ -5,8 +5,8 @@ import { useEditorStore } from "@/store/useEditorStore";
 function StatusItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center gap-1 text-[11px]">
-      <span className="text-editor-textMuted">{label}:</span>
-      <span className="text-editor-textPrimary">{value}</span>
+      <span className="text-editor-text-muted">{label}:</span>
+      <span className="text-editor-text">{value}</span>
     </div>
   );
 }

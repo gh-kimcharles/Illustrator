@@ -20,17 +20,15 @@ const EditorShell = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showNewDoc, setShowNewDoc] = useState(false);
 
-  // File operations
-  const handleNewDocument = useCallback(() => setShowNewDoc(true), []);
+  const getCanvas = () =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).__editorCanvas as HTMLCanvasElement | null;
 
   const handleNewDocConfirm = useCallback(
     (width: number, height: number) => {
       setCanvasSize({ width, height });
       setShowNewDoc(false);
-
-      // Clear canvas
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const canvas = (window as any).__editorCanvas as HTMLCanvasElement | null;
+      const canvas = getCanvas();
       if (canvas) {
         const ctx = canvas.getContext("2d");
         if (ctx) {
@@ -44,8 +42,6 @@ const EditorShell = () => {
     [setCanvasSize],
   );
 
-  const handleOpenFile = useCallback(() => fileInputRef.current?.click(), []);
-
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
@@ -53,9 +49,7 @@ const EditorShell = () => {
       const img = new Image();
       img.onload = () => {
         setCanvasSize({ width: img.width, height: img.height });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const canvas = (window as any)
-          .__editorCanvas as HTMLCanvasElement | null;
+        const canvas = getCanvas();
         if (canvas) {
           const ctx = canvas.getContext("2d");
           if (ctx) {
@@ -73,8 +67,7 @@ const EditorShell = () => {
   );
 
   const handleExportPNG = useCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const canvas = (window as any).__editorCanvas as HTMLCanvasElement | null;
+    const canvas = getCanvas();
     if (!canvas) return;
     const a = document.createElement("a");
     a.download = "canvas.png";
@@ -83,59 +76,45 @@ const EditorShell = () => {
   }, []);
 
   return (
-    <>
-      {/* Render */}
-      <div className="flex flex-col h-screen overflow-hidden bg-editor-bg text-editor-textPrimary">
-        {/* Menu bar */}
-        <MenuBar
-          onNewDocument={handleNewDocument}
-          onOpenFile={handleOpenFile}
-          onExportPNG={handleExportPNG}
-        />
+    <div className="flex flex-col h-screen overflow-hidden bg-editor-bg text-editor-text">
+      <MenuBar
+        onNewDocument={() => setShowNewDoc(true)}
+        onOpenFile={() => fileInputRef.current?.click()}
+        onExportPNG={handleExportPNG}
+      />
 
-        {/* Option bar */}
-        <OptionsBar />
+      <OptionsBar />
 
-        {/* Main work */}
-        <div className="flex flex-1 overflow-hidden">
-          {/* Left toolbar */}
-          <Toolbar />
+      <div className="flex flex-1 overflow-hidden">
+        <Toolbar />
 
-          {/* Canvas */}
-          <CanvasArea />
+        <CanvasArea />
 
-          {/* Right panel column */}
-          <div
-            className="w-60 bg-editor-panel border-l border-editor-border flex flex-col overflow-y-auto flex-shrink-0"
-            style={{ scrollbarWidth: "thin" }}
-          >
-            <ColorPanel />
-            <AdjustmentsPanel />
-            <LayersPanel />
-          </div>
+        {/* Right panel column */}
+        <div className="w-60 bg-editor-panel border-l border-editor-border flex flex-col overflow-y-auto flex-shrink-0">
+          <ColorPanel />
+          <AdjustmentsPanel />
+          <LayersPanel />
         </div>
-
-        {/* Status bar */}
-        <StatusBar />
-
-        {/* Hidden file input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-
-        {/* New Document dialog */}
-        {showNewDoc && (
-          <NewDocumentDialog
-            onConfirm={handleNewDocConfirm}
-            onCancel={() => setShowNewDoc(false)}
-          />
-        )}
       </div>
-    </>
+
+      <StatusBar />
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+
+      {showNewDoc && (
+        <NewDocumentDialog
+          onConfirm={handleNewDocConfirm}
+          onCancel={() => setShowNewDoc(false)}
+        />
+      )}
+    </div>
   );
 };
 

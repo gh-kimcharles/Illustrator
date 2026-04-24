@@ -3,6 +3,7 @@
 import { useEditorStore } from "@/store/useEditorStore";
 import { ToolName } from "@/types";
 import { rgbToCss } from "@/utils/color";
+import { ToolButton } from "@/components/ui";
 
 interface ToolDef {
   id: ToolName;
@@ -195,67 +196,57 @@ const Toolbar = () => {
     useEditorStore();
 
   return (
-    <>
-      <div className="w-11 bg-editor-toolbar border-r border-editor-border flex flex-col items-center py-1 gap-px flex-shrink-0 overflow-y-auto">
-        {tools.map((tool, i) => {
-          if (tool === "separator") {
-            return (
-              <div
-                key={`sep-${i}`}
-                className="w-7 h-px bg-editor-borderLight my-0.5"
-              />
-            );
-          }
-          const isActive = activeTool === tool.id;
+    <div className="w-11 bg-editor-toolbar border-r border-editor-border flex flex-col items-center py-1 gap-px flex-shrink-0 overflow-y-auto">
+      {tools.map((tool, i) => {
+        if (tool === "separator") {
           return (
-            <div key={tool.id} className="relative group">
-              <button
-                onClick={() => setActiveTool(tool.id)}
-                className={`w-9 h-9 flex items-center justify-center rounded-sm border transition-all ${
-                  isActive
-                    ? "bg-editor-active/20 border-editor-active text-editor-active"
-                    : "border-transparent text-editor-textMuted hover:bg-editor-hover hover:text-editor-textPrimary hover:border-editor-borderLight"
-                }`}
-                title={`${tool.label} (${tool.shortcut})`}
-              >
-                {tool.icon}
-              </button>
-
-              {/* Tooltip */}
-              <div className="absolute left-11 top-1/2 -translate-y-1/2 bg-[#1a1a1a] border border-editor-borderLight px-2 py-1 whitespace-nowrap text-[11px] text-editor-textPrimary pointer-events-none opacity-0 group-hover:opacity-100 z-50 transition-opacity">
-                {tool.label} ({tool.shortcut})
-              </div>
-            </div>
+            <div
+              key={`sep-${i}`}
+              className="w-7 h-px bg-editor-border-light my-0.5"
+            />
           );
-        })}
+        }
+        return (
+          <ToolButton
+            key={tool.id}
+            active={activeTool === tool.id}
+            onClick={() => setActiveTool(tool.id)}
+            title={`${tool.label} (${tool.shortcut})`}
+          >
+            {tool.icon}
+          </ToolButton>
+        );
+      })}
 
-        {/* Separator */}
-        <div className="w-7 h-px bg-editor-borderLight my-1" />
+      {/* Separator */}
+      <div className="w-7 h-px bg-editor-border-light my-1" />
 
-        {/* FG / BG color swatches */}
+      {/* FG / BG color swatches */}
+      <div
+        className="relative w-9 h-9 cursor-pointer my-1"
+        onClick={swapColors}
+        title="Swap foreground/background colors (X)"
+      >
+        {/* BG swatch */}
         <div
-          className="relative w-9 h-9 cursor-pointer my-1"
-          onClick={swapColors}
-          title="Swap foreground/background colors (X)"
-        >
-          {/* BG swatch */}
-          <div
-            className="absolute bottom-0.5 right-0.5 w-5 h-5 border-[#555]"
-            style={{ background: rgbToCss(bgColor) }}
-          />
+          className="absolute bottom-0.5 right-0.5 w-5 h-5 border-2 border-editor-border-light"
+          style={{ background: rgbToCss(bgColor) }}
+        />
 
-          {/* FG swatch */}
-          <div
-            className="absolute top-0.5 left-0.5 w-5 h-5 border-2 border-[#888] z-10"
-            style={{ background: rgbToCss(fgColor) }}
-          />
-          {/* Swap indicator */}
-          <span className="absolute bottom-0 left-0 text-[8px] text-editor-textMuted leading-none">
-            ↺
-          </span>
-        </div>
+        {/* FG swatch */}
+        <div
+          className="absolute top-0.5 left-0.5 w-5 h-5 border-2 z-10"
+          style={{
+            background: rgbToCss(fgColor),
+            borderColor: "var(--editor-text-muted)",
+          }}
+        />
+        {/* Swap indicator */}
+        <span className="absolute bottom-0 left-0 text-[8px] text-editor-text-muted leading-none z-20">
+          ↺
+        </span>
       </div>
-    </>
+    </div>
   );
 };
 

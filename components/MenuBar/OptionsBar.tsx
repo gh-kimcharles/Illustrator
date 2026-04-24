@@ -1,66 +1,69 @@
 "use client";
 
 import { useEditorStore } from "@/store/useEditorStore";
+import { NumberInput, Slider } from "@/components/ui";
 
 const OptionsBar = () => {
   const { activeTool, brush, setBrush } = useEditorStore();
 
   return (
-    <div className="flex items-center h-8 bg-editor-optbar border-b border-editor-border px-3 gap-3 flex-shrink-0 text-[11px] text-editor-textMuted select-none overflow-x-auto">
+    <div className="flex items-center h-8 bg-editor-optbar border-b border-editor-border px-3 gap-3 flex-shrink-0 text-[11px] text-editor-text-muted select-none overflow-x-auto">
       {/* Active tool label */}
-      <span className="text-editor-textPrimary font-medium min-w-max">
+      <span className="text-editor-text font-medium min-w-max">
         {activeTool} Tool
       </span>
 
-      <div className="w-px h-5 bg-editor-borderLight flex-shrink-0" />
+      <div className="editor-sep" />
 
       {/* Brush settings - only when brush/eraser is active */}
       {(activeTool === "Brush" || activeTool === "Eraser") && (
         <>
           <span>Size:</span>
-          <input
-            type="number"
+          <NumberInput
             value={brush.size}
             min={1}
             max={500}
-            onChange={(e) => setBrush({ size: Number(e.target.value) })}
-            className="w-14 bg-[#2a2a2a] border border-editor-border text-editor-textPrimary px-1.5 py-0.5 text-center text-[11px] outline-none focus:border-editor-active"
+            onChange={(v) => setBrush({ size: v })}
+            suffix="px"
           />
-          <span>px</span>
-
-          <div className="w-px h-5 bg-editor-borderLight flex-shrink-0" />
-
+          <div className="editor-sep" />
           <span>Opacity:</span>
-          <input
-            type="range"
+          <Slider
             min={1}
             max={100}
             value={brush.opacity}
-            onChange={(e) => setBrush({ opacity: Number(e.target.value) })}
-            className="w-24"
+            onChange={(v) => setBrush({ opacity: v })}
+            className="w-28"
           />
-          <span className="w-8 text-editor-textPrimary">{brush.opacity}%</span>
-
-          <div className="w-px h-5 bg-editor-borderLight flex-shrink-0" />
-
+          <span>{brush.opacity}%</span>
+          <div className="editor-sep" />
           <span>Hardness:</span>
-          <input
-            type="range"
+          <Slider
             min={0}
             max={100}
             value={brush.hardness}
-            onChange={(e) => setBrush({ hardness: Number(e.target.value) })}
-            className="w-24"
+            onChange={(v) => setBrush({ hardness: v })}
+            className="w-28"
           />
-          <span className="w-8 text-editor-textPrimary">{brush.hardness}%</span>
+          <span>{brush.hardness}%</span>
         </>
       )}
 
-      {/* Zoom percentage display */}
+      {/* Tool with functionalities */}
       {activeTool === "Zoom" && (
-        <>
-          <span>Tip: Scroll to zoom · Ctrl+scroll also works</span>
-        </>
+        <span className="text-editor-text-muted">
+          Scroll to zoom · Ctrl+scroll also works
+        </span>
+      )}
+      {activeTool === "Fill" && (
+        <span className="text-editor-text-muted">
+          Click on canvas to fill · Tolerance: 32px
+        </span>
+      )}
+      {activeTool === "Eyedropper" && (
+        <span className="text-editor-text-muted">
+          Click on canvas to pick a color
+        </span>
       )}
     </div>
   );
