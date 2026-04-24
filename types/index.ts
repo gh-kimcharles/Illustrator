@@ -1,3 +1,4 @@
+/* Tools */
 export type ToolName =
   | "Move"
   | "Marquee"
@@ -12,6 +13,7 @@ export type ToolName =
   | "Zoom"
   | "Hand";
 
+/* Blend Modes */
 export type BlendMode =
   | "normal"
   | "multiply"
@@ -30,12 +32,14 @@ export type BlendMode =
   | "color"
   | "luminosity";
 
+/* RGB colors (red, green, blue) */
 export interface RGBColor {
   r: number;
   g: number;
   b: number;
 }
 
+/* Layer properties */
 export interface Layer {
   id: string;
   name: string;
@@ -43,15 +47,38 @@ export interface Layer {
   locked: boolean;
   opacity: number;
   blendMode: BlendMode;
+
+  // add: each layer will have own offscreen canvas
+  canvas: OffscreenCanvas | null;
+  offsetX: number;
+  offsetY: number;
 }
 
+/* Canvas properties */
 export interface CanvasSize {
   width: number;
   height: number;
 }
 
+/* Brush settings */
 export interface BrushSettings {
   size: number;
-  hardness: number;
-  opacity: number;
+  hardness: number; // brush sharpness (crisp vs soft)
+  opacity: number; // brush transparency (solid vs transparent)
+}
+
+// add: selection and history
+/* Rectanglular marquee selection */
+export interface SelectionRectangle {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/* History */
+export interface HistorySnapshot {
+  label: string;
+  layerData: Map<string, ImageData>; // layerId -> pixels
+  layerOrder: string[]; // order layer ids
 }

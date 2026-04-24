@@ -1,30 +1,19 @@
+import { history } from "@/lib/layers/historyManager";
+import { makeBackgroundLayer, makeLayer } from "@/lib/layers/layerManager";
 import {
   BlendMode,
   BrushSettings,
   CanvasSize,
   Layer,
   RGBColor,
+  SelectionRectangle,
   ToolName,
 } from "@/types";
 import { create } from "zustand";
 
-/**
- * Helpers
- */
-function makeLayer(name: string, locked = false): Layer {
-  return {
-    id: crypto.randomUUID(),
-    name,
-    visible: true,
-    locked,
-    opacity: 100,
-    blendMode: "normal",
-  };
-}
+const DEFAULT_SIZE: CanvasSize = { width: 800, height: 600 };
 
-/**
- * State Shape
- */
+/* State Shape */
 interface EditorState {
   // Tool
   activeTool: ToolName;
@@ -34,12 +23,19 @@ interface EditorState {
   fgColor: RGBColor;
   bgColor: RGBColor;
 
-  // Canvas
+  // Document
   canvasSize: CanvasSize;
 
   // Layers
   layers: Layer[];
   activeLayerId: string;
+
+  // Selection
+  selection: SelectionRectangle | null;
+
+  // History
+  canUndo: boolean;
+  canRedo: boolean;
 
   // View
   zoom: number;
@@ -69,6 +65,11 @@ interface EditorState {
   moveLayerUp: (id: string) => void;
   moveLayerDown: (id: string) => void;
 
+  setSelection: (selection: SelectionRectangle | null) => void;
+  pushHistory: (label: string) => void;
+  undo: () => void;
+  redo: () => void;
+
   setZoom: (zoom: number) => void;
   zoomIn: () => void;
   zoomOut: () => void;
@@ -80,7 +81,7 @@ interface EditorState {
 /**
  * Store
  */
-const backgroundLayer = makeLayer("Background", true); // default layer
+const bgLayer = makeBackgroundLayer(DEFAULT_SIZE); // default layer
 
 export const useEditorStore = create<EditorState>((set, get) => ({
   // Initial state
@@ -90,9 +91,13 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   fgColor: { r: 0, g: 0, b: 0 },
   bgColor: { r: 255, g: 255, b: 255 },
 
-  canvasSize: { width: 800, height: 600 },
-  layers: [backgroundLayer],
-  activeLayerId: backgroundLayer.id,
+  canvasSize: DEFAULT_SIZE,
+  layers: [bgLayer],
+  activeLayerId: bgLayer.id,
+
+  selection: null,
+  canUndo: false,
+  canRedo: false,
 
   zoom: 1,
   showRulers: true,
@@ -106,16 +111,20 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setBgColor: (color) => set({ bgColor: color }),
   swapColors: () => set((s) => ({ fgColor: s.bgColor, bgColor: s.fgColor })),
 
-  // Canvas actions
+  // Canvas size
   setCanvasSize: (size) => set({ canvasSize: size }),
 
-  // Layer actions
+  // Layer CRUD actions
   addLayer: (name) => {
-    const layer = makeLayer(name ?? `Layer ${get().layers.length + 1}`);
-    set((s) => ({
+    const s = get();
+    const layer = makeLayer(
+      name ?? `Layer ${get().layers.length + 1}`,
+      s.canvasSize,
+    );
+    set({
       layers: [...s.layers, layer],
       activeLayerId: layer.id,
-    }));
+    });
   },
 
   deleteLayer: (id) =>
@@ -131,11 +140,21 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     set((s) => {
       const src = s.layers.find((l) => l.id === id);
       if (!src) return s;
+
+      // Create a new Offscreencanvas and copy pixel data
+      const newCanvas = new OffscreenCanvas(
+        s.canvasSize.width,
+        s.canvasSize.height,
+      );
+
+      const ctx = newCanvas.getContext("2d");
+      if (ctx && src.canvas) ctx.drawImage(src.canvas, 0, 0);
       const copy: Layer = {
         ...src,
         id: crypto.randomUUID(),
         name: src.name + " copy",
         locked: false,
+        canvas: newCanvas,
       };
       const idx = s.layers.findIndex((l) => l.id === id);
       const layers = [...s.layers];
@@ -182,6 +201,34 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       [layers[idx], layers[idx - 1]] = [layers[idx - 1], layers[idx]];
       return { layers };
     }),
+
+  setSelection: (selection) => set({ selection: selection }),
+  pushHistory: (label) => {
+    history.push(label, get().layers);
+    set({
+      canUndo: history.canUndo(),
+      canRedo: history.canRedo(),
+    });
+  },
+  undo: () => {
+    const undo = history.undo(get().layers);
+    if (undo)
+      set((s) => ({
+        layers: [...s.layers], // trigger re-render
+        canUndo: history.canUndo(),
+        canRedo: history.canRedo(),
+      }));
+  },
+
+  redo: () => {
+    const redo = history.redo(get().layers);
+    if (redo)
+      set((s) => ({
+        layers: [...s.layers],
+        canUndo: history.canUndo(),
+        canRedo: history.canRedo(),
+      }));
+  },
 
   // View actions
   setZoom: (zoom) => set({ zoom: Math.min(Math.max(zoom, 0.05), 16) }),

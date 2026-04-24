@@ -4,7 +4,7 @@ import { BrushSettings, RGBColor } from "@/types";
  * Brush & Eraser Properties
  */
 export function drawBrushStroke(
-  ctx: CanvasRenderingContext2D,
+  ctx: OffscreenCanvasRenderingContext2D,
   fromX: number,
   fromY: number,
   toX: number,
@@ -36,7 +36,7 @@ export function drawBrushStroke(
 }
 
 export function drawBrushDot(
-  ctx: CanvasRenderingContext2D,
+  ctx: OffscreenCanvasRenderingContext2D,
   x: number,
   y: number,
   settings: BrushSettings,
@@ -64,7 +64,7 @@ export function drawBrushDot(
  * Flood Fill
  */
 export function floodFill(
-  ctx: CanvasRenderingContext2D,
+  ctx: OffscreenCanvasRenderingContext2D,
   startX: number,
   startY: number,
   fillColor: RGBColor,
