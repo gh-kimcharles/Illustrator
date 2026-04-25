@@ -20,9 +20,22 @@ interface MenuBarProps {
   onNewDocument: () => void;
   onOpenFile: () => void;
   onExportPNG: () => void;
+
+  canUndo: boolean;
+  canRedo: boolean;
+  onUndo: () => void;
+  onRedo: () => void;
 }
 
-const MenuBar = ({ onNewDocument, onOpenFile, onExportPNG }: MenuBarProps) => {
+const MenuBar = ({
+  onNewDocument,
+  onOpenFile,
+  onExportPNG,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
+}: MenuBarProps) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const { zoomIn, zoomOut, zoomFit, zoom100, toggleRulers, addLayer } =
@@ -48,8 +61,19 @@ const MenuBar = ({ onNewDocument, onOpenFile, onExportPNG }: MenuBarProps) => {
     {
       label: "Edit",
       items: [
-        { label: "Undo", shortcut: "Ctrl+Z", disabled: true },
-        { label: "Redo", shortcut: "Ctrl+Y", disabled: true },
+        {
+          label: "Undo",
+          shortcut: "Ctrl+Z",
+          action: onUndo,
+          // disabled when nothing to undo
+          disabled: !canUndo,
+        },
+        {
+          label: "Redo",
+          shortcut: "Ctrl+Y",
+          action: onRedo,
+          disabled: !canRedo,
+        },
         { separator: true, label: "" },
         { label: "Cut", shortcut: "Ctrl+X", disabled: true },
         { label: "Copy", shortcut: "Ctrl+C", disabled: true },
@@ -115,7 +139,7 @@ const MenuBar = ({ onNewDocument, onOpenFile, onExportPNG }: MenuBarProps) => {
       className="flex items-center h-7 bg-editor-menubar border-b border-editor-border select-none z-50 flex-shrink-0"
     >
       {/* Logo */}
-      <div className="w-9 h-full flex items-center justify-center bg-[oklch(0.10_0.05_240)] text-editor-accent text-[11px] font-bold tracking-wide flex-shrink-0 flex-shrink-0">
+      <div className="w-9 h-full flex items-center justify-center bg-[oklch(0.10_0.05_240)] text-editor-accent text-[11px] font-bold tracking-wide flex-shrink-0">
         Ill
       </div>
 
