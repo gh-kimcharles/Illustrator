@@ -5,7 +5,10 @@ export function makeLayer(
   size: CanvasSize,
   locked = false,
 ): Layer {
-  const offscreen = new OffscreenCanvas(size.width, size.height);
+  const offscreen =
+    typeof OffscreenCanvas !== "undefined"
+      ? new OffscreenCanvas(size.width, size.height)
+      : null;
 
   return {
     id: crypto.randomUUID(),

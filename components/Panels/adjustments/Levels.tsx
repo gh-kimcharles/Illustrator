@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
-import AdjustmentModal from "./AdjustmentModal";
+import { AdjustmentModal } from "./AdjustmentModal";
 import { applyLevels } from "@/lib/filters";
 import { SliderRow } from "@/components/ui/Slider";
 

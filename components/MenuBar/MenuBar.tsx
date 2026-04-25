@@ -230,7 +230,7 @@ const MenuBar = ({
       >
         {/* Logo */}
         <div className="w-9 h-full flex items-center justify-center bg-[oklch(0.10_0.05_240)] text-editor-accent text-[11px] font-bold tracking-wide flex-shrink-0">
-          Ps
+          Ill
         </div>
 
         {menus.map((menu) => (

@@ -123,6 +123,7 @@ export const AdjustmentModal = ({
         {/* Inject handlePreview so sliders can trigger it */}
         {typeof children === "function"
           ? (children as (preview: () => void) => React.ReactNode)(
+              // eslint-disable-next-line react-hooks/refs
               handlePreview,
             )
           : children}
