@@ -12,6 +12,15 @@ interface SliderProps {
   step?: number;
 }
 
+interface SliderRowProps {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  onChange: (v: number) => void;
+  step?: number;
+}
+
 export function Slider({
   label,
   min,
@@ -47,6 +56,40 @@ export function Slider({
           {value}
         </span>
       )}
+    </div>
+  );
+}
+
+/* reusable slider row */
+export function SliderRow({
+  label,
+  value,
+  min,
+  max,
+  onChange,
+  step = 1,
+}: SliderRowProps) {
+  return (
+    <div className="space-y-1">
+      <div className="flex justify-between items-center">
+        <span className="text-[11px] text-editor-text-muted">{label}</span>
+        <span className="text-[11px] text-editor-text w-10 text-right">
+          {value}
+        </span>
+      </div>
+      <Slider
+        min={min}
+        max={max}
+        value={value}
+        onChange={onChange}
+        showValue={false}
+        step={step}
+      />
+      {/* Min / max labels */}
+      <div className="flex justify-between">
+        <span className="text-[9px] text-editor-text-disabled">{min}</span>
+        <span className="text-[9px] text-editor-text-disabled">{max}</span>
+      </div>
     </div>
   );
 }

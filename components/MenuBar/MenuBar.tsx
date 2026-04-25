@@ -2,6 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
+import {
+  BrightnessContrast,
+  HueSaturation,
+  Levels,
+  Invert,
+  Grayscale,
+  Blur,
+  Sharpen,
+} from "@/components/Panels/adjustments";
+
+type OpenModal =
+  | "brightness"
+  | "hue"
+  | "levels"
+  | "invert"
+  | "gray"
+  | "blur"
+  | "sharpen"
+  | null;
 
 interface MenuItem {
   label: string;
@@ -37,7 +56,9 @@ const MenuBar = ({
   onRedo,
 }: MenuBarProps) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [openModal, setOpenModal] = useState<OpenModal>(null);
   const ref = useRef<HTMLDivElement>(null);
+
   const { zoomIn, zoomOut, zoomFit, zoom100, toggleRulers, addLayer } =
     useEditorStore();
 
@@ -83,6 +104,63 @@ const MenuBar = ({
       ],
     },
     {
+      // add: filter menu
+      label: "Filter",
+      items: [
+        {
+          label: "Brightness / Contrast…",
+          action: () => {
+            closeMenus();
+            setOpenModal("brightness");
+          },
+        },
+        {
+          label: "Hue / Saturation…",
+          action: () => {
+            closeMenus();
+            setOpenModal("hue");
+          },
+        },
+        {
+          label: "Levels…",
+          action: () => {
+            closeMenus();
+            setOpenModal("levels");
+          },
+        },
+        { separator: true, label: "" },
+        {
+          label: "Invert",
+          action: () => {
+            closeMenus();
+            setOpenModal("invert");
+          },
+        },
+        {
+          label: "Grayscale",
+          action: () => {
+            closeMenus();
+            setOpenModal("gray");
+          },
+        },
+        { separator: true, label: "" },
+        {
+          label: "Blur…",
+          action: () => {
+            closeMenus();
+            setOpenModal("blur");
+          },
+        },
+        {
+          label: "Sharpen…",
+          action: () => {
+            closeMenus();
+            setOpenModal("sharpen");
+          },
+        },
+      ],
+    },
+    {
       label: "Image",
       items: [
         { label: "Image Size…", disabled: true },
@@ -121,6 +199,17 @@ const MenuBar = ({
     },
   ];
 
+  function close() {
+    setOpenModal(null);
+  }
+
+  function closeMenus() {
+    document
+      .querySelectorAll("menu-item-open")
+      .forEach((m) => m.classList.remove("menu-item-open"));
+    setOpenMenu(null);
+  }
+
   // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -134,62 +223,84 @@ const MenuBar = ({
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className="flex items-center h-7 bg-editor-menubar border-b border-editor-border select-none z-50 flex-shrink-0"
-    >
-      {/* Logo */}
-      <div className="w-9 h-full flex items-center justify-center bg-[oklch(0.10_0.05_240)] text-editor-accent text-[11px] font-bold tracking-wide flex-shrink-0">
-        Ill
+    <>
+      <div
+        ref={ref}
+        className="flex items-center h-7 bg-editor-menubar border-b border-editor-border select-none z-50 flex-shrink-0"
+      >
+        {/* Logo */}
+        <div className="w-9 h-full flex items-center justify-center bg-[oklch(0.10_0.05_240)] text-editor-accent text-[11px] font-bold tracking-wide flex-shrink-0">
+          Ps
+        </div>
+
+        {menus.map((menu) => (
+          <div key={menu.label} className="relative">
+            <button
+              className={`px-3 h-7 text-[12px] text-editor-text transition-colors ${
+                openMenu === menu.label
+                  ? "bg-editor-accent text-white"
+                  : "hover:bg-editor-hover"
+              }`}
+              onMouseDown={() =>
+                setOpenMenu(openMenu === menu.label ? null : menu.label)
+              }
+              onMouseEnter={() => openMenu && setOpenMenu(menu.label)}
+            >
+              {menu.label}
+            </button>
+
+            {openMenu === menu.label && (
+              <div className="absolute top-full left-0 min-w-[220px] bg-editor-panel-header border border-editor-border shadow-2xl z-[200]">
+                {menu.items.map((item, i) =>
+                  item.separator ? (
+                    <div
+                      key={i}
+                      className="h-px bg-editor-border-light my-0.5"
+                    />
+                  ) : (
+                    <button
+                      key={i}
+                      disabled={item.disabled}
+                      className={`
+                        w-full flex justify-between items-center gap-6
+                        px-4 py-1.5 text-[12px] text-left transition-colors
+                        ${
+                          item.disabled
+                            ? "text-editor-text-disabled cursor-default"
+                            : "text-editor-text hover:bg-editor-accent hover:text-white"
+                        }
+                      `}
+                      onClick={() => {
+                        if (!item.disabled && item.action) {
+                          item.action();
+                          setOpenMenu(null);
+                        }
+                      }}
+                    >
+                      <span>{item.label}</span>
+                      {item.shortcut && (
+                        <span className="text-[11px] opacity-60">
+                          {item.shortcut}
+                        </span>
+                      )}
+                    </button>
+                  ),
+                )}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
-      {menus.map((menu) => (
-        <div key={menu.label} className="relative">
-          <button
-            className={`editor-menu-item ${openMenu === menu.label ? "editor-menu-item-open" : ""}`}
-            onMouseDown={() =>
-              setOpenMenu(openMenu === menu.label ? null : menu.label)
-            }
-            onMouseEnter={() => openMenu && setOpenMenu(menu.label)}
-          >
-            {menu.label}
-          </button>
-
-          {openMenu === menu.label && (
-            <div className="absolute top-full left-0 min-w-[200px] bg-editor-panel-header border border-editor-border shadow-2xl z-[200]">
-              {menu.items.map((item, i) =>
-                item.separator ? (
-                  <div key={i} className="h-px bg-editor-border-light my-0.5" />
-                ) : (
-                  <button
-                    key={i}
-                    disabled={item.disabled}
-                    className={`w-full flex justify-between items-center gap-6 px-4 py-1.5 text-[12px] text-left transition-colors ${
-                      item.disabled
-                        ? "text-editor-text-disabled cursor-default"
-                        : "text-editor-text hover:bg-editor-accent hover:text-white"
-                    }`}
-                    onClick={() => {
-                      if (!item.disabled && item.action) {
-                        item.action();
-                        setOpenMenu(null);
-                      }
-                    }}
-                  >
-                    <span>{item.label}</span>
-                    {item.shortcut && (
-                      <span className="text-[11px] opacity-60">
-                        {item.shortcut}
-                      </span>
-                    )}
-                  </button>
-                ),
-              )}
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
+      {/* Adjustment modals triggered from menu bar  */}
+      {openModal === "brightness" && <BrightnessContrast onClose={close} />}
+      {openModal === "hue" && <HueSaturation onClose={close} />}
+      {openModal === "levels" && <Levels onClose={close} />}
+      {openModal === "invert" && <Invert onClose={close} />}
+      {openModal === "gray" && <Grayscale onClose={close} />}
+      {openModal === "blur" && <Blur onClose={close} />}
+      {openModal === "sharpen" && <Sharpen onClose={close} />}
+    </>
   );
 };
 
