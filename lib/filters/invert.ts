@@ -1,10 +1,10 @@
 /* Invert */
-// inverts each colour channel: newValue = 255 - oldValue
-// Alpha channel is preserved
+// inverts each colour channel
 
 export function applyInvert(imageData: ImageData): void {
   const data = imageData.data;
 
+  // invert = 255 - oldValue
   for (let i = 0; i < data.length; i += 4) {
     data[i] = 255 - data[i];
     data[i + 1] = 255 - data[i + 1];

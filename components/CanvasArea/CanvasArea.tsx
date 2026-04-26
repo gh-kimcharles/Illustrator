@@ -7,8 +7,10 @@ import {
   drawBrushDot,
   floodFill,
   pickColor,
+  drawSelectionOverlay,
 } from "@/lib/tools/drawingEngine";
 import { compositeLayers } from "@/lib/layers/layerManager";
+import { RulerH, RulerV } from "../ui";
 
 const CURSOR_MAP: Record<string, string> = {
   Move: "default",
@@ -23,123 +25,7 @@ const CURSOR_MAP: Record<string, string> = {
   Shape: "crosshair",
   Zoom: "zoom-in",
   Hand: "grab",
-
-  // Move: "default",
-  // Marquee: "crosshair",
-  // Lasso: "crosshair",
-  // Crop: "crosshair",
-  // Eyedropper: "crosshair",
-  // Brush: "crosshair",
-  // Eraser: "crosshair",
-  // Fill: "crosshair",
-  // Text: "text",
-  // Shape: "crosshair",
-  // Zoom: "zoom-in",
-  // Hand: "grab",
 };
-
-/* Ruler sub-components */
-function RulerH({ width }: { width: number }) {
-  const ticks = [];
-  for (let i = 0; i <= width; i += 50)
-    ticks.push(
-      <span
-        key={i}
-        style={{
-          position: "absolute",
-          left: i,
-          fontSize: 9,
-          color: "var(--editor-text-muted)",
-          bottom: 2,
-        }}
-      >
-        {i}
-      </span>,
-    );
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 20,
-        right: 0,
-        height: 20,
-        background: "var(--editor-panel-header)",
-        borderBottom: "1px solid var(--editor-border)",
-        overflow: "hidden",
-      }}
-    >
-      {ticks}
-    </div>
-  );
-}
-
-function RulerV({ height }: { height: number }) {
-  const ticks = [];
-  for (let i = 0; i <= height; i += 50) {
-    ticks.push(
-      <span
-        key={i}
-        style={{
-          position: "absolute",
-          top: i,
-          fontSize: 8,
-          color: "var(--editor-text-muted)",
-          right: 2,
-          writingMode: "vertical-rl",
-        }}
-      >
-        {i}
-      </span>,
-    );
-  }
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: 20,
-        left: 0,
-        width: 20,
-        bottom: 0,
-        background: "var(--editor-panel-header)",
-        borderRight: "1px solid var(--editor-border)",
-        overflow: "hidden",
-      }}
-    >
-      {ticks}
-    </div>
-  );
-}
-
-function drawSelectionOverlay(
-  overlayCtx: CanvasRenderingContext2D,
-  selection: { x: number; y: number; width: number; height: number } | null,
-) {
-  const { width, height } = overlayCtx.canvas;
-  overlayCtx.clearRect(0, 0, width, height);
-  if (!selection) return;
-
-  overlayCtx.save();
-  overlayCtx.strokeStyle = "white";
-  overlayCtx.lineWidth = 1;
-  overlayCtx.setLineDash([4, 4]);
-  overlayCtx.strokeRect(
-    selection.x,
-    selection.y,
-    selection.width,
-    selection.height,
-  );
-  overlayCtx.strokeStyle = "black";
-  overlayCtx.setLineDash([4, 4]);
-  overlayCtx.lineDashOffset = 4;
-  overlayCtx.strokeRect(
-    selection.x,
-    selection.y,
-    selection.width,
-    selection.height,
-  );
-  overlayCtx.restore();
-}
 
 export const CanvasArea = () => {
   const displayRef = useRef<HTMLCanvasElement>(null); // composited display

@@ -1,9 +1,5 @@
 import { applyGaussianBlur } from "./blur";
 
-function clamp(v: number): number {
-  return Math.min(255, Math.max(0, Math.round(v)));
-}
-
 /* Sharpen (unsharp mask) */
 // classic unsharp mask algorithm:
 // create a blurred copy of the image
@@ -19,13 +15,14 @@ export function applySharpen(
 ): void {
   const { width, height, data } = imageData;
 
-  // make a blurred copy
+  // blur image to remove high frequency detail
   const blurred = new ImageData(new Uint8ClampedArray(data), width, height);
   applyGaussianBlur(blurred, radius);
 
-  // unsharp mask: output = original + (original - blurred) * (amount / 100)
   const strength = amount / 100;
 
+  // unsharp mask algorithm: Isharp ​= Ioriginal ​+ (Ioriginal ​− Iblurred​) * α
+  // unsharp mask (easy implmentation): output = original + (original - blurred) * (amount / 100)
   for (let i = 0; i < data.length; i += 4) {
     data[i] = clamp(data[i] + (data[i] - blurred.data[i]) * strength);
     data[i + 1] = clamp(
@@ -36,4 +33,9 @@ export function applySharpen(
     );
     // alpha untouched
   }
+}
+
+// ensure pixel channel remain in the RGB range
+function clamp(v: number): number {
+  return Math.min(255, Math.max(0, Math.round(v))); // 0 >= value <= 255
 }

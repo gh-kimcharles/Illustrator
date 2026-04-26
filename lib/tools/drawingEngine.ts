@@ -1,8 +1,6 @@
 import { BrushSettings, RGBColor } from "@/types";
 
-/**
- * Brush & Eraser Properties
- */
+/* Brush & Eraser Properties */
 export function drawBrushStroke(
   ctx: OffscreenCanvasRenderingContext2D,
   fromX: number,
@@ -60,9 +58,38 @@ export function drawBrushDot(
   ctx.restore();
 }
 
-/**
- * Flood Fill
- */
+/* Draw selection overlay */
+export function drawSelectionOverlay(
+  overlayCtx: CanvasRenderingContext2D,
+  selection: { x: number; y: number; width: number; height: number } | null,
+) {
+  const { width, height } = overlayCtx.canvas;
+  overlayCtx.clearRect(0, 0, width, height);
+  if (!selection) return;
+
+  overlayCtx.save();
+  overlayCtx.strokeStyle = "white";
+  overlayCtx.lineWidth = 1;
+  overlayCtx.setLineDash([4, 4]);
+  overlayCtx.strokeRect(
+    selection.x,
+    selection.y,
+    selection.width,
+    selection.height,
+  );
+  overlayCtx.strokeStyle = "black";
+  overlayCtx.setLineDash([4, 4]);
+  overlayCtx.lineDashOffset = 4;
+  overlayCtx.strokeRect(
+    selection.x,
+    selection.y,
+    selection.width,
+    selection.height,
+  );
+  overlayCtx.restore();
+}
+
+/* Flood Fill */
 export function floodFill(
   ctx: OffscreenCanvasRenderingContext2D,
   startX: number,
@@ -113,9 +140,7 @@ export function floodFill(
   ctx.putImageData(imageData, 0, 0);
 }
 
-/**
- * Eyedropper
- */
+/* Eyedropper */
 export function pickColor(
   ctx: CanvasRenderingContext2D,
   x: number,

@@ -31,7 +31,7 @@ export function rgbToHsl(
   b: number,
 ): [number, number, number] {
   const max = Math.max(r, g, b);
-  const min = Math.max(r, g, b);
+  const min = Math.min(r, g, b); // fix: .max to .min bug
   const diff = max - min;
 
   let h = 0;

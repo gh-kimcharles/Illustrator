@@ -1,6 +1,6 @@
 /* LUT builder */
-// Pre-computess the output for every possible 0-255 input value
-// This avoids repeating the math for every pixel in the image
+// pre-computes the output for every possible 0-255 input value
+// avoids repeating the math for every pixel in the image
 function buildLut(
   inMin: number,
   inMax: number,
@@ -20,6 +20,9 @@ function buildLut(
     const normalised = (clamped - inMin) / inRange;
 
     // apply gamma correction
+    // gamma = 1 → no change
+    // gamma > 1 → brighten midtones
+    // gamma < 1 → darken midtones
     const gammaCorrected = Math.pow(normalised, 1 / gamma);
 
     // map to output range
@@ -30,16 +33,16 @@ function buildLut(
 }
 
 /* Levels */
-// Remaps pixel values from an input range [inMin, inMax] to an output range
-// [outMin, outMax] mirrors ps levels adjusttment
+// remaps pixel values from an input range [inMin, inMax] to an output range
+// [outMin, outMax] mirrors ps levels adjustment
 
-// all values are range 0 - 255
-// Default (no - op): inMin = 0; inMax= 255; gamma=1.0, outMin= 0, outMax=255
+// all values are range 0-255
+// Default (no-op): inMin = 0; inMax = 255; gamma = 1.0, outMin = 0, outMax = 255
 export function applyLevels(
   imageData: ImageData,
   inMin: number, // 0-254
   inMax: number, // 1-255
-  gamma: number, //0.1 - 9.99
+  gamma: number, //0.1-9.99
   outMin: number, // 0-254
   outMax: number, //1-255
 ): void {

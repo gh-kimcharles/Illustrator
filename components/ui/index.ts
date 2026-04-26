@@ -5,3 +5,4 @@ export { NumberInput } from "./NumberInput";
 export { IconButton } from "./IconButton";
 export { Dialog, DialogButton } from "./Dialog";
 export { Select } from "./Select";
+export { RulerV, RulerH } from "./Ruler";
