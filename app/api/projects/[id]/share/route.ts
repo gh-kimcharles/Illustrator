@@ -69,6 +69,3 @@ export async function DELETE(
 
   return NextResponse.json({ message: "Sharing disabled" });
 }
-
-// share project with token
-export async function GET() {}
