@@ -1,13 +1,105 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// run these commands after editing this file:
+//    npx prisma migrate dev --name <description>
+//    npx prisma generate 
+
+// visualize the schema:
+//    npx prisma studio
 
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  // DATABASE_URL from .evn
+  url = env("DATABASE_URL")
+}
+
+// User
+// adapter auto-populates Account, Session, VerificationToken
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?   // null for OAuth users (Google etc.)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  accounts  Account[]
+  sessions  Session[]
+  projects  Project[]
+}
+
+// Account
+// OAuth provider accounts (Google, GitHub, etc.) linked to a User
+// required by @auth/prisma-adapter
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+// Session
+// database sessions for NextAuth
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// VerificationToken
+// email verification magic links
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Project
+// a saved editor project belonging to a User
+model Project {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String   @default("Untitled Project")
+  thumbnail   String?  // base64 data URL or external URL
+  // The full project state serialised as JSON.
+  // Stores: canvasSize, layer metadata, per-layer pixel data (base64).
+  data        Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Share settings
+  isShared    Boolean  @default(false)
+  shareToken  String?  @unique  // random token used in /share/[token]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([shareToken])
 }
