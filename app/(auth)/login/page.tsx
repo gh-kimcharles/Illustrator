@@ -1,3 +1,5 @@
+"use client";
+
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,7 +18,7 @@ const LoginPage = () => {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    setLoading(false);
+    setLoading(true);
 
     // signIn() from next-auth/react
     // POST /api/auth/signin/credentials

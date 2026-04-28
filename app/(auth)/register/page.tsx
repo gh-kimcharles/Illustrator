@@ -23,7 +23,7 @@ const RegisterPage = () => {
       // custom register endpoint
       const res = await fetch("/api/auth/register", {
         method: "POST",
-        headers: { "Content-Type": "application/type" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
 
@@ -62,7 +62,7 @@ const RegisterPage = () => {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 bg-[oklch(0.10_0.05_240)] text-editor-accent text-xl font-bold mb-3">
-            Ps
+            Ill
           </div>
           <h1 className="text-xl font-semibold text-editor-text">
             Create your account
