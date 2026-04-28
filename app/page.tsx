@@ -13,12 +13,12 @@ export const LandingPage = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <link
+          <Link
             href="/login"
             className="text-[13px] text-editor-text-muted hover:text-editor-text transition-colors"
           >
             Sign in
-          </link>
+          </Link>
           <Link
             href="/register"
             className="text-[13px] bg-editor-accent hover:bg-editor-accent-hover text-white px-4 py-1.5 transition-colors"

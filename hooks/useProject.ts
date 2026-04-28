@@ -15,7 +15,7 @@ async function serialiseProject() {
 
       if (layer.canvas) {
         // convert OffscreenCanvas -> blob -> base64
-        const blob = await layer.canvas.convertToBlob({ type: "image/png " });
+        const blob = await layer.canvas.convertToBlob({ type: "image/png" });
         pixelData = await blobToBase64(blob);
       }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 // new project button
 // navigates to the editor with no projectId - creates a fresh canvas

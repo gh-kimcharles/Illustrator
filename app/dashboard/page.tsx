@@ -6,7 +6,7 @@ import Link from "next/link";
 import { NewProjectButton } from "@/components/ui/NewProjectButton";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 
-export const DashboardPage = async () => {
+const DashboardPage = async () => {
   const session = await getServerSession(authOptions);
 
   // check session (middleware handle this, but be defensive)
@@ -90,3 +90,5 @@ export const DashboardPage = async () => {
     </div>
   );
 };
+
+export default DashboardPage;
