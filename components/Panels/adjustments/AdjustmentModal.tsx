@@ -13,6 +13,7 @@ interface AdjustmentModalProps {
   // parent can only apply filters on top of a copy
   children: (preview: () => void) => React.ReactNode;
   onPreview: (savedData: ImageData) => void;
+  autoPreview?: boolean; // add: autoPreview will populate savedDataRef for Invert and Grayscale filters
 }
 
 export const AdjustmentModal = ({
@@ -21,29 +22,16 @@ export const AdjustmentModal = ({
   onCancel,
   children,
   onPreview,
+  autoPreview = false,
 }: AdjustmentModalProps) => {
   const { layers, activeLayerId, canvasSize } = useEditorStore();
 
   // snapshot of pixel data before any adjustment - restored on cancel
   const savedDataRef = useRef<ImageData | null>(null);
 
-  // snaphot on mount
-  useEffect(() => {
-    const layer = layers.find((l) => l.id === activeLayerId);
-    if (!layer?.canvas) return;
-
-    const ctx = layer.canvas.getContext("2d");
-    if (!ctx) return;
-
-    // Save a copy
-    savedDataRef.current = ctx.getImageData(
-      0,
-      0,
-      layer.canvas.width,
-      layer.canvas.height,
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // runs once on mount only
+  // holds the latest handlePreview so the snapshot effect can call it
+  // without needing handlePreview in the dependency array
+  const previewFnRef = useRef<() => void>(() => {});
 
   // get display canvas for recompositing
   const getDisplayCtx = useCallback((): CanvasRenderingContext2D | null => {
@@ -81,6 +69,42 @@ export const AdjustmentModal = ({
     const displayCtx = getDisplayCtx();
     if (displayCtx) compositeLayers(displayCtx, layers, canvasSize);
   }, [layers, activeLayerId, canvasSize, onPreview, getDisplayCtx]);
+
+  // eslint-disable-next-line react-hooks/refs
+  previewFnRef.current = handlePreview;
+
+  // stable wrapper - created once, reads from ref at call time
+  const stablePreview = useCallback(() => {
+    previewFnRef.current();
+  }, []); // empty deps - identity is stable, reads latest via ref
+
+  // snaphot on mount
+  useEffect(() => {
+    const layer = layers.find((l) => l.id === activeLayerId);
+    if (!layer?.canvas) return;
+    const ctx = layer.canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Save a copy
+    savedDataRef.current = ctx.getImageData(
+      0,
+      0,
+      layer.canvas.width,
+      layer.canvas.height,
+    );
+
+    // auto-preview immediately after snapshot is ready
+    // setTimeout 0 ensures savedDataRef.current is set
+    // before previewFnRef.current() reads it
+    if (autoPreview) {
+      // use timeout to set before handlePreview reads the snapshot
+      setTimeout(() => {
+        previewFnRef.current();
+      }, 0);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // runs once on mount only
 
   // apply: commit the current state
   const handleApply = useCallback(() => {
@@ -124,7 +148,7 @@ export const AdjustmentModal = ({
         {typeof children === "function"
           ? (children as (preview: () => void) => React.ReactNode)(
               // eslint-disable-next-line react-hooks/refs
-              handlePreview,
+              stablePreview,
             )
           : children}
       </div>
