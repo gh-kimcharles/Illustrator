@@ -38,6 +38,7 @@ const LoginPage = () => {
     router.push(callbackUrl);
     router.refresh(); // refresh server components to pick up new session
   }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-editor-bg">
       <div className="w-full max-w-sm">
