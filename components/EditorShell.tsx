@@ -37,6 +37,13 @@ const EditorShell = ({ projectId }: EditorShellProps) => {
   const [currentId, setCurrentId] = useState<string | undefined>(projectId);
   const [projectName, setProjectName] = useState("Untitled Project");
 
+  // add: push initial blank state as stack[0]
+  // to give undo baseline to restore to
+  useEffect(() => {
+    const { pushHistory } = useEditorStore.getState();
+    pushHistory("initial");
+  }, []);
+
   // Load project on mount if projectId provided
   useEffect(() => {
     if (projectId) {
@@ -95,6 +102,9 @@ const EditorShell = ({ projectId }: EditorShellProps) => {
       canRedo: false,
     });
 
+    // add: add initial state after clearing
+    useEditorStore.getState().pushHistory("initial");
+
     // Resize the display
     const canvas = getCanvas();
     if (canvas) {
@@ -139,6 +149,9 @@ const EditorShell = ({ projectId }: EditorShellProps) => {
           canvas.width = img.width;
           canvas.height = img.height;
         }
+
+        // add: new initial state after file changes
+        useEditorStore.getState().pushHistory("initial");
 
         URL.revokeObjectURL(img.src);
       };

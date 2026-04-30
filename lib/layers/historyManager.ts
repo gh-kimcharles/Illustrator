@@ -30,16 +30,18 @@ export class HistoryManager {
 
   // Undo: step back one snapshot and restore it
   undo(layers: Layer[]): boolean {
-    if (this.cursor < 0) return false;
+    if (this.cursor <= 0) return false;
+
+    this.cursor--;
     const snapshot = this.stack[this.cursor];
     restoreSnapshot(layers, snapshot.layerData);
-    this.cursor--;
     return true;
   }
 
   // Redo: step forward one snapshot and restor it
   redo(layers: Layer[]): boolean {
     if (this.cursor >= this.stack.length - 1) return false;
+
     this.cursor++;
     const snapshot = this.stack[this.cursor];
     restoreSnapshot(layers, snapshot.layerData);
@@ -47,7 +49,7 @@ export class HistoryManager {
   }
 
   canUndo(): boolean {
-    return this.cursor >= 0;
+    return this.cursor > 0;
   }
 
   canRedo(): boolean {

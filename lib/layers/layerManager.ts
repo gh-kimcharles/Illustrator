@@ -64,21 +64,27 @@ export function compositeLayers(
 
 /* Snapshot */
 // Captures the current pixel state of every layer as image data.
+// update: wrapping the imageData in a new Uint8ClampedArray copy so snapshots aren't sharing the same pixel buffer
 export function snapshotLayers(layers: Layer[]): Map<string, ImageData> {
   const map = new Map<string, ImageData>();
   for (const layer of layers) {
     if (!layer.canvas) continue;
-
     const ctx = layer.canvas.getContext("2d");
     if (!ctx) continue;
-
     const imageData = ctx.getImageData(
       0,
       0,
       layer.canvas.width,
       layer.canvas.height,
     );
-    map.set(layer.id, imageData);
+    map.set(
+      layer.id,
+      new ImageData(
+        new Uint8ClampedArray(imageData.data),
+        imageData.width,
+        imageData.height,
+      ),
+    );
   }
   return map;
 }

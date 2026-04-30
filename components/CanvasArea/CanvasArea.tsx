@@ -130,7 +130,7 @@ export const CanvasArea = () => {
       if (!ctx) return;
 
       if (activeTool === "Brush" || activeTool === "Eraser") {
-        pushHistory(activeTool);
+        // pushHistory(activeTool); // remove pushHistory on mouse down
         drawBrushDot(
           ctx,
           position.x,
@@ -143,7 +143,7 @@ export const CanvasArea = () => {
       }
 
       if (activeTool === "Fill") {
-        pushHistory(activeTool);
+        // pushHistory(activeTool); // remove pushHistory on mouse down
         floodFill(ctx, position.x, position.y, fgColor);
         recomposite();
       }
@@ -166,7 +166,7 @@ export const CanvasArea = () => {
       recomposite,
       setFgColor,
       setSelection,
-      pushHistory,
+      // pushHistory, // remove pushHistory on mouse down
     ],
   );
 
@@ -186,9 +186,9 @@ export const CanvasArea = () => {
         const sy = selectionStart.current.y;
         setSelection({
           x: Math.min(sx, position.x),
-          y: Math.min(sx, position.y),
+          y: Math.min(sy, position.y),
           width: Math.abs(position.x - sx),
-          height: Math.min(position.y - sy),
+          height: Math.abs(position.y - sy),
         });
 
         return;
@@ -240,9 +240,19 @@ export const CanvasArea = () => {
     ],
   );
 
+  // modify: push AFTER stroke completes
   const handleMouseUp = useCallback(() => {
+    if (drawing.current) {
+      if (
+        activeTool === "Brush" ||
+        activeTool === "Eraser" ||
+        activeTool === "Fill"
+      ) {
+        pushHistory(activeTool); // post-action snapshots
+      }
+    }
     drawing.current = false;
-  }, []);
+  }, [activeTool, pushHistory]);
 
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {

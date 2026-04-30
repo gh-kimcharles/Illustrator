@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
 import type { ToolName } from "@/types";
 
@@ -33,15 +33,17 @@ export function useKeyboardShortcuts() {
     setSelection,
   } = useEditorStore();
 
+  const latestRef = useRef({ undo, redo, canUndo, canRedo });
+  useEffect(() => {
+    latestRef.current = { undo, redo, canUndo, canRedo };
+  });
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      // Do not apply shortcuts while typing in input
       const tag = (e.target as HTMLElement).tagName.toLowerCase();
       if (tag === "input" || tag === "textarea" || tag === "select") return;
 
       const ctrl = e.ctrlKey || e.metaKey;
-
-      // Tool shortcuts (single key)
       if (ctrl) {
         switch (e.key) {
           case "=":
@@ -61,22 +63,20 @@ export function useKeyboardShortcuts() {
             e.preventDefault();
             zoom100();
             break;
-          // Undo (Ctrl+Z)
           case "z":
             e.preventDefault();
-            if (!e.shiftKey && canUndo) undo();
+            if (!e.shiftKey && latestRef.current.canUndo)
+              latestRef.current.undo();
             break;
-          // Redo (Ctrl+Y  or  Ctrl+Shift+Z)
           case "y":
             e.preventDefault();
-            if (canRedo) redo();
+            if (latestRef.current.canRedo) latestRef.current.redo();
             break;
-          // Ctrl+Shift+Z — also redo (common in many apps)
           case "Z":
             e.preventDefault();
-            if (e.shiftKey && canRedo) redo();
+            if (e.shiftKey && latestRef.current.canRedo)
+              latestRef.current.redo();
             break;
-          // Deselect all (Ctrl+D)
           case "d":
             e.preventDefault();
             setSelection(null);
@@ -85,29 +85,15 @@ export function useKeyboardShortcuts() {
         return;
       }
 
-      // Single-key tool shortcuts
       const tool = KEY_TOOL_MAP[e.key.toLowerCase()];
       if (tool) {
         e.preventDefault();
         setActiveTool(tool);
       }
-
-      // Escape clear selection
       if (e.key === "Escape") setSelection(null);
     };
 
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [
-    setActiveTool,
-    zoomIn,
-    zoomOut,
-    zoomFit,
-    zoom100,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-    setSelection,
-  ]);
+  }, [setActiveTool, zoomIn, zoomOut, zoomFit, zoom100, setSelection]);
 }
