@@ -1,7 +1,6 @@
 "use client";
 
 import { useEditorStore } from "@/store/useEditorStore";
-import React, { useEffect } from "react";
 import { AdjustmentModal } from "./AdjustmentModal";
 import { applyInvert } from "@/lib/filters";
 
@@ -11,6 +10,7 @@ export const Invert = ({ onClose }: { onClose: () => void }) => {
   return (
     <AdjustmentModal
       title="Invert"
+      autoPreview={true}
       onCommit={() => {
         pushHistory("Invert");
         onClose();
@@ -18,18 +18,12 @@ export const Invert = ({ onClose }: { onClose: () => void }) => {
       onCancel={onClose}
       onPreview={(imageData) => applyInvert(imageData)}
     >
-      {(preview: () => void) => {
-        // Auto-preview on mount — no sliders needed
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-          preview();
-        }, []);
-        return (
-          <p className="text-[11px] text-editor-text-muted text-center py-2">
-            Inverts all colour channels on the active layer.
-          </p>
-        );
-      }}
+      {/* fix: no useEffect needed to preview changes, let autoPreview handle */}
+      {() => (
+        <p className="text-[11px] text-editor-text-muted text-center py-2">
+          Inverts all colour channels on the active layer.
+        </p>
+      )}
     </AdjustmentModal>
   );
 };
