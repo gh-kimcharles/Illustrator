@@ -28,6 +28,9 @@ export function applyHueSaturation(
     s = clamp01(s + saturation / 100); // saturation = clamp(s + Δs)
     l = clamp01(l + lightness / 100); // lightness = clamp(l + Δl)
 
+    // add: snap near-zero saturation to exact 0 to prevent floating point float
+    if (s < 0.001) s = 0;
+
     // convert back from HSL to RGB
     const [nr, ng, nb] = hslToRgb(h, s, l);
 

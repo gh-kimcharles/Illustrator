@@ -1,14 +1,18 @@
 "use client";
 
 import { useEditorStore } from "@/store/useEditorStore";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { AdjustmentModal } from "./AdjustmentModal";
 import { applyGaussianBlur } from "@/lib/filters";
 import { SliderRow } from "@/components/ui/Slider";
 
 export const Blur = ({ onClose }: { onClose: () => void }) => {
-  const [radius, setRadius] = useState(3);
   const { pushHistory } = useEditorStore();
+
+  const [radius, setRadius] = useState(3);
+
+  // add: refs to hold latest values synchronously
+  const radiusRef = useRef(3);
 
   return (
     <AdjustmentModal
@@ -18,7 +22,7 @@ export const Blur = ({ onClose }: { onClose: () => void }) => {
         onClose();
       }}
       onCancel={onClose}
-      onPreview={(imageData) => applyGaussianBlur(imageData, radius)}
+      onPreview={(imageData) => applyGaussianBlur(imageData, radiusRef.current)}
     >
       {(preview: () => void) => (
         <SliderRow
@@ -27,6 +31,7 @@ export const Blur = ({ onClose }: { onClose: () => void }) => {
           min={1}
           max={20}
           onChange={(v) => {
+            radiusRef.current = v;
             setRadius(v);
             preview();
           }}

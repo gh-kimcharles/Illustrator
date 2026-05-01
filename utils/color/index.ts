@@ -39,6 +39,7 @@ export function rgbToHsl(
   const l = (max + min) / 2;
 
   if (diff !== 0) {
+    // guard to ensure s stays 0 when r === g === b
     s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
 
     switch (max) {
@@ -63,6 +64,7 @@ export function hslToRgb(
   s: number,
   l: number,
 ): [number, number, number] {
+  // guard: to ensure floating point arithmetic cannot produce a slight tint
   if (s === 0) {
     return [l, l, l]; // achromatic
   }

@@ -1,15 +1,20 @@
 "use client";
 
 import { useEditorStore } from "@/store/useEditorStore";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { AdjustmentModal } from "./AdjustmentModal";
 import { applySharpen } from "@/lib/filters";
 import { SliderRow } from "@/components/ui/Slider";
 
 export const Sharpen = ({ onClose }: { onClose: () => void }) => {
-  const [amount, setAmount] = useState(100);
-  const [radius, setRadius] = useState(1);
   const { pushHistory } = useEditorStore();
+
+  const [amount, setAmount] = useState(100);
+  const [radius, setRadius] = useState(2); // increase radius amount for sharper default
+
+  // add: refs to hold latest values synchronously
+  const amountRef = useRef(100);
+  const radiusRef = useRef(2);
 
   return (
     <AdjustmentModal
@@ -19,7 +24,9 @@ export const Sharpen = ({ onClose }: { onClose: () => void }) => {
         onClose();
       }}
       onCancel={onClose}
-      onPreview={(imageData) => applySharpen(imageData, amount, radius)}
+      onPreview={(imageData) =>
+        applySharpen(imageData, amountRef.current, radiusRef.current)
+      }
     >
       {(preview: () => void) => (
         <>
@@ -29,6 +36,7 @@ export const Sharpen = ({ onClose }: { onClose: () => void }) => {
             min={0}
             max={200}
             onChange={(v) => {
+              amountRef.current = v;
               setAmount(v);
               preview();
             }}
@@ -39,6 +47,7 @@ export const Sharpen = ({ onClose }: { onClose: () => void }) => {
             min={1}
             max={10}
             onChange={(v) => {
+              radiusRef.current = v;
               setRadius(v);
               preview();
             }}

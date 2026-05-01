@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { AdjustmentModal } from "./AdjustmentModal";
 import { applyBrightnessContrast } from "@/lib/filters";
@@ -11,9 +11,14 @@ interface Props {
 }
 
 export const BrightnessContrast = ({ onClose }: Props) => {
+  const { pushHistory } = useEditorStore();
+
   const [brightness, setBrightness] = useState(0);
   const [contrast, setContrast] = useState(0);
-  const { pushHistory } = useEditorStore();
+
+  // add: refs to hold latest values synchronously
+  const brightnessRef = useRef(0);
+  const contrastRef = useRef(0);
 
   function handleCommit() {
     pushHistory("Brightness/Contrast");
@@ -26,7 +31,11 @@ export const BrightnessContrast = ({ onClose }: Props) => {
       onCommit={handleCommit}
       onCancel={onClose}
       onPreview={(imageData) => {
-        applyBrightnessContrast(imageData, brightness, contrast);
+        applyBrightnessContrast(
+          imageData,
+          brightnessRef.current,
+          contrastRef.current,
+        );
       }}
     >
       {(preview: () => void) => (
@@ -37,6 +46,7 @@ export const BrightnessContrast = ({ onClose }: Props) => {
             min={-100}
             max={100}
             onChange={(v) => {
+              brightnessRef.current = v;
               setBrightness(v);
               preview();
             }}
@@ -47,6 +57,7 @@ export const BrightnessContrast = ({ onClose }: Props) => {
             min={-100}
             max={100}
             onChange={(v) => {
+              contrastRef.current = v;
               setContrast(v);
               preview();
             }}

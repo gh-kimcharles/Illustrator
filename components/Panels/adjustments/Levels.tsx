@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { AdjustmentModal } from "./AdjustmentModal";
 import { applyLevels } from "@/lib/filters";
@@ -11,12 +11,20 @@ interface Props {
 }
 
 export const Levels = ({ onClose }: Props) => {
+  const { pushHistory } = useEditorStore();
+
   const [inMin, setInMin] = useState(0);
   const [inMax, setInMax] = useState(255);
   const [gamma, setGamma] = useState(100); // stored ×100 for slider (1.00 = 100)
   const [outMin, setOutMin] = useState(0);
   const [outMax, setOutMax] = useState(255);
-  const { pushHistory } = useEditorStore();
+
+  // add: refs to hold latest values synchronously
+  const inMinRef = useRef(0);
+  const inMaxRef = useRef(255);
+  const gammaRef = useRef(100);
+  const outMinRef = useRef(0);
+  const outMaxRef = useRef(255);
 
   function handleCommit() {
     pushHistory("Levels");
@@ -31,9 +39,16 @@ export const Levels = ({ onClose }: Props) => {
       title="Levels"
       onCommit={handleCommit}
       onCancel={onClose}
-      onPreview={(imageData) => {
-        applyLevels(imageData, inMin, inMax, gammaFloat, outMin, outMax);
-      }}
+      onPreview={(imageData) =>
+        applyLevels(
+          imageData,
+          inMinRef.current,
+          inMaxRef.current,
+          gammaRef.current / 100,
+          outMinRef.current,
+          outMaxRef.current,
+        )
+      }
     >
       {(preview: () => void) => (
         <>
@@ -46,6 +61,7 @@ export const Levels = ({ onClose }: Props) => {
             min={0}
             max={253}
             onChange={(v) => {
+              inMinRef.current = Math.min(v, inMaxRef.current - 2);
               setInMin(Math.min(v, inMax - 2));
               preview();
             }}
@@ -56,6 +72,7 @@ export const Levels = ({ onClose }: Props) => {
             min={2}
             max={255}
             onChange={(v) => {
+              inMinRef.current = Math.min(v, inMaxRef.current - 2);
               setInMax(Math.max(v, inMin + 2));
               preview();
             }}
@@ -66,6 +83,7 @@ export const Levels = ({ onClose }: Props) => {
             min={10}
             max={999}
             onChange={(v) => {
+              inMinRef.current = Math.min(v, inMaxRef.current - 2);
               setGamma(v);
               preview();
             }}
@@ -82,6 +100,7 @@ export const Levels = ({ onClose }: Props) => {
             min={0}
             max={253}
             onChange={(v) => {
+              inMinRef.current = Math.min(v, inMaxRef.current - 2);
               setOutMin(Math.min(v, outMax - 2));
               preview();
             }}
@@ -92,6 +111,7 @@ export const Levels = ({ onClose }: Props) => {
             min={2}
             max={255}
             onChange={(v) => {
+              inMinRef.current = Math.min(v, inMaxRef.current - 2);
               setOutMax(Math.max(v, outMin + 2));
               preview();
             }}
