@@ -61,8 +61,9 @@ export const Levels = ({ onClose }: Props) => {
             min={0}
             max={253}
             onChange={(v) => {
-              inMinRef.current = Math.min(v, inMaxRef.current - 2);
-              setInMin(Math.min(v, inMax - 2));
+              const clamped = Math.min(v, inMaxRef.current - 2);
+              inMinRef.current = clamped;
+              setInMin(clamped);
               preview();
             }}
           />
@@ -72,8 +73,9 @@ export const Levels = ({ onClose }: Props) => {
             min={2}
             max={255}
             onChange={(v) => {
-              inMinRef.current = Math.min(v, inMaxRef.current - 2);
-              setInMax(Math.max(v, inMin + 2));
+              const clamped = Math.max(v, inMinRef.current + 2);
+              inMaxRef.current = clamped;
+              setInMax(clamped);
               preview();
             }}
           />
@@ -83,7 +85,7 @@ export const Levels = ({ onClose }: Props) => {
             min={10}
             max={999}
             onChange={(v) => {
-              inMinRef.current = Math.min(v, inMaxRef.current - 2);
+              gammaRef.current = v;
               setGamma(v);
               preview();
             }}
@@ -100,8 +102,9 @@ export const Levels = ({ onClose }: Props) => {
             min={0}
             max={253}
             onChange={(v) => {
-              inMinRef.current = Math.min(v, inMaxRef.current - 2);
-              setOutMin(Math.min(v, outMax - 2));
+              const clamped = Math.min(v, outMaxRef.current - 2);
+              outMinRef.current = clamped;
+              setOutMin(clamped);
               preview();
             }}
           />
@@ -111,8 +114,9 @@ export const Levels = ({ onClose }: Props) => {
             min={2}
             max={255}
             onChange={(v) => {
-              inMinRef.current = Math.min(v, inMaxRef.current - 2);
-              setOutMax(Math.max(v, outMin + 2));
+              const clamped = Math.max(v, outMinRef.current + 2);
+              outMaxRef.current = clamped;
+              setOutMax(clamped);
               preview();
             }}
           />
