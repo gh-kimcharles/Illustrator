@@ -14,6 +14,7 @@ interface AdjustmentModalProps {
   children: (preview: () => void) => React.ReactNode;
   onPreview: (savedData: ImageData) => void;
   autoPreview?: boolean; // add: autoPreview will populate savedDataRef for Invert and Grayscale filters
+  className?: string;
 }
 
 export const AdjustmentModal = ({
@@ -23,6 +24,7 @@ export const AdjustmentModal = ({
   children,
   onPreview,
   autoPreview = false,
+  className,
 }: AdjustmentModalProps) => {
   const { layers, activeLayerId, canvasSize } = useEditorStore();
 

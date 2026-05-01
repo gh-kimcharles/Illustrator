@@ -12,6 +12,7 @@ import {
   Sharpen,
   Posterize,
   Vibrance,
+  Curves,
 } from "./adjustments";
 
 type OpenModal =
@@ -24,6 +25,7 @@ type OpenModal =
   | "sharpen"
   | "vibrance"
   | "posterize"
+  | "curves"
   | null;
 
 const ADJUSTMENTS: {
@@ -33,7 +35,7 @@ const ADJUSTMENTS: {
 }[] = [
   { icon: "☀", label: "B/C", id: "brightness" },
   { icon: "◑", label: "Levels", id: "levels" },
-  { icon: "〜", label: "Curves", id: null }, // Phase 5
+  { icon: "〜", label: "Curves", id: "curves" },
   { icon: "🎨", label: "Hue/Sat", id: "hue" },
   { icon: "◻", label: "B&W", id: "grayscale" },
   { icon: "⬤", label: "Vibrance", id: "vibrance" },
@@ -92,6 +94,7 @@ const AdjustmentsPanel = () => {
       {openModal === "sharpen" && <Sharpen onClose={close} />}
       {openModal === "posterize" && <Posterize onClose={close} />}
       {openModal === "vibrance" && <Vibrance onClose={close} />}
+      {openModal === "curves" && <Curves onClose={close} />}
     </>
   );
 };

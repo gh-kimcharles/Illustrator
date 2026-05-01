@@ -8,3 +8,5 @@ export { Levels } from "./Levels";
 export { Sharpen } from "./Sharpen";
 export { Posterize } from "./Posterize";
 export { Vibrance } from "./Vibrance";
+export { CurveGraph } from "./CurveGraph";
+export { Curves } from "./Curves";

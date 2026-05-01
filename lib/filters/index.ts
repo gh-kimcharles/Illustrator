@@ -7,3 +7,4 @@ export { applyLevels } from "./levels";
 export { applySharpen } from "./sharpen";
 export { applyPosterize } from "./posterize";
 export { applyVibrance } from "./vibrance";
+export { applyCurves } from "./curves";
