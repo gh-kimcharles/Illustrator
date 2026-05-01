@@ -10,6 +10,8 @@ import {
   Grayscale,
   Blur,
   Sharpen,
+  Posterize,
+  Vibrance,
 } from "./adjustments";
 
 type OpenModal =
@@ -20,6 +22,8 @@ type OpenModal =
   | "grayscale"
   | "blur"
   | "sharpen"
+  | "vibrance"
+  | "posterize"
   | null;
 
 const ADJUSTMENTS: {
@@ -32,8 +36,8 @@ const ADJUSTMENTS: {
   { icon: "〜", label: "Curves", id: null }, // Phase 5
   { icon: "🎨", label: "Hue/Sat", id: "hue" },
   { icon: "◻", label: "B&W", id: "grayscale" },
-  { icon: "⬤", label: "Vibrance", id: null }, // Phase 5
-  { icon: "▤", label: "Posterize", id: null }, // Phase 5
+  { icon: "⬤", label: "Vibrance", id: "vibrance" },
+  { icon: "▤", label: "Posterize", id: "posterize" },
   { icon: "◈", label: "Invert", id: "invert" },
   { icon: "≋", label: "Blur", id: "blur" },
   { icon: "◈", label: "Sharpen", id: "sharpen" },
@@ -86,6 +90,8 @@ const AdjustmentsPanel = () => {
       {openModal === "grayscale" && <Grayscale onClose={close} />}
       {openModal === "blur" && <Blur onClose={close} />}
       {openModal === "sharpen" && <Sharpen onClose={close} />}
+      {openModal === "posterize" && <Posterize onClose={close} />}
+      {openModal === "vibrance" && <Vibrance onClose={close} />}
     </>
   );
 };

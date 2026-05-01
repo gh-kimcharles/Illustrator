@@ -5,3 +5,5 @@ export { applyHueSaturation } from "./hueSaturation";
 export { applyInvert } from "./invert";
 export { applyLevels } from "./levels";
 export { applySharpen } from "./sharpen";
+export { applyPosterize } from "./posterize";
+export { applyVibrance } from "./vibrance";
