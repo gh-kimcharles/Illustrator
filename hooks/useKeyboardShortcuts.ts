@@ -31,15 +31,33 @@ export function useKeyboardShortcuts() {
     canUndo,
     canRedo,
     setSelection,
+    activeTool,
   } = useEditorStore();
 
-  const latestRef = useRef({ undo, redo, canUndo, canRedo });
+  // Ref holds the latest values so the stable event listener always
+  // reads current state without needing to be re-registered
+  const latestRef = useRef({
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    activeTool,
+    setActiveTool,
+  });
   useEffect(() => {
-    latestRef.current = { undo, redo, canUndo, canRedo };
+    latestRef.current = {
+      undo,
+      redo,
+      canUndo,
+      canRedo,
+      activeTool,
+      setActiveTool,
+    };
   });
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      // never apply shortcuts while typing in an input
       const tag = (e.target as HTMLElement).tagName.toLowerCase();
       if (tag === "input" || tag === "textarea" || tag === "select") return;
 
@@ -85,12 +103,23 @@ export function useKeyboardShortcuts() {
         return;
       }
 
+      // single key tool shortcuts
       const tool = KEY_TOOL_MAP[e.key.toLowerCase()];
       if (tool) {
         e.preventDefault();
         setActiveTool(tool);
       }
-      if (e.key === "Escape") setSelection(null);
+
+      // escape
+      if (e.key === "Escape") {
+        // clears selection
+        setSelection(null);
+
+        // if cropping, switch back to move tool to cancel
+        if (latestRef.current.activeTool === "Crop") {
+          latestRef.current.setActiveTool("Move");
+        }
+      }
     };
 
     window.addEventListener("keydown", handler);

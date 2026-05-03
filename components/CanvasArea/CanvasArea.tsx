@@ -122,6 +122,17 @@ export const CanvasArea = () => {
     return layer.canvas.getContext("2d");
   }, [layers, activeLayerId]);
 
+  // if there is selection, apply
+  const applySelectionClip = useCallback(
+    (ctx: OffscreenCanvasRenderingContext2D) => {
+      if (!selection) return; // no selection, no clip
+      ctx.beginPath();
+      ctx.rect(selection.x, selection.y, selection.width, selection.height);
+      ctx.clip();
+    },
+    [selection],
+  );
+
   // Converts a mouse event to canvas value coordinates (accounts for zoom)
   const getCanvasPosition = useCallback(
     (e: React.MouseEvent) => {
@@ -185,7 +196,10 @@ export const CanvasArea = () => {
       if (!ctx) return;
 
       if (activeTool === "Brush" || activeTool === "Eraser") {
-        // pushHistory(activeTool); // remove pushHistory on mouse down
+        ctx.save();
+
+        // if there is selection clip, ensure it only draws that part
+        applySelectionClip(ctx);
         drawBrushDot(
           ctx,
           position.x,
@@ -194,12 +208,23 @@ export const CanvasArea = () => {
           fgColor,
           activeTool === "Eraser",
         );
+        ctx.restore();
+
         recomposite();
       }
 
       if (activeTool === "Fill") {
-        // pushHistory(activeTool); // remove pushHistory on mouse down
-        floodFill(ctx, position.x, position.y, fgColor);
+        ctx.save();
+        applySelectionClip(ctx);
+        floodFill(
+          ctx,
+          position.x,
+          position.y,
+          fgColor,
+          32,
+          selection ?? undefined,
+        );
+        ctx.restore();
         recomposite();
       }
 
@@ -290,6 +315,8 @@ export const CanvasArea = () => {
       if (!ctx) return;
 
       if (activeTool === "Brush" || activeTool === "Eraser") {
+        ctx.save();
+        applySelectionClip(ctx);
         drawBrushStroke(
           ctx,
           lastPosition.current.x,
@@ -300,6 +327,7 @@ export const CanvasArea = () => {
           fgColor,
           activeTool === "Eraser",
         );
+        ctx.restore();
         recomposite();
       }
       lastPosition.current = position;

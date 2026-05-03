@@ -69,37 +69,30 @@ export function drawCropOverlay(
 
   ctx.save();
 
-  // Darken everything outside the crop rectangle
   ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
 
-  // Top region
   ctx.fillRect(0, 0, cw, y);
-  // Bottom region
   ctx.fillRect(0, y + height, cw, ch - y - height);
-  // Left region
   ctx.fillRect(0, y, x, height);
-  // Right region
   ctx.fillRect(x + width, y, cw - x - width, height);
 
-  // Crop border
   ctx.strokeStyle = "white";
   ctx.lineWidth = 1;
   ctx.strokeRect(x, y, width, height);
 
-  // Rule-of-thirds grid inside the crop area
   ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
   ctx.lineWidth = 0.5;
   ctx.setLineDash([]);
 
   for (let i = 1; i < 3; i++) {
-    // Vertical thirds
+    // vertical thirds
     const vx = x + (width / 3) * i;
     ctx.beginPath();
     ctx.moveTo(vx, y);
     ctx.lineTo(vx, y + height);
     ctx.stroke();
 
-    // Horizontal thirds
+    // horizontal thirds
     const hy = y + (height / 3) * i;
     ctx.beginPath();
     ctx.moveTo(x, hy);
@@ -107,7 +100,6 @@ export function drawCropOverlay(
     ctx.stroke();
   }
 
-  // Corner handles
   const handleSize = 6;
   const corners = [
     { cx: x, cy: y },
@@ -167,10 +159,21 @@ export function floodFill(
   startY: number,
   fillColor: RGBColor,
   tolerance = 32,
+  bounds?: { x: number; y: number; width: number; height: number }, // add: to handle selection bounds only
 ) {
   const { width, height } = ctx.canvas;
   const imageData = ctx.getImageData(0, 0, width, height);
   const data = imageData.data;
+
+  // clamp stack walk to bounds if provided, otherwise full canvas
+  const minX = bounds ? Math.max(0, Math.floor(bounds.x)) : 0;
+  const minY = bounds ? Math.max(0, Math.floor(bounds.y)) : 0;
+  const maxX = bounds
+    ? Math.min(width, Math.floor(bounds.x + bounds.width))
+    : width;
+  const maxY = bounds
+    ? Math.min(height, Math.floor(bounds.y + bounds.height))
+    : height;
 
   const idx = (x: number, y: number) => (y * width + x) * 4;
   const startIdx = idx(Math.floor(startX), Math.floor(startY));
@@ -193,7 +196,8 @@ export function floodFill(
 
   while (stack.length) {
     const [x, y] = stack.pop()!;
-    if (x < 0 || x >= width || y < 0 || y >= height) continue;
+    // Use clamped bounds instead of raw canvas size
+    if (x < minX || x >= maxX || y < minY || y >= maxY) continue;
 
     const i = idx(x, y);
     if (visited[y * width + x]) continue;
