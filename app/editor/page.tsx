@@ -6,6 +6,7 @@ import EditorShell from "@/components/EditorShell";
 interface Props {
   searchParams: Promise<{ projectId?: string }>;
 }
+
 const EditorPage = async ({ searchParams }: Props) => {
   const { projectId } = await searchParams;
   return <EditorShell projectId={projectId} />;

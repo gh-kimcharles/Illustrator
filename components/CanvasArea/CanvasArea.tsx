@@ -132,7 +132,7 @@ export const CanvasArea = () => {
 
     window.addEventListener("editor:cancel", handleCancel);
     return () => window.removeEventListener("editor:cancel", handleCancel);
-  }, []); // stable — only refs and local state setters, no deps needed
+  }, []); // stable - only refs and local state setters, no deps needed
 
   // Expose canvas globally for EditorShell file I/O
   useEffect(() => {
@@ -408,7 +408,7 @@ export const CanvasArea = () => {
         return { ...layer, canvas: newCanvas };
       });
 
-      // Push new layer array into the store — triggers re-render cleanly
+      // Push new layer array into the store - triggers re-render cleanly
       setLayers(croppedLayers);
       setCanvasSize({ width, height });
 
@@ -577,7 +577,7 @@ export const CanvasArea = () => {
             transition: isPanning ? "none" : "transform 0.05s ease-out",
           }}
         >
-          {/* Display canvas — composited layers */}
+          {/* Display canvas - composited layers */}
           <canvas
             ref={displayRef}
             width={canvasSize.width}
@@ -585,7 +585,7 @@ export const CanvasArea = () => {
             style={{ display: "block" }}
           />
 
-          {/* Overlay canvas — selection dashes, lasso path, crop preview */}
+          {/* Overlay canvas - selection dashes, lasso path, crop preview */}
           <canvas
             ref={overlayRef}
             width={canvasSize.width}
@@ -613,7 +613,7 @@ export const CanvasArea = () => {
         </div>
       )}
 
-      {/* Lasso hint — shown while drawing */}
+      {/* Lasso hint - shown while drawing */}
       {activeTool === "Lasso" && isLassoDrawing && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-editor-panel-header border border-editor-border-light text-[11px] text-editor-text px-3 py-1 pointer-events-none">
           Release to close selection · Esc to cancel

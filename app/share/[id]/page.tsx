@@ -1,14 +1,12 @@
-// renders a read-only flattened view of a shared project ussing the shareToken
+import { ShareView } from "@/components/ui/ShareView";
+import { prisma } from "@/lib/db/prisma";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
-import { ShareView } from "@/components/ui/ShareView";
-import { prisma } from "@/lib/db/prisma";
-import { notFound } from "next/navigation";
-import React from "react";
-
+// renders a read-only flattened view of a shared project ussing the shareToken
 const SharePage = async ({ params }: Props) => {
   const { id } = await params;
 

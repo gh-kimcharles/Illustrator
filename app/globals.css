@@ -3,9 +3,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ============================================================
-   SHADCN ZINC THEME — dark mode is the editor default
-   ============================================================ */
+/*
+ * SHADCN ZINC THEME
+ * dark mode is the editor default
+ */
 
 :root {
   --background: oklch(1 0 0);
@@ -66,14 +67,13 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
-/* ============================================================
-   EDITOR-SPECIFIC TOKENS
-   Mapped from the Zinc dark palette above.
-   These drive every editor component — toolbar, panels, canvas.
-   ============================================================ */
+/*
+* EDITOR-SPECIFIC TOKENS - toolbar, panels, canvas, etc.
+* mapped from the Zinc dark palette above.
+*/
 
 :root {
-  /* Surfaces — from darkest to lightest */
+  /* Surfaces */
   --editor-bg: oklch(0.141 0.005 285.823); /* app background */
   --editor-panel: oklch(0.18 0.005 285.823); /* panel background */
   --editor-panel-header: oklch(0.21 0.006 285.885); /* panel header / card */
@@ -84,7 +84,7 @@
   --editor-hover: oklch(0.274 0.006 286.033); /* hover state */
   --editor-input-bg: oklch(0.16 0.005 285.823); /* input background */
 
-  /* Accent — editor blue (same family as sidebar-primary in dark) */
+  /* Accent - editor blue (same family as sidebar-primary in dark) */
   --editor-accent: oklch(0.55 0.18 240);
   --editor-accent-hover: oklch(0.5 0.18 240);
   --editor-accent-subtle: oklch(0.55 0.18 240 / 15%);
@@ -111,25 +111,19 @@
   --space-3: 12px;
   --space-4: 16px;
 
-  /* Radius — from shadcn */
+  /* Radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* ============================================================
-   TAILWIND V4 THEME MAPPING
-   Exposes all tokens as Tailwind utilities:
-     bg-editor-panel, text-editor-muted, border-editor-border …
-   ============================================================ */
-
 @theme inline {
   /* Geist fonts (loaded via next/font in layout.tsx) */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* shadcn semantic tokens */
+  /* Shadcn semantic tokens */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -192,9 +186,9 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* ============================================================
-   BASE LAYER
-   ============================================================ */
+/* 
+ * BASE LAYER
+ */
 
 @layer base {
   * {
@@ -206,7 +200,7 @@
   body {
     height: 100%;
     overflow: hidden;
-    /* Force dark mode — editor is always dark */
+    /* Force dark mode - editor is always dark */
     @apply bg-editor-bg text-editor-text;
     font-family: var(--font-sans), system-ui, sans-serif;
   }
@@ -254,7 +248,7 @@
     border: none;
   }
 
-  /* Number inputs — hide spinners */
+  /* Number inputs - hide spinners */
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -272,10 +266,10 @@
   }
 }
 
-/* ============================================================
-   EDITOR COMPONENT UTILITIES
-   Reusable classes used across editor components.
-   ============================================================ */
+/*
+ * EDITOR COMPONENT UTILITIES
+ * Reusable classes used across editor components
+ */
 
 @layer components {
   /* Panel section wrapper */

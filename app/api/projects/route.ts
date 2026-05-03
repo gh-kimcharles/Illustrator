@@ -1,11 +1,10 @@
 import { NextRequest } from "next/server";
-// get all projects
-
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db/prisma";
 import { NextResponse } from "next/server";
 
+// get all projects
 // GET /api/projects
 export async function GET() {
   const session = await getServerSession(authOptions);
