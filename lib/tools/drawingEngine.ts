@@ -58,6 +58,77 @@ export function drawBrushDot(
   ctx.restore();
 }
 
+/* Crop overlay drawing */
+export function drawCropOverlay(
+  ctx: CanvasRenderingContext2D,
+  rect: { x: number; y: number; width: number; height: number },
+  canvasSize: { width: number; height: number },
+) {
+  const { x, y, width, height } = rect;
+  const { width: cw, height: ch } = canvasSize;
+
+  ctx.save();
+
+  // Darken everything outside the crop rectangle
+  ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+
+  // Top region
+  ctx.fillRect(0, 0, cw, y);
+  // Bottom region
+  ctx.fillRect(0, y + height, cw, ch - y - height);
+  // Left region
+  ctx.fillRect(0, y, x, height);
+  // Right region
+  ctx.fillRect(x + width, y, cw - x - width, height);
+
+  // Crop border
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x, y, width, height);
+
+  // Rule-of-thirds grid inside the crop area
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+  ctx.lineWidth = 0.5;
+  ctx.setLineDash([]);
+
+  for (let i = 1; i < 3; i++) {
+    // Vertical thirds
+    const vx = x + (width / 3) * i;
+    ctx.beginPath();
+    ctx.moveTo(vx, y);
+    ctx.lineTo(vx, y + height);
+    ctx.stroke();
+
+    // Horizontal thirds
+    const hy = y + (height / 3) * i;
+    ctx.beginPath();
+    ctx.moveTo(x, hy);
+    ctx.lineTo(x + width, hy);
+    ctx.stroke();
+  }
+
+  // Corner handles
+  const handleSize = 6;
+  const corners = [
+    { cx: x, cy: y },
+    { cx: x + width, cy: y },
+    { cx: x, cy: y + height },
+    { cx: x + width, cy: y + height },
+  ];
+
+  ctx.fillStyle = "white";
+  corners.forEach(({ cx, cy }) => {
+    ctx.fillRect(
+      cx - handleSize / 2,
+      cy - handleSize / 2,
+      handleSize,
+      handleSize,
+    );
+  });
+
+  ctx.restore();
+}
+
 /* Draw selection overlay */
 export function drawSelectionOverlay(
   overlayCtx: CanvasRenderingContext2D,
