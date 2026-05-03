@@ -70,11 +70,23 @@ export interface BrushSettings {
 // add: selection and history
 /* Rectanglular marquee selection */
 export interface SelectionRectangle {
+  kind: "rect";
   x: number;
   y: number;
   width: number;
   height: number;
 }
+
+// add: freehand lasso selection
+export interface SelectionLasso {
+  kind: "lasso";
+  // raw polygon points in canvas coordinates
+  points: { x: number; y: number }[];
+  // prebuilt Path2D for clipping
+  path: Path2D;
+}
+
+export type Selection = SelectionRectangle | SelectionLasso;
 
 /* History */
 export interface HistorySnapshot {

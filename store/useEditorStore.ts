@@ -6,7 +6,7 @@ import {
   CanvasSize,
   Layer,
   RGBColor,
-  SelectionRectangle,
+  Selection,
   ToolName,
 } from "@/types";
 import { create } from "zustand";
@@ -31,7 +31,7 @@ interface EditorState {
   activeLayerId: string;
 
   // Selection
-  selection: SelectionRectangle | null;
+  selection: Selection | null; // update: selects rect or lasso
 
   // History
   canUndo: boolean;
@@ -54,6 +54,7 @@ interface EditorState {
 
   setCanvasSize: (size: CanvasSize) => void;
 
+  setLayers: (layers: Layer[]) => void;
   addLayer: (name?: string) => void;
   deleteLayer: (id: string) => void;
   duplicateLayer: (id: string) => void;
@@ -65,7 +66,7 @@ interface EditorState {
   moveLayerUp: (id: string) => void;
   moveLayerDown: (id: string) => void;
 
-  setSelection: (selection: SelectionRectangle | null) => void;
+  setSelection: (selection: Selection | null) => void;
   pushHistory: (label: string) => void;
   undo: () => void;
   redo: () => void;
@@ -115,6 +116,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setCanvasSize: (size) => set({ canvasSize: size }),
 
   // Layer CRUD actions
+  setLayers: (layers) => set({ layers }),
+
   addLayer: (name) => {
     const s = get();
     const layer = makeLayer(
@@ -203,6 +206,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     }),
 
   setSelection: (selection) => set({ selection: selection }),
+
   pushHistory: (label) => {
     history.push(label, get().layers);
     set({

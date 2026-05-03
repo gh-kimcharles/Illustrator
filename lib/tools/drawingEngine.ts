@@ -1,4 +1,4 @@
-import { BrushSettings, RGBColor } from "@/types";
+import { BrushSettings, RGBColor, Selection } from "@/types";
 
 /* Brush & Eraser Properties */
 export function drawBrushStroke(
@@ -122,33 +122,83 @@ export function drawCropOverlay(
 }
 
 /* Draw selection overlay */
+// update: draws the selection outline (marching ants) for both rect and lasso
+// selections on the overlay canvas
 export function drawSelectionOverlay(
   overlayCtx: CanvasRenderingContext2D,
-  selection: { x: number; y: number; width: number; height: number } | null,
+  selection: Selection | null,
 ) {
   const { width, height } = overlayCtx.canvas;
   overlayCtx.clearRect(0, 0, width, height);
   if (!selection) return;
 
   overlayCtx.save();
+
+  if (selection.kind === "rect") {
+    // marching-ants rect selection
+    _drawMarchingAntsRect(
+      overlayCtx,
+      selection.x,
+      selection.y,
+      selection.width,
+      selection.height,
+    );
+  } else {
+    // Marching-ants lasso polygon
+    _drawMarchingAntsPath(overlayCtx, selection.path);
+  }
+
+  overlayCtx.restore();
+}
+
+/**
+ * draws the live (in-progress) lasso path while the user is still dragging
+ * call this every mousemove to refresh the overlay
+ */
+export function drawLassoOverlay(
+  overlayCtx: CanvasRenderingContext2D,
+  points: { x: number; y: number }[],
+) {
+  if (points.length < 2) return;
+
+  overlayCtx.save();
+
+  overlayCtx.beginPath();
+  overlayCtx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i++) {
+    overlayCtx.lineTo(points[i].x, points[i].y);
+  }
   overlayCtx.strokeStyle = "white";
   overlayCtx.lineWidth = 1;
-  overlayCtx.setLineDash([4, 4]);
-  overlayCtx.strokeRect(
-    selection.x,
-    selection.y,
-    selection.width,
-    selection.height,
-  );
+  overlayCtx.setLineDash([]);
+  overlayCtx.stroke();
+
+  // black dashed line on top - offset to create marching-ants feel
+  overlayCtx.beginPath();
+  overlayCtx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i++) {
+    overlayCtx.lineTo(points[i].x, points[i].y);
+  }
   overlayCtx.strokeStyle = "black";
+  overlayCtx.lineWidth = 1;
   overlayCtx.setLineDash([4, 4]);
   overlayCtx.lineDashOffset = 4;
-  overlayCtx.strokeRect(
-    selection.x,
-    selection.y,
-    selection.width,
-    selection.height,
-  );
+  overlayCtx.stroke();
+
+  // small closing-line hint back to origin
+  if (points.length > 3) {
+    const last = points[points.length - 1];
+    const first = points[0];
+    overlayCtx.beginPath();
+    overlayCtx.moveTo(last.x, last.y);
+    overlayCtx.lineTo(first.x, first.y);
+    overlayCtx.strokeStyle = "rgba(255,255,255,0.35)";
+    overlayCtx.lineWidth = 1;
+    overlayCtx.setLineDash([2, 4]);
+    overlayCtx.lineDashOffset = 0;
+    overlayCtx.stroke();
+  }
+
   overlayCtx.restore();
 }
 
@@ -230,5 +280,82 @@ export function pickColor(
     };
   } catch {
     return null;
+  }
+}
+
+/**
+ * internal helpers
+ */
+function _drawMarchingAntsRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+) {
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.strokeRect(x, y, width, height);
+
+  ctx.strokeStyle = "black";
+  ctx.setLineDash([4, 4]);
+  ctx.lineDashOffset = 4;
+  ctx.strokeRect(x, y, width, height);
+}
+
+function _drawMarchingAntsPath(ctx: CanvasRenderingContext2D, path: Path2D) {
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.lineDashOffset = 0;
+  ctx.stroke(path);
+
+  ctx.strokeStyle = "black";
+  ctx.setLineDash([4, 4]);
+  ctx.lineDashOffset = 4;
+  ctx.stroke(path);
+}
+
+/*
+ * helper
+ */
+
+/**
+ * builds a Path2D from an array of polygon points and returns it
+ * the path is closed (last point connects back to first)
+ */
+export function buildLassoPath(points: { x: number; y: number }[]): Path2D {
+  const path = new Path2D();
+  if (points.length < 2) return path;
+  path.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i++) {
+    path.lineTo(points[i].x, points[i].y);
+  }
+  path.closePath();
+  return path;
+}
+
+/**
+ * applies the active selection as a clip path on a drawing context
+ * - rect selection  → clips to the rectangle
+ * - lasso selection → clips to the polygon Path2D
+ * - no selection    → no-op (draw everywhere)
+ *
+ * call ctx.save() before and ctx.restore() after drawing to reset the clip.
+ */
+export function applySelectionClip(
+  ctx: OffscreenCanvasRenderingContext2D,
+  selection: Selection | null,
+) {
+  if (!selection) return;
+
+  if (selection.kind === "rect") {
+    ctx.beginPath();
+    ctx.rect(selection.x, selection.y, selection.width, selection.height);
+    ctx.clip();
+  } else {
+    // path2D clip - browser clips to the closed lasso polygon
+    ctx.clip(selection.path);
   }
 }

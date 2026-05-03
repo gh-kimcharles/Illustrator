@@ -115,6 +115,9 @@ export function useKeyboardShortcuts() {
         // clears selection
         setSelection(null);
 
+        // clear its overlay and lasso state
+        window.dispatchEvent(new CustomEvent("editor:cancel"));
+
         // if cropping, switch back to move tool to cancel
         if (latestRef.current.activeTool === "Crop") {
           latestRef.current.setActiveTool("Move");
