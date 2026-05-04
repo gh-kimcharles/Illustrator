@@ -290,15 +290,19 @@ export const CanvasArea = () => {
         }
 
         // place new overlay at click position
-        const wrapper = displayRef.current?.parentElement;
-        if (!wrapper) return;
-        const wrapperRect = wrapper.getBoundingClientRect(); // get screen coordinates for positioning
+        // const wrapper = displayRef.current?.parentElement;
+        // if (!wrapper) return;
+        // const wrapperRect = wrapper.getBoundingClientRect(); // get screen coordinates for positioning
+
+        // update: use containerRef for screen coordinates
+        const containerRect = containerRef.current?.getBoundingClientRect();
+        if (!containerRect) return;
 
         setTextOverlay({
           canvasX: position.x,
           canvasY: position.y,
-          screenX: e.clientX - wrapperRect.left,
-          screenY: e.clientY - wrapperRect.top,
+          screenX: e.clientX - containerRect.left,
+          screenY: e.clientY - containerRect.top,
         });
 
         setTextValue("");
@@ -723,57 +727,57 @@ export const CanvasArea = () => {
             }}
           />
         </div>
-
-        {/* Text overlay */}
-        {textOverlay && (
-          <textarea
-            ref={textareaRef}
-            value={textValue}
-            onChange={(e) => setTextValue(e.target.value)}
-            onKeyDown={(e) => {
-              // Shift+Enter = newline; plain Enter = commit
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                commitText();
-              }
-              if (e.key === "Escape") {
-                setTextOverlay(null);
-                setTextValue("");
-              }
-            }}
-            onBlur={commitText}
-            // prevent canvas mouse-down from triggering while textarea is open
-            onMouseDown={(e) => e.stopPropagation()}
-            rows={1}
-            style={{
-              position: "absolute",
-              left: textOverlay.screenX,
-              top: textOverlay.screenY,
-              font: textareaFont,
-              color: `rgb(${fgColor.r},${fgColor.g},${fgColor.b})`,
-              textAlign: textSettings.align,
-              background: "transparent",
-              border: "1px dashed rgba(255,255,255,0.6)",
-              outline: "none",
-              resize: "none",
-              minWidth: "4ch",
-              minHeight: `${textSettings.fontSize * zoom * 1.4}px`,
-              padding: "2px 4px",
-              lineHeight: 1.25,
-              // auto-size width as user types - override with CSS trick
-              width: "auto",
-              whiteSpace: "pre",
-              overflow: "hidden",
-              caretColor: `rgb(${fgColor.r},${fgColor.g},${fgColor.b})`,
-              zIndex: 100,
-              // Prevent transform blurriness - textarea lives in wrapper-space,
-              // not in the scaled canvas div, so we position in screen-px and
-              // do NOT apply the zoom transform here; font-size already accounts
-              // for zoom above
-            }}
-          />
-        )}
       </div>
+
+      {/* Text overlay */}
+      {textOverlay && (
+        <textarea
+          ref={textareaRef}
+          value={textValue}
+          onChange={(e) => setTextValue(e.target.value)}
+          onKeyDown={(e) => {
+            // Shift+Enter = newline; plain Enter = commit
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              commitText();
+            }
+            if (e.key === "Escape") {
+              setTextOverlay(null);
+              setTextValue("");
+            }
+          }}
+          onBlur={commitText}
+          // prevent canvas mouse-down from triggering while textarea is open
+          onMouseDown={(e) => e.stopPropagation()}
+          rows={1}
+          style={{
+            position: "absolute",
+            left: textOverlay.screenX,
+            top: textOverlay.screenY,
+            font: textareaFont,
+            color: `rgb(${fgColor.r},${fgColor.g},${fgColor.b})`,
+            textAlign: textSettings.align,
+            background: "transparent",
+            border: "1px dashed rgba(255,255,255,0.6)",
+            outline: "none",
+            resize: "none",
+            minWidth: "4ch",
+            minHeight: `${textSettings.fontSize * zoom * 1.4}px`,
+            padding: "2px 4px",
+            lineHeight: 1.25,
+            // auto-size width as user types - override with CSS trick
+            width: "auto",
+            whiteSpace: "pre",
+            overflow: "hidden",
+            caretColor: `rgb(${fgColor.r},${fgColor.g},${fgColor.b})`,
+            zIndex: 100,
+            // Prevent transform blurriness - textarea lives in wrapper-space,
+            // not in the scaled canvas div, so we position in screen-px and
+            // do NOT apply the zoom transform here; font-size already accounts
+            // for zoom above
+          }}
+        />
+      )}
 
       {/* Cursor position */}
       <div className="absolute bottom-1.5 right-2 text-[10px] text-editor-text-disabled pointer-events-none select-none">
