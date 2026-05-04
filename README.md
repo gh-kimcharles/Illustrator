@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Illustrator
 
-## Getting Started
+> Work in progress - personal project.
 
-First, run the development server:
+A simple web-based photo editor inspired by Photoshop, built without third-party filter/image libraries.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Progress
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Phase | Description                                                      | Status      |
+| ----- | ---------------------------------------------------------------- | ----------- |
+| p1    | Shell & canvas w/ template, types initialization                 | done        |
+| p2    | Theming & UI components, core tools (move, marquee, lasso, etc.) | done        |
+| p3    | Layer manager (OffscreenCanvas)                                  | done        |
+| p4    | Adjustments & filters (pure calculation, no libraries)           | done        |
+| p4.1  | Code docs & filter tests                                         | done        |
+| p5    | PostgreSQL & Prisma with Docker (local)                          | done        |
+| p6    | Posterize, vibrance, and curves filter                           | done        |
+| p6.1  | Code docs & tests                                                | done        |
+| p7    | Tools                                                            | in progress |
+| p7.1  | Tool tests                                                       |             |
+| p8    | Deployment (Neon)                                                |             |
+| p\*   | UI polish, code review, documentation, optimization              |             |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Author
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Developed by [Kim Charles](https://github.com/gh-kimcharles).
