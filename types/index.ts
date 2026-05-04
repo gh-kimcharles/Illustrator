@@ -67,6 +67,14 @@ export interface BrushSettings {
   opacity: number; // brush transparency (solid vs transparent)
 }
 
+export interface TextSettings {
+  fontFamily: string;
+  fontSize: number; // px
+  bold: boolean;
+  italic: boolean;
+  align: CanvasTextAlign;
+}
+
 // add: selection and history
 /* Rectanglular marquee selection */
 export interface SelectionRectangle {

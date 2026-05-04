@@ -1,5 +1,7 @@
+import { TextSettings } from "./../types/index";
 import { history } from "@/lib/layers/historyManager";
 import { makeBackgroundLayer, makeLayer } from "@/lib/layers/layerManager";
+import { TextOverlay } from "@/lib/tools/textEngine";
 import {
   BlendMode,
   BrushSettings,
@@ -41,6 +43,11 @@ interface EditorState {
   zoom: number;
   showRulers: boolean;
 
+  // Text
+  textSettings: TextSettings;
+  textOverlay: TextOverlay | null;
+  textValue: string;
+
   // History
   // historyStack: HistoryEntry[];
 
@@ -77,6 +84,10 @@ interface EditorState {
   zoomFit: () => void;
   zoom100: () => void;
   toggleRulers: () => void;
+
+  setTextSettings: (patch: Partial<TextSettings>) => void;
+  setTextOverlay: (overlay: TextOverlay | null) => void;
+  setTextValue: (value: string) => void;
 }
 
 /**
@@ -103,8 +114,30 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   zoom: 1,
   showRulers: true,
 
+  textSettings: {
+    fontFamily: "Arial",
+    fontSize: 24,
+    bold: false,
+    italic: false,
+    align: "left",
+  },
+  textOverlay: null,
+  textValue: "",
+
   // Tool actions
-  setActiveTool: (tool) => set({ activeTool: tool }),
+  setActiveTool: (tool) =>
+    set((state) => {
+      const updates: Partial<EditorState> = {
+        activeTool: tool,
+      };
+
+      if (state.activeTool === "Text" && tool !== "Text") {
+        updates.textOverlay = null;
+        updates.textValue = "";
+      }
+
+      return updates;
+    }),
   setBrush: (patch) => set((s) => ({ brush: { ...s.brush, ...patch } })),
 
   // Color actions
@@ -241,4 +274,9 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   zoomFit: () => set({ zoom: 0.6 }),
   zoom100: () => set({ zoom: 1 }),
   toggleRulers: () => set((s) => ({ showRulers: !s.showRulers })),
+
+  setTextSettings: (patch) =>
+    set((s) => ({ textSettings: { ...s.textSettings, ...patch } })),
+  setTextOverlay: (overlay) => set({ textOverlay: overlay }),
+  setTextValue: (value) => set({ textValue: value }),
 }));

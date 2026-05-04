@@ -15,6 +15,7 @@ import {
 } from "@/lib/tools/drawingEngine";
 import { compositeLayers } from "@/lib/layers/layerManager";
 import { RulerH, RulerV } from "../ui";
+import { commitTextToCanvas, TextOverlay } from "@/lib/tools/textEngine";
 
 const CURSOR_MAP: Record<string, string> = {
   Move: "default",
@@ -48,11 +49,17 @@ export const CanvasArea = () => {
     setSelection,
     pushHistory,
     setCanvasSize,
+    textSettings,
+    textOverlay,
+    textValue,
+    setTextOverlay,
+    setTextValue,
   } = useEditorStore();
 
   const displayRef = useRef<HTMLCanvasElement>(null); // composited display
   const overlayRef = useRef<HTMLCanvasElement>(null); // selection dashes
   const containerRef = useRef<HTMLDivElement>(null); // outer scrollable container
+  const textareaRef = useRef<HTMLTextAreaElement>(null); // for text input focus
 
   const drawing = useRef(false);
   const lastPosition = useRef({ x: 0, y: 0 });
@@ -75,7 +82,6 @@ export const CanvasArea = () => {
     width: number;
     height: number;
   } | null>(null);
-
   const cropStartRef = useRef({ x: 0, y: 0 });
 
   // Reset crop rect when switching away from Crop tool
@@ -84,6 +90,66 @@ export const CanvasArea = () => {
   // lasso
   const [isLassoDrawing, setIsLassoDrawing] = useState(false);
   const lassoPointsRef = useRef<{ x: number; y: number }[]>([]);
+
+  // auto focus textare when it appears
+  useEffect(() => {
+    if (textOverlay) {
+      // small delay to mount the element fully
+      requestAnimationFrame(() => textareaRef.current?.focus());
+    }
+  }, [textOverlay]);
+
+  // commit text to the active layer's OffscreenCanvas
+  const commitText = useCallback(() => {
+    if (!textOverlay || !textValue.trim()) {
+      setTextOverlay(null);
+      setTextValue("");
+      return;
+    }
+
+    const layer = layers.find((l) => l.id === activeLayerId);
+    if (!layer?.canvas) {
+      setTextOverlay(null);
+      setTextValue("");
+      return;
+    }
+
+    const ctx = layer.canvas.getContext("2d");
+    if (!ctx) {
+      setTextOverlay(null);
+      setTextValue("");
+      return;
+    }
+
+    commitTextToCanvas(
+      ctx,
+      textValue,
+      textOverlay.canvasX,
+      textOverlay.canvasY,
+      textSettings,
+      fgColor,
+    );
+
+    // recomposite
+    const display = displayRef.current;
+    if (display) {
+      const dCtx = display.getContext("2d");
+      if (dCtx) compositeLayers(dCtx, layers, canvasSize);
+    }
+
+    pushHistory("Text");
+    setTextOverlay(null);
+    setTextValue("");
+  }, [
+    textOverlay,
+    textValue,
+    layers,
+    activeLayerId,
+    textSettings,
+    fgColor,
+    canvasSize,
+    pushHistory,
+  ]);
 
   // Composite when data changes
   useEffect(() => {
@@ -216,6 +282,30 @@ export const CanvasArea = () => {
         return;
       }
 
+      // text: place the inline editor
+      if (activeTool === "Text") {
+        // commit to any existing overlay first
+        if (textOverlay) {
+          commitText();
+        }
+
+        // place new overlay at click position
+        const wrapper = displayRef.current?.parentElement;
+        if (!wrapper) return;
+        const wrapperRect = wrapper.getBoundingClientRect(); // get screen coordinates for positioning
+
+        setTextOverlay({
+          canvasX: position.x,
+          canvasY: position.y,
+          screenX: e.clientX - wrapperRect.left,
+          screenY: e.clientY - wrapperRect.top,
+        });
+
+        setTextValue("");
+        drawing.current = false;
+        return;
+      }
+
       const ctx = getActiveCtx();
       if (!ctx) return;
 
@@ -285,6 +375,7 @@ export const CanvasArea = () => {
       brush,
       fgColor,
       selection,
+      textOverlay,
       getCanvasPosition,
       getActiveCtx,
       recomposite,
@@ -549,6 +640,16 @@ export const CanvasArea = () => {
 
   const rulerOffset = showRulers ? 20 : 0;
 
+  // textarea's CSS font for live preview
+  const textareaFont = [
+    textSettings.italic ? "italic" : "",
+    textSettings.bold ? "bold" : "",
+    `${textSettings.fontSize * zoom}px`,
+    textSettings.fontFamily,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div
       ref={containerRef}
@@ -622,6 +723,56 @@ export const CanvasArea = () => {
             }}
           />
         </div>
+
+        {/* Text overlay */}
+        {textOverlay && (
+          <textarea
+            ref={textareaRef}
+            value={textValue}
+            onChange={(e) => setTextValue(e.target.value)}
+            onKeyDown={(e) => {
+              // Shift+Enter = newline; plain Enter = commit
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                commitText();
+              }
+              if (e.key === "Escape") {
+                setTextOverlay(null);
+                setTextValue("");
+              }
+            }}
+            onBlur={commitText}
+            // prevent canvas mouse-down from triggering while textarea is open
+            onMouseDown={(e) => e.stopPropagation()}
+            rows={1}
+            style={{
+              position: "absolute",
+              left: textOverlay.screenX,
+              top: textOverlay.screenY,
+              font: textareaFont,
+              color: `rgb(${fgColor.r},${fgColor.g},${fgColor.b})`,
+              textAlign: textSettings.align,
+              background: "transparent",
+              border: "1px dashed rgba(255,255,255,0.6)",
+              outline: "none",
+              resize: "none",
+              minWidth: "4ch",
+              minHeight: `${textSettings.fontSize * zoom * 1.4}px`,
+              padding: "2px 4px",
+              lineHeight: 1.25,
+              // auto-size width as user types - override with CSS trick
+              width: "auto",
+              whiteSpace: "pre",
+              overflow: "hidden",
+              caretColor: `rgb(${fgColor.r},${fgColor.g},${fgColor.b})`,
+              zIndex: 100,
+              // Prevent transform blurriness - textarea lives in wrapper-space,
+              // not in the scaled canvas div, so we position in screen-px and
+              // do NOT apply the zoom transform here; font-size already accounts
+              // for zoom above
+            }}
+          />
+        )}
       </div>
 
       {/* Cursor position */}
@@ -640,6 +791,18 @@ export const CanvasArea = () => {
       {activeTool === "Lasso" && isLassoDrawing && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-editor-panel-header border border-editor-border-light text-[11px] text-editor-text px-3 py-1 pointer-events-none">
           Release to close selection · Esc to cancel
+        </div>
+      )}
+
+      {/* Text hint */}
+      {activeTool === "Text" && !textOverlay && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-editor-panel-header border border-editor-border-light text-[11px] text-editor-text px-3 py-1 pointer-events-none">
+          Click on canvas to place text
+        </div>
+      )}
+      {activeTool === "Text" && textOverlay && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-editor-panel-header border border-editor-border-light text-[11px] text-editor-text px-3 py-1 pointer-events-none">
+          Enter to commit · Shift+Enter for new line · Esc to cancel
         </div>
       )}
     </div>
