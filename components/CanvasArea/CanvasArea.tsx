@@ -237,7 +237,36 @@ export const CanvasArea = () => {
 
       if (activeTool === "Fill") {
         const rectBounds = selection?.kind === "rect" ? selection : undefined;
-        floodFill(ctx, position.x, position.y, fgColor, 32, rectBounds);
+
+        if (selection?.kind === "lasso") {
+          // fill onto a temp canvas so we can mask it
+          const tempCanvas = new OffscreenCanvas(
+            canvasSize.width,
+            canvasSize.height,
+          );
+          const tempCtx = tempCanvas.getContext("2d");
+          if (tempCtx) {
+            // copy current layer pixels
+            const srcCtx = getActiveCtx();
+            if (srcCtx) {
+              const imageData = (srcCtx.canvas as OffscreenCanvas)
+                .getContext("2d")!
+                .getImageData(0, 0, canvasSize.width, canvasSize.height);
+              tempCtx.putImageData(imageData, 0, 0);
+            }
+
+            // run flood fill on temp canvas
+            floodFill(tempCtx, position.x, position.y, fgColor, 32);
+
+            // clip to lasso polygon and draw result
+            ctx.save();
+            ctx.clip(selection.path);
+            ctx.drawImage(tempCanvas, 0, 0);
+            ctx.restore();
+          }
+        } else {
+          floodFill(ctx, position.x, position.y, fgColor, 32, rectBounds);
+        }
 
         recomposite();
       }
@@ -459,6 +488,7 @@ export const CanvasArea = () => {
 
       // lasso: apply point selection from starting point to end
       if (activeTool === "Lasso") {
+        if (!drawing.current) return;
         setIsLassoDrawing(false);
         const points = lassoPointsRef.current;
 
@@ -497,13 +527,6 @@ export const CanvasArea = () => {
     [activeTool, cropRect, commitCrop, pushHistory, setSelection],
   );
 
-  const handleMouseLeave = useCallback(
-    (e: React.MouseEvent) => {
-      handleMouseUp(e);
-    },
-    [handleMouseUp],
-  );
-
   // Wheel zoom
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {
@@ -533,7 +556,7 @@ export const CanvasArea = () => {
       style={{ background: "var(--editor-canvas-bg)", cursor }}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={(e) => handleMouseUp(e)}
       onWheel={handleWheel}
     >
       {/* Checker pattern background */}
