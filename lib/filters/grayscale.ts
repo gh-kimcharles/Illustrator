@@ -1,5 +1,6 @@
 /* Grayscale */
 
+/* Apply Grayscale */
 // this weights green more heavily because human eye is sentitive to green light.
 // produces more natural grayscale than a simple (R+G+B)/3 ave
 export function applyGrayscale(imageData: ImageData) {

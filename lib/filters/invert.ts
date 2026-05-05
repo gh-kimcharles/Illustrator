@@ -1,6 +1,7 @@
 /* Invert */
-// inverts each colour channel
 
+/* Apply Invert */
+// inverts each colour channel
 export function applyInvert(imageData: ImageData): void {
   const data = imageData.data;
 

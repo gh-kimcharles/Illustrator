@@ -1,16 +1,39 @@
 /* Guassian Blur */
-// performs a separable gaussian blur - one horizontal pass then one vertical
-// pass. This is 0(w * h * radius) instead of 0(w * h * radius^2) for a naive
-// 2D kernel, making it fast for interactive use
-// radius: 1-20 pixels
 
+// handle edge handling via clamp-to-border
+function clampCoord(v: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, v));
+}
+
+/* Kernel builder */
+function buildGaussianKernel(radius: number): number[] {
+  const size = radius * 2 + 1;
+  const sigma = radius / 3;
+  const kernel: number[] = [];
+  let sum = 0;
+
+  for (let i = 0; i < size; i++) {
+    const x = i - radius;
+    const val = Math.exp(-(x * x) / (2 * sigma * sigma)); // standard gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
+    kernel.push(val);
+    sum += val;
+  }
+
+  // normalization
+  return kernel.map((v) => v / sum);
+}
+
+/* Apply Gaussian Blur */
+// performs a separable gaussian blur - one horizontal pass then one vertical pass.
+// this is 0(w * h * radius) instead of 0(w * h * radius^2) for a naive
+// 2D kernel, making it fast for interactive use.
 export function applyGaussianBlur(imageData: ImageData, radius: number): void {
   if (radius < 1) return;
 
   const { width, height, data } = imageData;
 
   // build 1D gaussian kernel
-  const kernel = buildGaussianKernel(radius);
+  const kernel = buildGaussianKernel(radius); // radius: 1-20 pixels
   const kLen = kernel.length;
   const half = Math.floor(kLen / 2);
 
@@ -70,27 +93,4 @@ export function applyGaussianBlur(imageData: ImageData, radius: number): void {
       data[out + 3] = a;
     }
   }
-}
-
-/* Kernel builder */
-function buildGaussianKernel(radius: number): number[] {
-  const size = radius * 2 + 1;
-  const sigma = radius / 3;
-  const kernel: number[] = [];
-  let sum = 0;
-
-  for (let i = 0; i < size; i++) {
-    const x = i - radius;
-    const val = Math.exp(-(x * x) / (2 * sigma * sigma)); // standard gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
-    kernel.push(val);
-    sum += val;
-  }
-
-  // normalization
-  return kernel.map((v) => v / sum);
-}
-
-// handle edge handling via clamp-to-border
-function clampCoord(v: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, v));
 }

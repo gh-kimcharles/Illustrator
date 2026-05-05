@@ -1,13 +1,14 @@
 /* Posterize */
 // creates a flat, graphic poster-like effect bt quantising pixel values
 
-// levels: 2-16
+// clamp levels: 2-16
 //  - 2 = most dramatic
 //  - 16 - subtle
 function clamp(levels: number): number {
   return Math.max(2, Math.min(16, Math.round(levels)));
 }
 
+/* Apply Posterize */
 // reduces each colour channel to N discrete levels
 export function applyPosterize(imageData: ImageData, levels: number): void {
   const n = clamp(levels);

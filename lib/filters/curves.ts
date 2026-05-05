@@ -1,3 +1,5 @@
+/* Curves */
+
 export type CurveChannel = "rgb" | "r" | "g" | "b";
 
 export interface CurvePoint {
@@ -13,7 +15,13 @@ export interface CurveData {
   b: CurvePoint[];
 }
 
-// default identity curves - straight diagonal, no change
+// min-max value range (0-255)
+function clamp(v: number): number {
+  return Math.min(255, Math.max(0, v));
+}
+
+/* Default identity curves */
+// straight diagonal, no change
 export function defaultCurves(): CurveData {
   const identity = (): CurvePoint[] => [
     { x: 0, y: 0 },
@@ -27,7 +35,7 @@ export function defaultCurves(): CurveData {
   };
 }
 
-// Cubic Spline Interpolation
+/* Cubic Spline Interpolation */
 // a set of control points, builds a lookup table mapping every input value 0-255
 // to a smooth output value.
 
@@ -111,7 +119,7 @@ function buildSplineLut(points: CurvePoint[]): Uint8ClampedArray {
   return lut;
 }
 
-// Main Curves filter
+/* Apply Curves */
 export function applyCurves(imageData: ImageData, curves: CurveData): void {
   const data = imageData.data;
 
@@ -130,7 +138,7 @@ export function applyCurves(imageData: ImageData, curves: CurveData): void {
   }
 }
 
-// helper
+/* Helper */
 // used to skip building a LUT for unchanged channels
 export function isIdentityCurve(points: CurvePoint[]): boolean {
   if (points.length !== 2) return false;
@@ -140,8 +148,4 @@ export function isIdentityCurve(points: CurvePoint[]): boolean {
     points[1].x === 255 &&
     points[1].y === 255
   );
-}
-
-function clamp(v: number): number {
-  return Math.min(255, Math.max(0, v));
 }

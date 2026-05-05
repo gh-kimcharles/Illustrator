@@ -1,3 +1,5 @@
+/* Levels */
+
 /* LUT builder */
 // pre-computes the output for every possible 0-255 input value
 // avoids repeating the math for every pixel in the image
@@ -32,10 +34,9 @@ function buildLut(
   return lut;
 }
 
-/* Levels */
+/* Apply Levels */
 // remaps pixel values from an input range [inMin, inMax] to an output range
 // [outMin, outMax] mirrors ps levels adjustment
-
 // all values are range 0-255
 // Default (no-op): inMin = 0; inMax = 255; gamma = 1.0, outMin = 0, outMax = 255
 export function applyLevels(
