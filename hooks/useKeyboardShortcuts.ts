@@ -19,6 +19,7 @@ const KEY_TOOL_MAP: Record<string, ToolName> = {
   h: "Hand",
 };
 
+/* Keyboard Shortcuts Hook */
 export function useKeyboardShortcuts() {
   const {
     setActiveTool,
@@ -34,7 +35,7 @@ export function useKeyboardShortcuts() {
     activeTool,
   } = useEditorStore();
 
-  // Ref holds the latest values so the stable event listener always
+  // ref holds the latest values so the stable event listener always
   // reads current state without needing to be re-registered
   const latestRef = useRef({
     undo,
@@ -110,9 +111,8 @@ export function useKeyboardShortcuts() {
         setActiveTool(tool);
       }
 
-      // escape
+      // escape key
       if (e.key === "Escape") {
-        // clears selection
         setSelection(null);
 
         // clear its overlay and lasso state
