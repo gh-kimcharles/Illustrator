@@ -32,11 +32,10 @@ export type BlendMode =
   | "color"
   | "luminosity";
 
-/* RGB colors (red, green, blue) */
-export interface RGBColor {
-  r: number;
-  g: number;
-  b: number;
+/* Canvas properties */
+export interface CanvasSize {
+  width: number;
+  height: number;
 }
 
 /* Layer properties */
@@ -48,25 +47,27 @@ export interface Layer {
   opacity: number;
   blendMode: BlendMode;
 
-  // add: each layer will have own offscreen canvas
+  // each layer will have their own offscreen canvas
   canvas: OffscreenCanvas | null;
   offsetX: number;
   offsetY: number;
 }
 
-/* Canvas properties */
-export interface CanvasSize {
-  width: number;
-  height: number;
+/* RGB colors */
+export interface RGBColor {
+  r: number; // red
+  g: number; // green
+  b: number; // blue
 }
 
 /* Brush settings */
 export interface BrushSettings {
   size: number;
-  hardness: number; // brush sharpness (crisp vs soft)
-  opacity: number; // brush transparency (solid vs transparent)
+  hardness: number; // sharpness; crisp vs soft
+  opacity: number; // transparency; solid vs transparent
 }
 
+/* Text settings */
 export interface TextSettings {
   fontFamily: string;
   fontSize: number; // px
@@ -85,7 +86,8 @@ export interface TextOverlay {
   screenY: number;
 }
 
-// add: selection and history
+export type Selection = SelectionRectangle | SelectionLasso;
+
 /* Rectanglular marquee selection */
 export interface SelectionRectangle {
   kind: "rect";
@@ -104,11 +106,9 @@ export interface SelectionLasso {
   path: Path2D;
 }
 
-export type Selection = SelectionRectangle | SelectionLasso;
-
 /* History */
 export interface HistorySnapshot {
   label: string;
-  layerData: Map<string, ImageData>; // layerId -> pixels
+  layerData: Map<string, ImageData>; // layerId in pixels
   layerOrder: string[]; // order layer ids
 }
