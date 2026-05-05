@@ -1,5 +1,11 @@
-/* Brightness / Contrast Filter */
+/* Brightness / Contrast */
 
+// ensure pixel channel remain in the RGB range
+function clamp(value: number): number {
+  return Math.min(255, Math.max(0, Math.round(value))); // 0 >= value <= 255
+}
+
+/* Apply Brightness / Contrast */
 // applies brightness and contract adjustments to ImageData
 // brightness: -100 to +100 (0 = no change)
 // contrast: -100 to +100 (0 = no change)
@@ -25,9 +31,4 @@ export function applyBrightnessContrast(
     data[i + 2] = clamp(factor * (data[i + 2] + brightnessOffset - 128) + 128);
     // alpha untouched
   }
-}
-
-// ensure pixel channel remain in the RGB range
-function clamp(value: number): number {
-  return Math.min(255, Math.max(0, Math.round(value))); // 0 >= value <= 255
 }

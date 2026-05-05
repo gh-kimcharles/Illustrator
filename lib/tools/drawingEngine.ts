@@ -1,6 +1,6 @@
 import { BrushSettings, RGBColor, Selection, TextSettings } from "@/types";
 
-/* Brush & Eraser Properties */
+/* Brush & Eraser Strokes */
 export function drawBrushStroke(
   ctx: OffscreenCanvasRenderingContext2D,
   fromX: number,
@@ -9,13 +9,13 @@ export function drawBrushStroke(
   toY: number,
   settings: BrushSettings,
   color: RGBColor,
-  isEraser: boolean, // allow eraser brush (not final)
+  isEraser: boolean,
 ) {
   ctx.save();
 
   if (isEraser) {
     ctx.globalCompositeOperation = "destination-out";
-    ctx.strokeStyle = "rgba(0,0,0,1)"; // removes color
+    ctx.strokeStyle = "rgba(0,0,0,1)";
   } else {
     ctx.globalCompositeOperation = "source-over";
     ctx.strokeStyle = `rgba(${color.r},${color.g},${color.b},${settings.opacity / 100})`;
@@ -33,6 +33,7 @@ export function drawBrushStroke(
   ctx.restore();
 }
 
+/* Brush Dot */
 export function drawBrushDot(
   ctx: OffscreenCanvasRenderingContext2D,
   x: number,
@@ -45,7 +46,7 @@ export function drawBrushDot(
 
   if (isEraser) {
     ctx.globalCompositeOperation = "destination-out";
-    ctx.fillStyle = "rgba(0,0,0,1)"; // removes color
+    ctx.fillStyle = "rgba(0,0,0,1)";
   } else {
     ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${settings.opacity / 100})`;
@@ -58,7 +59,7 @@ export function drawBrushDot(
   ctx.restore();
 }
 
-/* Crop overlay drawing */
+/* Crop Overlay Drawing */
 export function drawCropOverlay(
   ctx: CanvasRenderingContext2D,
   rect: { x: number; y: number; width: number; height: number },
@@ -121,7 +122,7 @@ export function drawCropOverlay(
   ctx.restore();
 }
 
-/* Draw selection overlay */
+/* Draw Selection Overlay */
 // update: draws the selection outline (marching ants) for both rect and lasso
 // selections on the overlay canvas
 export function drawSelectionOverlay(
@@ -153,10 +154,9 @@ export function drawSelectionOverlay(
   overlayCtx.restore();
 }
 
-/**
- * draws the live (in-progress) lasso path while the user is still dragging
- * call this every mousemove to refresh the overlay
- */
+/* Draw Lasso Overlay */
+// draws the live (in-progress) lasso path while the user is still dragging
+// call this every mousemove to refresh the overlay
 export function drawLassoOverlay(
   overlayCtx: CanvasRenderingContext2D,
   points: { x: number; y: number }[],
@@ -361,9 +361,7 @@ export function drawTextOverlay(
   ctx.restore();
 }
 
-/**
- * internal helpers
- */
+/* Internal Helpers */
 export function drawMarchingAntsRect(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -405,14 +403,11 @@ export function drawMarchingAntsPath(
   ctx.restore();
 }
 
-/*
- * helper
- */
+/* Helper*/
 
-/**
- * builds a Path2D from an array of polygon points and returns it
- * the path is closed (last point connects back to first)
- */
+/* Build Lasso Path */
+// builds a Path2D from an array of polygon points and returns it
+// the path is closed (last point connects back to first)
 export function buildLassoPath(points: { x: number; y: number }[]): Path2D {
   const path = new Path2D();
   if (points.length < 2) return path;
@@ -424,13 +419,14 @@ export function buildLassoPath(points: { x: number; y: number }[]): Path2D {
   return path;
 }
 
+/* Apply Selection Clip */
 /**
  * applies the active selection as a clip path on a drawing context
  * - rect selection  → clips to the rectangle
  * - lasso selection → clips to the polygon Path2D
  * - no selection    → no-op (draw everywhere)
  *
- * call ctx.save() before and ctx.restore() after drawing to reset the clip.
+ * call ctx.save() before and ctx.restore() after drawing to reset the clip
  */
 export function applySelectionClip(
   ctx: OffscreenCanvasRenderingContext2D,

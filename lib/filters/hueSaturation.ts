@@ -1,8 +1,14 @@
 import { hslToRgb, rgbToHsl } from "@/utils/color";
 
 /* Hue / Saturation */
-// convert each pixel RGB -> HSL, adjusts, converts back to RGB.
 
+// ensure values ranges on normalization (0-1)
+function clamp01(v: number): number {
+  return Math.min(1, Math.max(0, v));
+}
+
+/* Apply Hue / Saturation */
+// convert each pixel RGB -> HSL, adjusts, converts back to RGB.
 // hue: -180 to +180 (degress shift)
 // saturation: -100 to +100 (0 = no change)
 // lightness: -100 to +100 (0 = no change)
@@ -40,9 +46,4 @@ export function applyHueSaturation(
     data[i + 2] = Math.round(nb * 255);
     // Alpha untouched
   }
-}
-
-// ensure values ranges on normalization (0-1)
-function clamp01(v: number): number {
-  return Math.min(1, Math.max(0, v));
 }

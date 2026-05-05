@@ -1,13 +1,19 @@
 import { applyGaussianBlur } from "./blur";
 
+/* Sharpen */
+
+// ensure pixel channel remain in the RGB range
+function clamp(v: number): number {
+  return Math.min(255, Math.max(0, Math.round(v))); // 0 >= value <= 255
+}
+
 /* Sharpen (unsharp mask) */
 // classic unsharp mask algorithm:
-// create a blurred copy of the image
-// subtract it from the original to get the "detail" layer
-// add the detail layer back sscaled by 'amount'
+//    create a blurred copy of the image
+//    subtract it from the original to get the "detail" layer
+//    add the detail layer back sscaled by 'amount'
 // amount: 0-200 (100 = standard sharpen)
 // radius: 1-10 (blur radius for the mask)
-
 export function applySharpen(
   imageData: ImageData,
   amount: number,
@@ -33,9 +39,4 @@ export function applySharpen(
     );
     // alpha untouched
   }
-}
-
-// ensure pixel channel remain in the RGB range
-function clamp(v: number): number {
-  return Math.min(255, Math.max(0, Math.round(v))); // 0 >= value <= 255
 }

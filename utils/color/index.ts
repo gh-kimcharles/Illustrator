@@ -1,5 +1,8 @@
 import { RGBColor } from "@/types";
 
+/* Color Convertion Utils */
+
+// RGB to Hex
 export function rgbToHex({ r, g, b }: RGBColor): string {
   return ((1 << 24) + (r << 16) + (g << 8) + b)
     .toString(16)
@@ -7,11 +10,12 @@ export function rgbToHex({ r, g, b }: RGBColor): string {
     .toUpperCase();
 }
 
+// Hex to RGB
 export function hexToRgb(hex: string): RGBColor | null {
   const clean = hex.replace("#", "");
 
-  // Validate hex value
   if (clean.length !== 6) return null;
+
   return {
     r: parseInt(clean.slice(0, 2), 16),
     g: parseInt(clean.slice(2, 4), 16),
@@ -19,6 +23,7 @@ export function hexToRgb(hex: string): RGBColor | null {
   };
 }
 
+// RGB to CSS string
 export function rgbToCss({ r, g, b }: RGBColor): string {
   return `rgb(${r},${g},${b})`;
 }
@@ -31,7 +36,7 @@ export function rgbToHsl(
   b: number,
 ): [number, number, number] {
   const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b); // fix: .max to .min bug
+  const min = Math.min(r, g, b);
   const diff = max - min;
 
   let h = 0;
@@ -39,9 +44,8 @@ export function rgbToHsl(
   const l = (max + min) / 2;
 
   if (diff !== 0) {
-    // guard to ensure s stays 0 when r === g === b
+    // guard: to ensure s stays 0 when r === g === b
     s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
-
     switch (max) {
       case r:
         h = ((g - b) / diff + (g < b ? 6 : 0)) / 6;

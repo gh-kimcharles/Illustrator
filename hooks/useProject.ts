@@ -4,7 +4,7 @@ import { makeLayer } from "@/lib/layers/layerManager";
 import { useEditorStore } from "@/store/useEditorStore";
 import { useCallback, useRef } from "react";
 
-// serialise
+/* Serialise Project */
 // convert each layer's OffscreenCanvas to a base64 PNG string
 async function serialiseProject() {
   const { layers, canvasSize, activeLayerId } = useEditorStore.getState();
@@ -40,7 +40,7 @@ async function serialiseProject() {
   };
 }
 
-// deserialise
+/* Deserialise Project */
 // reconstructs OffscreenCanvas instances from base64 PNG strings
 async function deserialiseProject(data: ReturnType<typeof JSON.parse>) {
   const { canvasSize, layers: rawLayers, activeLayerId } = data;
@@ -74,26 +74,7 @@ async function deserialiseProject(data: ReturnType<typeof JSON.parse>) {
   return { canvasSize, layers, activeLayerId };
 }
 
-// helpers
-function blobToBase64(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-}
-
-function base64ToImage(base64: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = base64;
-  });
-}
-
-// generate thumbnail
+/* Generate Thumbnail */
 // takes a small screenshot of the display canvas for the project card
 function generateThumbnail(): string | null {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -111,7 +92,7 @@ function generateThumbnail(): string | null {
   return thumb.toDataURL("image/jpeg", 0.7);
 }
 
-// hook
+/* Project Management Hook */
 export function useProject() {
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -189,4 +170,23 @@ export function useProject() {
   );
 
   return { saveProject, loadProject, triggerAutoSave };
+}
+
+/* Helper */
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+function base64ToImage(base64: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = base64;
+  });
 }

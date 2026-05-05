@@ -1,6 +1,7 @@
 import { RGBColor, TextSettings } from "@/types";
 
-/* Renders a multi-line text string onto an OffscreenCanvas context */
+/* Commit Text to Canvas */
+// renders a multi-line text string onto an OffscreenCanvas context
 export function commitTextToCanvas(
   ctx: OffscreenCanvasRenderingContext2D,
   text: string,

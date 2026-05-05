@@ -12,6 +12,7 @@ function clamp01(v: number): number {
   return Math.min(1, Math.max(0, v));
 }
 
+/* Apply Vibrance */
 // dull colours become vivid, already-vivid colours are protected from over-saturation
 // pixels with low saturation get stronger boost
 // pixels with near full saturation are left mostly alone
