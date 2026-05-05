@@ -16,8 +16,8 @@ A simple web-based photo editor inspired by Photoshop, built without third-party
 | p5    | PostgreSQL & Prisma with Docker (local)                          | done        |
 | p6    | Posterize, vibrance, and curves filter                           | done        |
 | p6.1  | Code docs & tests                                                | done        |
-| p7    | Tools                                                            | in progress |
-| p7.1  | Tool tests                                                       |             |
+| p7    | Tools                                                            | done        |
+| p7.1  | Tool tests                                                       | in progress |
 | p8    | Deployment (Neon)                                                |             |
 | p\*   | UI polish, code review, documentation, optimization              |             |
 
