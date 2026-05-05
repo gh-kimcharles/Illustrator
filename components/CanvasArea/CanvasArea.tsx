@@ -91,6 +91,20 @@ export const CanvasArea = () => {
   const [isLassoDrawing, setIsLassoDrawing] = useState(false);
   const lassoPointsRef = useRef<{ x: number; y: number }[]>([]);
 
+  // zoom
+  const [altHeld, setAltHeld] = useState(false);
+
+  // check if alt is held
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => setAltHeld(e.altKey);
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("keyup", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("keyup", onKey);
+    };
+  });
+
   // auto focus textare when it appears
   useEffect(() => {
     if (textOverlay) {
@@ -148,6 +162,8 @@ export const CanvasArea = () => {
     textSettings,
     fgColor,
     canvasSize,
+    setTextOverlay,
+    setTextValue,
     pushHistory,
   ]);
 
@@ -373,6 +389,32 @@ export const CanvasArea = () => {
         const color = pickColor(dCtx, position.x, position.y);
         if (color) setFgColor(color);
       }
+
+      if (activeTool === "Zoom") {
+        const oldZoom = zoom;
+        const newZoom = e.altKey
+          ? Math.max(oldZoom / 1.25, 0.05)
+          : Math.min(oldZoom * 1.25, 16);
+
+        // position of click relative to the container center
+        const container = containerRef.current;
+        if (!container) return;
+
+        const rect = container.getBoundingClientRect();
+        const cx = e.clientX - rect.left - rect.width / 2;
+        const cy = e.clientY - rect.top - rect.height / 2;
+
+        // shift pan so the point under cursor stays fixed
+        const scale = newZoom / oldZoom;
+        setPanOffset((prev) => ({
+          x: cx + (prev.x - cx) * scale,
+          y: cy + (prev.y - cy) * scale,
+        }));
+
+        setZoom(newZoom);
+        drawing.current = false;
+        return;
+      }
     },
     [
       activeTool,
@@ -380,6 +422,12 @@ export const CanvasArea = () => {
       fgColor,
       selection,
       textOverlay,
+      canvasSize,
+      zoom,
+      commitText,
+      setTextOverlay,
+      setTextValue,
+      setZoom,
       getCanvasPosition,
       getActiveCtx,
       recomposite,
@@ -640,7 +688,11 @@ export const CanvasArea = () => {
       ? isPanning
         ? "grabbing"
         : "grab"
-      : CURSOR_MAP[activeTool] || "crosshair";
+      : activeTool === "Zoom"
+        ? altHeld
+          ? "zoom-out"
+          : "zoom-in"
+        : CURSOR_MAP[activeTool] || "crosshair";
 
   const rulerOffset = showRulers ? 20 : 0;
 
