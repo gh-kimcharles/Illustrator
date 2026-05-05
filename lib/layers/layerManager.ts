@@ -1,5 +1,6 @@
 import { CanvasSize, Layer } from "@/types";
 
+/* Create layer */
 export function makeLayer(
   name: string,
   size: CanvasSize,
@@ -24,7 +25,7 @@ export function makeLayer(
 }
 
 /* Background */
-// Background layer is white-fileed and locked by default
+// background layer is white-filled and locked by default
 export function makeBackgroundLayer(size: CanvasSize): Layer {
   const layer = makeLayer("Background", size, true);
   if (layer.canvas) {
@@ -39,8 +40,7 @@ export function makeBackgroundLayer(size: CanvasSize): Layer {
 }
 
 /* Compositor */
-// Merge all visible layer on the canvas (bottom to top)
-// Called after every event
+// merge all visible layer on the canvas (bottom to top); called after every event
 export function compositeLayers(
   displayCtx: CanvasRenderingContext2D,
   layers: Layer[],
@@ -63,7 +63,7 @@ export function compositeLayers(
 }
 
 /* Snapshot */
-// Captures the current pixel state of every layer as image data.
+// captures the current pixel state of every layer as image data
 // update: wrapping the imageData in a new Uint8ClampedArray copy so snapshots aren't sharing the same pixel buffer
 export function snapshotLayers(layers: Layer[]): Map<string, ImageData> {
   const map = new Map<string, ImageData>();
@@ -90,7 +90,7 @@ export function snapshotLayers(layers: Layer[]): Map<string, ImageData> {
 }
 
 /* Restore snapshot (from undo/redo) */
-// Writes ImageData back to each layer's OffscreenCanvas.
+// writes ImageData back to each layer's OffscreenCanvas
 export function restoreSnapshot(
   layers: Layer[],
   snapshot: Map<string, ImageData>,
@@ -105,7 +105,7 @@ export function restoreSnapshot(
 }
 
 /* Resize */
-// Creates new OffscreenCanvas size, copying old content
+// creates new OffscreenCanvas size, copying old content
 export function resizeLayerCanvas(
   layer: Layer,
   newSize: CanvasSize,
