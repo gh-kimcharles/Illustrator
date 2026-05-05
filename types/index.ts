@@ -75,6 +75,16 @@ export interface TextSettings {
   align: CanvasTextAlign;
 }
 
+export interface TextOverlay {
+  // canvas space coordinates where the user clicked
+  canvasX: number;
+  canvasY: number;
+
+  // screen space position for the <textarea> - for zoom and pan
+  screenX: number;
+  screenY: number;
+}
+
 // add: selection and history
 /* Rectanglular marquee selection */
 export interface SelectionRectangle {

@@ -12,10 +12,11 @@ import {
   applySelectionClip,
   drawLassoOverlay,
   buildLassoPath,
+  drawTextOverlay,
 } from "@/lib/tools/drawingEngine";
 import { compositeLayers } from "@/lib/layers/layerManager";
 import { RulerH, RulerV } from "../ui";
-import { commitTextToCanvas, TextOverlay } from "@/lib/tools/textEngine";
+import { commitTextToCanvas } from "@/lib/tools/textEngine";
 
 const CURSOR_MAP: Record<string, string> = {
   Move: "default",
@@ -84,6 +85,12 @@ export const CanvasArea = () => {
   } | null>(null);
   const cropStartRef = useRef({ x: 0, y: 0 });
 
+  // marching ants animation offset for text overlay
+  const dashOffsetRef = useRef(0);
+  const animFrameRef = useRef<number>(0);
+
+  const selectionAnimFrameRef = useRef<number>(0);
+
   // Reset crop rect when switching away from Crop tool
   const effectiveCropRect = activeTool === "Crop" ? cropRect : null;
 
@@ -103,7 +110,7 @@ export const CanvasArea = () => {
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("keyup", onKey);
     };
-  });
+  }, []);
 
   // auto focus textare when it appears
   useEffect(() => {
@@ -112,6 +119,77 @@ export const CanvasArea = () => {
       requestAnimationFrame(() => textareaRef.current?.focus());
     }
   }, [textOverlay]);
+
+  useEffect(() => {
+    if (!textOverlay) {
+      cancelAnimationFrame(animFrameRef.current);
+      return;
+    }
+
+    const animate = () => {
+      dashOffsetRef.current = (dashOffsetRef.current - 0.5) % 8;
+
+      const overlay = overlayRef.current;
+      if (overlay) {
+        const ctx = overlay.getContext("2d");
+        if (ctx) {
+          ctx.clearRect(0, 0, overlay.width, overlay.height);
+          drawTextOverlay(
+            ctx,
+            textOverlay.canvasX,
+            textOverlay.canvasY,
+            textValue, // pass live textValue so box resizes as user types
+            textSettings,
+            dashOffsetRef.current,
+          );
+        }
+      }
+
+      animFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animFrameRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animFrameRef.current);
+  }, [textOverlay, textValue, textSettings]); // re-run when text changes to resize box
+
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+
+    // nothing to animate — clear and stop
+    if (!selection && !isLassoDrawing && activeTool !== "Marquee") {
+      cancelAnimationFrame(selectionAnimFrameRef.current);
+      const ctx = overlay.getContext("2d");
+      ctx?.clearRect(0, 0, overlay.width, overlay.height);
+
+      // still draw crop overlay if needed (crop is static, no ants)
+      if (effectiveCropRect && activeTool === "Crop") {
+        const ctx2 = overlay.getContext("2d");
+        if (ctx2) drawCropOverlay(ctx2, effectiveCropRect, canvasSize);
+      }
+      return;
+    }
+
+    const animate = () => {
+      dashOffsetRef.current = (dashOffsetRef.current - 0.5) % 8;
+
+      const ctx = overlay.getContext("2d");
+      if (!ctx) return;
+
+      ctx.clearRect(0, 0, overlay.width, overlay.height);
+
+      if (selection) {
+        drawSelectionOverlay(ctx, selection, dashOffsetRef.current);
+      } else if (isLassoDrawing) {
+        drawLassoOverlay(ctx, lassoPointsRef.current, dashOffsetRef.current);
+      }
+
+      selectionAnimFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    selectionAnimFrameRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(selectionAnimFrameRef.current);
+  }, [selection, isLassoDrawing, activeTool, effectiveCropRect, canvasSize]);
 
   // commit text to the active layer's OffscreenCanvas
   const commitText = useCallback(() => {
@@ -177,32 +255,13 @@ export const CanvasArea = () => {
     compositeLayers(ctx, layers, canvasSize);
   }, [layers, canvasSize]);
 
-  // Redraw selection / crop overlay
-  useEffect(() => {
-    const overlay = overlayRef.current;
-    if (!overlay) return;
-    const ctx = overlay.getContext("2d");
-    if (!ctx) return;
-
-    ctx.clearRect(0, 0, overlay.width, overlay.height);
-
-    // update: now handles selection and crop tool
-    if (selection) {
-      drawSelectionOverlay(ctx, selection);
-    }
-
-    // draw crop rectangle if actively cropping
-    if (effectiveCropRect && activeTool === "Crop") {
-      drawCropOverlay(ctx, effectiveCropRect, canvasSize);
-    }
-  }, [selection, effectiveCropRect, activeTool, canvasSize]);
-
   // check for existing lasso and cancel / clear
   useEffect(() => {
     const handleCancel = () => {
       // Clear the in-progress lasso
       lassoPointsRef.current = [];
       setIsLassoDrawing(false);
+      cancelAnimationFrame(selectionAnimFrameRef.current);
 
       // Clear the overlay canvas
       const overlay = overlayRef.current;
@@ -473,16 +532,6 @@ export const CanvasArea = () => {
       if (activeTool === "Lasso") {
         // append point
         lassoPointsRef.current.push(position);
-
-        // redraw the overlay with the growing path
-        const overlay = overlayRef.current;
-        if (overlay) {
-          const ctx = overlay.getContext("2d");
-          if (ctx) {
-            ctx.clearRect(0, 0, overlay.width, overlay.height);
-            drawLassoOverlay(ctx, lassoPointsRef.current);
-          }
-        }
 
         return;
       }

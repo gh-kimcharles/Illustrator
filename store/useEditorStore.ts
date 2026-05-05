@@ -1,7 +1,7 @@
 import { TextSettings } from "./../types/index";
 import { history } from "@/lib/layers/historyManager";
 import { makeBackgroundLayer, makeLayer } from "@/lib/layers/layerManager";
-import { TextOverlay } from "@/lib/tools/textEngine";
+import { TextOverlay } from "./../types/index";
 import {
   BlendMode,
   BrushSettings,

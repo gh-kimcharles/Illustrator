@@ -1,4 +1,4 @@
-import { BrushSettings, RGBColor, Selection } from "@/types";
+import { BrushSettings, RGBColor, Selection, TextSettings } from "@/types";
 
 /* Brush & Eraser Properties */
 export function drawBrushStroke(
@@ -127,6 +127,7 @@ export function drawCropOverlay(
 export function drawSelectionOverlay(
   overlayCtx: CanvasRenderingContext2D,
   selection: Selection | null,
+  dashOffset: number = 0,
 ) {
   const { width, height } = overlayCtx.canvas;
   overlayCtx.clearRect(0, 0, width, height);
@@ -136,16 +137,17 @@ export function drawSelectionOverlay(
 
   if (selection.kind === "rect") {
     // marching-ants rect selection
-    _drawMarchingAntsRect(
+    drawMarchingAntsRect(
       overlayCtx,
       selection.x,
       selection.y,
       selection.width,
       selection.height,
+      dashOffset,
     );
   } else {
     // Marching-ants lasso polygon
-    _drawMarchingAntsPath(overlayCtx, selection.path);
+    drawMarchingAntsPath(overlayCtx, selection.path, dashOffset);
   }
 
   overlayCtx.restore();
@@ -158,11 +160,13 @@ export function drawSelectionOverlay(
 export function drawLassoOverlay(
   overlayCtx: CanvasRenderingContext2D,
   points: { x: number; y: number }[],
+  dashOffset: number = 0,
 ) {
   if (points.length < 2) return;
 
   overlayCtx.save();
 
+  // white base
   overlayCtx.beginPath();
   overlayCtx.moveTo(points[0].x, points[0].y);
   for (let i = 1; i < points.length; i++) {
@@ -170,10 +174,11 @@ export function drawLassoOverlay(
   }
   overlayCtx.strokeStyle = "white";
   overlayCtx.lineWidth = 1;
-  overlayCtx.setLineDash([]);
+  overlayCtx.setLineDash([4, 4]);
+  overlayCtx.lineDashOffset = dashOffset;
   overlayCtx.stroke();
 
-  // black dashed line on top - offset to create marching-ants feel
+  // black offset on top
   overlayCtx.beginPath();
   overlayCtx.moveTo(points[0].x, points[0].y);
   for (let i = 1; i < points.length; i++) {
@@ -182,10 +187,10 @@ export function drawLassoOverlay(
   overlayCtx.strokeStyle = "black";
   overlayCtx.lineWidth = 1;
   overlayCtx.setLineDash([4, 4]);
-  overlayCtx.lineDashOffset = 4;
+  overlayCtx.lineDashOffset = dashOffset + 4;
   overlayCtx.stroke();
 
-  // small closing-line hint back to origin
+  // faint closing-line hint
   if (points.length > 3) {
     const last = points[points.length - 1];
     const first = points[0];
@@ -283,38 +288,121 @@ export function pickColor(
   }
 }
 
+/* Text Overlay */
+export function drawTextOverlay(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  text: string,
+  settings: TextSettings,
+  dashOffset: number = 0,
+) {
+  ctx.save();
+
+  // match the font exactly as commitTextToCanvas does
+  const fontStyle = [
+    settings.italic ? "italic" : "",
+    settings.bold ? "bold" : "",
+    `${settings.fontSize}px`,
+    settings.fontFamily,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  ctx.font = fontStyle;
+
+  const lineHeight = settings.fontSize * 1.2;
+  const lines = text ? text.split("\n") : [""];
+
+  const measuredWidth = Math.max(
+    ...lines.map((line) => ctx.measureText(line || " ").width),
+    ctx.measureText("M").width * 4, // minimum width even when empty
+  );
+
+  const totalHeight = lines.length * lineHeight;
+
+  const PAD = 4; // padding around the text box
+  const rx = x - PAD;
+  const ry = y - PAD;
+  const rw = measuredWidth + PAD * 2;
+  const rh = totalHeight + PAD * 2;
+
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.lineDashOffset = dashOffset;
+  ctx.strokeRect(rx, ry, rw, rh);
+
+  ctx.strokeStyle = "black";
+  ctx.setLineDash([4, 4]);
+  ctx.lineDashOffset = dashOffset + 4;
+  ctx.strokeRect(rx, ry, rw, rh);
+
+  const TICK = 5;
+  ctx.setLineDash([]);
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(x - TICK, y);
+  ctx.lineTo(x + TICK, y);
+  ctx.moveTo(x, y - TICK);
+  ctx.lineTo(x, y + TICK);
+  ctx.stroke();
+
+  ctx.strokeStyle = "rgba(0,0,0,0.6)";
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.moveTo(x - TICK, y);
+  ctx.lineTo(x + TICK, y);
+  ctx.moveTo(x, y - TICK);
+  ctx.lineTo(x, y + TICK);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
 /**
  * internal helpers
  */
-function _drawMarchingAntsRect(
+export function drawMarchingAntsRect(
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
   width: number,
   height: number,
+  dashOffset: number = 0,
 ) {
+  ctx.save();
   ctx.strokeStyle = "white";
   ctx.lineWidth = 1;
   ctx.setLineDash([4, 4]);
+  ctx.lineDashOffset = dashOffset;
   ctx.strokeRect(x, y, width, height);
 
   ctx.strokeStyle = "black";
   ctx.setLineDash([4, 4]);
-  ctx.lineDashOffset = 4;
+  ctx.lineDashOffset = dashOffset + 4;
   ctx.strokeRect(x, y, width, height);
+  ctx.restore();
 }
 
-function _drawMarchingAntsPath(ctx: CanvasRenderingContext2D, path: Path2D) {
+export function drawMarchingAntsPath(
+  ctx: CanvasRenderingContext2D,
+  path: Path2D,
+  dashOffset: number = 0,
+) {
+  ctx.save();
   ctx.strokeStyle = "white";
   ctx.lineWidth = 1;
   ctx.setLineDash([4, 4]);
-  ctx.lineDashOffset = 0;
+  ctx.lineDashOffset = dashOffset;
   ctx.stroke(path);
 
   ctx.strokeStyle = "black";
   ctx.setLineDash([4, 4]);
-  ctx.lineDashOffset = 4;
+  ctx.lineDashOffset = dashOffset + 4;
   ctx.stroke(path);
+  ctx.restore();
 }
 
 /*
