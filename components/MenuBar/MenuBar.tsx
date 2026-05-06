@@ -210,7 +210,7 @@ const MenuBar = ({
     setOpenMenu(null);
   }
 
-  // Close on outside click
+  // close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {

@@ -9,11 +9,9 @@ interface AdjustmentModalProps {
   title: string;
   onCommit: () => void;
   onCancel: () => void;
-  // parent renders the sliders as children
-  // parent can only apply filters on top of a copy
   children: (preview: () => void) => React.ReactNode;
   onPreview: (savedData: ImageData) => void;
-  autoPreview?: boolean; // add: autoPreview will populate savedDataRef for Invert and Grayscale filters
+  autoPreview?: boolean;
   className?: string;
 }
 

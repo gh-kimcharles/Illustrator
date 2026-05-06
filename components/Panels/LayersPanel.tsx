@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
 import type { BlendMode } from "@/types";
 import { IconButton, Panel, Select, Slider } from "@/components/ui";

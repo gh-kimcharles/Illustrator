@@ -1,11 +1,11 @@
+import { useRef, useState } from "react";
+import { useEditorStore } from "@/store/useEditorStore";
 import {
   applyCurves,
   CurveData,
   CurvePoint,
   defaultCurves,
 } from "@/lib/filters/curves";
-import { useEditorStore } from "@/store/useEditorStore";
-import { useRef, useState } from "react";
 import { CurveGraph } from "./CurveGraph";
 import { AdjustmentModal } from "./AdjustmentModal";
 
@@ -23,8 +23,6 @@ export function Curves({ onClose }: { onClose: () => void }) {
   // each channel has its own set of control points
   const [curves, setCurves] = useState<CurveData>(defaultCurves());
   const [activeChannel, setActiveChannel] = useState<keyof CurveData>("rgb");
-
-  // ref holds the latest curves object synchronously
   const curvesRef = useRef(defaultCurves());
 
   // update a single channels' points

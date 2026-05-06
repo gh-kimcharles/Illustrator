@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/utils";
 import { useEffect } from "react";
+import { cn } from "@/utils";
 
 interface DialogProps {
   title: string;

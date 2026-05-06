@@ -10,8 +10,6 @@ export const Posterize = ({ onClose }: { onClose: () => void }) => {
   const { pushHistory } = useEditorStore();
 
   const [levels, setLevels] = useState(4);
-
-  // add: refs to hold latest values synchronously
   const levelsRef = useRef(4);
 
   return (
