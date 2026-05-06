@@ -22,7 +22,6 @@ export const AdjustmentModal = ({
   children,
   onPreview,
   autoPreview = false,
-  className,
 }: AdjustmentModalProps) => {
   const { layers, activeLayerId, canvasSize } = useEditorStore();
 

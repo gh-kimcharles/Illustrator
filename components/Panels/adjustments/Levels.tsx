@@ -19,7 +19,6 @@ export const Levels = ({ onClose }: Props) => {
   const [outMin, setOutMin] = useState(0);
   const [outMax, setOutMax] = useState(255);
 
-  // add: refs to hold latest values synchronously
   const inMinRef = useRef(0);
   const inMaxRef = useRef(255);
   const gammaRef = useRef(100);

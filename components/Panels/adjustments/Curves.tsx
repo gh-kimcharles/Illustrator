@@ -9,7 +9,7 @@ import {
 import { CurveGraph } from "./CurveGraph";
 import { AdjustmentModal } from "./AdjustmentModal";
 
-// channel tabl definitions
+// channel table definitions
 const CHANNELS: { id: keyof CurveData; label: string; color: string }[] = [
   { id: "rgb", label: "RGB", color: "#ffffff" },
   { id: "r", label: "R", color: "#ef4444" },

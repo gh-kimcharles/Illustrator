@@ -18,7 +18,6 @@ export const Invert = ({ onClose }: { onClose: () => void }) => {
       onCancel={onClose}
       onPreview={(imageData) => applyInvert(imageData)}
     >
-      {/* fix: no useEffect needed to preview changes, let autoPreview handle */}
       {() => (
         <p className="text-[11px] text-editor-text-muted text-center py-2">
           Inverts all colour channels on the active layer.

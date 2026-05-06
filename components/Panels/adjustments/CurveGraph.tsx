@@ -20,6 +20,33 @@ interface CurveGraphProps {
   onChange: (points: CurvePoint[]) => void;
 }
 
+// ensure value ranges min-max
+function clamp(v: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, v));
+}
+
+// inline curve evaluator (for drawing only - not the pixel filter)
+// uses linear interpolation between sorted control points for the graph preview.
+// the actual pixel filter uses the full cubic spline in curves.ts.
+function evaluateCurve(sorted: CurvePoint[], x: number): number {
+  if (sorted.length === 0) return x;
+  if (x <= sorted[0].x) return sorted[0].y;
+  if (x >= sorted[sorted.length - 1].x) return sorted[sorted.length - 1].y;
+
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const p0 = sorted[i];
+    const p1 = sorted[i + 1];
+    if (x >= p0.x && x <= p1.x) {
+      const t = (x - p0.x) / (p1.x - p0.x);
+      // Smooth step for a nicer curve approximation in the graph
+      const smooth = t * t * (3 - 2 * t);
+      return p0.y + smooth * (p1.y - p0.y);
+    }
+  }
+
+  return x;
+}
+
 export const CurveGraph = ({ points, channel, onChange }: CurveGraphProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const draggingIdx = useRef<number | null>(null);
@@ -212,30 +239,3 @@ export const CurveGraph = ({ points, channel, onChange }: CurveGraphProps) => {
     />
   );
 };
-
-// inline curve evaluator (for drawing only - not the pixel filter)
-// uses linear interpolation between sorted control points for the graph preview.
-// the actual pixel filter uses the full cubic spline in curves.ts.
-function evaluateCurve(sorted: CurvePoint[], x: number): number {
-  if (sorted.length === 0) return x;
-  if (x <= sorted[0].x) return sorted[0].y;
-  if (x >= sorted[sorted.length - 1].x) return sorted[sorted.length - 1].y;
-
-  for (let i = 0; i < sorted.length - 1; i++) {
-    const p0 = sorted[i];
-    const p1 = sorted[i + 1];
-    if (x >= p0.x && x <= p1.x) {
-      const t = (x - p0.x) / (p1.x - p0.x);
-      // Smooth step for a nicer curve approximation in the graph
-      const smooth = t * t * (3 - 2 * t);
-      return p0.y + smooth * (p1.y - p0.y);
-    }
-  }
-
-  return x;
-}
-
-// ensure value ranges min-max
-function clamp(v: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, v));
-}

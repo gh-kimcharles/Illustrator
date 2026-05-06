@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { AdjustmentModal } from "./AdjustmentModal";
 import { applyPosterize } from "@/lib/filters";
