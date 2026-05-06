@@ -11,8 +11,6 @@ export const Sharpen = ({ onClose }: { onClose: () => void }) => {
 
   const [amount, setAmount] = useState(100);
   const [radius, setRadius] = useState(2); // increase radius amount for sharper default
-
-  // add: refs to hold latest values synchronously
   const amountRef = useRef(100);
   const radiusRef = useRef(2);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { AdjustmentModal } from "./AdjustmentModal";
 import { applyBrightnessContrast } from "@/lib/filters";
@@ -15,8 +15,6 @@ export const BrightnessContrast = ({ onClose }: Props) => {
 
   const [brightness, setBrightness] = useState(0);
   const [contrast, setContrast] = useState(0);
-
-  // add: refs to hold latest values synchronously
   const brightnessRef = useRef(0);
   const contrastRef = useRef(0);
 

@@ -10,8 +10,6 @@ export const Vibrance = ({ onClose }: { onClose: () => void }) => {
   const { pushHistory } = useEditorStore();
 
   const [amount, setAmount] = useState(0);
-
-  // add: refs to hold latest values synchronously
   const amountRef = useRef(0);
 
   return (

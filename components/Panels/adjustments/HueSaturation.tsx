@@ -16,8 +16,6 @@ export const HueSaturation = ({ onClose }: Props) => {
   const [hue, setHue] = useState(0);
   const [saturation, setSaturation] = useState(0);
   const [lightness, setLightness] = useState(0);
-
-  // add: refs to hold latest values synchronously
   const hueRef = useRef(0);
   const saturationRef = useRef(0);
   const lightnessRef = useRef(0);

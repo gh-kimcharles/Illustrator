@@ -1,7 +1,7 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
-import React, { useRef, useState } from "react";
 import { AdjustmentModal } from "./AdjustmentModal";
 import { applyGaussianBlur } from "@/lib/filters";
 import { SliderRow } from "@/components/ui/Slider";
@@ -10,8 +10,6 @@ export const Blur = ({ onClose }: { onClose: () => void }) => {
   const { pushHistory } = useEditorStore();
 
   const [radius, setRadius] = useState(3);
-
-  // add: refs to hold latest values synchronously
   const radiusRef = useRef(3);
 
   return (
