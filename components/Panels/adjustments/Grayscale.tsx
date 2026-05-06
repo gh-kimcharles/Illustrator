@@ -18,7 +18,6 @@ export const Grayscale = ({ onClose }: { onClose: () => void }) => {
       onCancel={onClose}
       onPreview={(imageData) => applyGrayscale(imageData)}
     >
-      {/* fix: no useEffect needed to preview changes, let autoPreview handle */}
       {() => (
         <p className="text-[11px] text-editor-text-muted text-center py-2">
           Converts the active layer to grayscale using the BT.709 luminance

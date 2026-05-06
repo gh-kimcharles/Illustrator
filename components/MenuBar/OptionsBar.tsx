@@ -3,6 +3,10 @@
 import { useEditorStore } from "@/store/useEditorStore";
 import { NumberInput, Slider } from "@/components/ui";
 
+const HintBar = ({ children }: { children: React.ReactNode }) => (
+  <div className="text-editor-text-muted">{children}</div>
+);
+
 const OptionsBar = () => {
   const { activeTool, brush, setBrush } = useEditorStore();
 
@@ -50,20 +54,35 @@ const OptionsBar = () => {
       )}
 
       {/* Tool with functionalities */}
-      {activeTool === "Zoom" && (
-        <span className="text-editor-text-muted">
-          Scroll to zoom · Ctrl+scroll also works
-        </span>
+      {activeTool === "Move" && (
+        <HintBar>Click on selected objects to drag and move</HintBar>
       )}
-      {activeTool === "Fill" && (
-        <span className="text-editor-text-muted">
-          Click on canvas to fill · Tolerance: 32px
-        </span>
+      {activeTool === "Marquee" && (
+        <HintBar>Click to select a rectangular area of the canvas</HintBar>
+      )}
+      {activeTool === "Lasso" && (
+        <HintBar>Click to draw freeform selection of the canvas</HintBar>
+      )}
+      {activeTool === "Crop" && (
+        <HintBar>Hold to trim or adjust the canvas</HintBar>
       )}
       {activeTool === "Eyedropper" && (
-        <span className="text-editor-text-muted">
-          Click on canvas to pick a color
-        </span>
+        <HintBar>Click on canvas to pick a color</HintBar>
+      )}
+      {activeTool === "Fill" && (
+        <HintBar>Click on canvas to fill selected areas</HintBar>
+      )}
+      {activeTool === "Text" && (
+        <HintBar>Click on canvas to add text input</HintBar>
+      )}
+      {activeTool === "Shape" && (
+        <HintBar>Click on canvas to add geometric shapes selection</HintBar>
+      )}
+      {activeTool === "Zoom" && (
+        <HintBar>Scroll to zoom · Ctrl+scroll also works</HintBar>
+      )}
+      {activeTool === "Hand" && (
+        <HintBar>Click on canvas to pan and navigate</HintBar>
       )}
     </div>
   );

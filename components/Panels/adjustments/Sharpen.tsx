@@ -1,7 +1,7 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
-import React, { useRef, useState } from "react";
 import { AdjustmentModal } from "./AdjustmentModal";
 import { applySharpen } from "@/lib/filters";
 import { SliderRow } from "@/components/ui/Slider";

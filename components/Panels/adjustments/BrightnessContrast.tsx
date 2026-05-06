@@ -6,11 +6,7 @@ import { AdjustmentModal } from "./AdjustmentModal";
 import { applyBrightnessContrast } from "@/lib/filters";
 import { SliderRow } from "@/components/ui/Slider";
 
-interface Props {
-  onClose: () => void;
-}
-
-export const BrightnessContrast = ({ onClose }: Props) => {
+export const BrightnessContrast = ({ onClose }: { onClose: () => void }) => {
   const { pushHistory } = useEditorStore();
 
   const [brightness, setBrightness] = useState(0);

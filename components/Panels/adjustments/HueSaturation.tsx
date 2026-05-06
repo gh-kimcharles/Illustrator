@@ -1,16 +1,12 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { AdjustmentModal } from "./AdjustmentModal";
 import { applyHueSaturation } from "@/lib/filters";
 import { SliderRow } from "@/components/ui/Slider";
 
-interface Props {
-  onClose: () => void;
-}
-
-export const HueSaturation = ({ onClose }: Props) => {
+export const HueSaturation = ({ onClose }: { onClose: () => void }) => {
   const { pushHistory } = useEditorStore();
 
   const [hue, setHue] = useState(0);

@@ -10,12 +10,18 @@ import {
   Grayscale,
   Blur,
   Sharpen,
+  Curves,
+  Vibrance,
+  Posterize,
 } from "@/components/Panels/adjustments";
 
 type OpenModal =
   | "brightness"
   | "hue"
   | "levels"
+  | "curves"
+  | "vibrance"
+  | "posterize"
   | "invert"
   | "gray"
   | "blur"
@@ -39,7 +45,6 @@ interface MenuBarProps {
   onNewDocument: () => void;
   onOpenFile: () => void;
   onExportPNG: () => void;
-
   canUndo: boolean;
   canRedo: boolean;
   onUndo: () => void;
@@ -68,8 +73,12 @@ const MenuBar = ({
       items: [
         { label: "New…", shortcut: "Ctrl+N", action: onNewDocument },
         { label: "Open…", shortcut: "Ctrl+O", action: onOpenFile },
+        { label: "Open As…", shortcut: "Alt+Shift+Ctrl+O", disabled: true },
+        { label: "Open Recent", disabled: true },
         { separator: true, label: "" },
         { label: "Save", shortcut: "Ctrl+S", disabled: true },
+        { label: "Save As…", shortcut: "Shift+Ctrl+S", disabled: true },
+        { separator: true, label: "" },
         {
           label: "Export as PNG",
           shortcut: "Ctrl+Shift+E",
@@ -80,13 +89,23 @@ const MenuBar = ({
       ],
     },
     {
+      label: "Image",
+      items: [
+        { label: "Image Size…", disabled: true },
+        { label: "Canvas Size…", disabled: true },
+        { separator: true, label: "" },
+        { label: "Rotate Canvas ▶", disabled: true },
+        { label: "Flip Canvas Horizontal", disabled: true },
+        { label: "Flip Canvas Vertical", disabled: true },
+      ],
+    },
+    {
       label: "Edit",
       items: [
         {
           label: "Undo",
           shortcut: "Ctrl+Z",
           action: onUndo,
-          // disabled when nothing to undo
           disabled: !canUndo,
         },
         {
@@ -104,7 +123,6 @@ const MenuBar = ({
       ],
     },
     {
-      // add: filter menu
       label: "Filter",
       items: [
         {
@@ -121,6 +139,7 @@ const MenuBar = ({
             setOpenModal("hue");
           },
         },
+        { separator: true, label: "" },
         {
           label: "Levels…",
           action: () => {
@@ -128,7 +147,30 @@ const MenuBar = ({
             setOpenModal("levels");
           },
         },
+        {
+          label: "Curves…",
+          action: () => {
+            closeMenus();
+            setOpenModal("curves");
+          },
+        },
+        {
+          label: "Vibrance…",
+          action: () => {
+            closeMenus();
+            setOpenModal("vibrance");
+          },
+        },
+        {
+          label: "Posterize…",
+          action: () => {
+            closeMenus();
+            setOpenModal("posterize");
+          },
+        },
+
         { separator: true, label: "" },
+
         {
           label: "Invert",
           action: () => {
@@ -143,7 +185,9 @@ const MenuBar = ({
             setOpenModal("gray");
           },
         },
+
         { separator: true, label: "" },
+
         {
           label: "Blur…",
           action: () => {
@@ -161,17 +205,6 @@ const MenuBar = ({
       ],
     },
     {
-      label: "Image",
-      items: [
-        { label: "Image Size…", disabled: true },
-        { label: "Canvas Size…", disabled: true },
-        { separator: true, label: "" },
-        { label: "Rotate Canvas ▶", disabled: true },
-        { label: "Flip Canvas Horizontal", disabled: true },
-        { label: "Flip Canvas Vertical", disabled: true },
-      ],
-    },
-    {
       label: "Layer",
       items: [
         {
@@ -185,6 +218,10 @@ const MenuBar = ({
         { label: "Merge Down", shortcut: "Ctrl+E", disabled: true },
         { label: "Flatten Image", disabled: true },
       ],
+    },
+    {
+      label: "Select",
+      items: [],
     },
     {
       label: "View",
@@ -296,8 +333,11 @@ const MenuBar = ({
       {openModal === "brightness" && <BrightnessContrast onClose={close} />}
       {openModal === "hue" && <HueSaturation onClose={close} />}
       {openModal === "levels" && <Levels onClose={close} />}
-      {openModal === "invert" && <Invert onClose={close} />}
+      {openModal === "curves" && <Curves onClose={close} />}
+      {openModal === "vibrance" && <Vibrance onClose={close} />}
+      {openModal === "posterize" && <Posterize onClose={close} />}
       {openModal === "gray" && <Grayscale onClose={close} />}
+      {openModal === "invert" && <Invert onClose={close} />}
       {openModal === "blur" && <Blur onClose={close} />}
       {openModal === "sharpen" && <Sharpen onClose={close} />}
     </>
