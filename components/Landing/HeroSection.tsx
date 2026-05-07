@@ -2,12 +2,10 @@ import Link from "next/link";
 import EditorMockup from "./EditorMockup";
 
 const FEATURE_CHIPS = [
-  "Layer compositing",
-  "Gaussian blur",
-  "Hue/Saturation",
-  "Levels",
-  "Undo/Redo",
-  "Marquee selection",
+  "HTML5 Canvas",
+  "Layers",
+  "Tools",
+  "Adjustment Filters",
   "Export PNG",
   "Cloud save",
   "Share via link",
@@ -15,19 +13,26 @@ const FEATURE_CHIPS = [
 
 export default function HeroSection() {
   return (
-    <section className="min-h-screen flex items-center px-10 pt-14 pb-16 gap-12 max-w-[1300px] mx-auto">
+    <section className="relative min-h-screen flex items-center px-20 pt-14 pb-16 gap-12 mx-auto overflow-hidden">
+      {/* Fading checker background */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-full pointer-events-none"
+        aria-hidden="true"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='32' height='32' fill='rgba(255,255,255,0.07)'/%3E%3Crect x='32' y='32' width='32' height='32' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E")`,
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 90%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, black 95%)",
+        }}
+      />
+
       {/* Left */}
       <div
-        className="flex-none max-w-[460px] animate-[heroLeft_0.8s_0.2s_cubic-bezier(0.22,1,0.36,1)_both]"
+        className="relative flex-none max-w-[460px] animate-[heroLeft_0.8s_0.2s_cubic-bezier(0.22,1,0.36,1)_both]"
         style={{ flex: "0 0 460px" }}
       >
-        <div className="inline-flex items-center gap-2 text-[11.5px] text-editor-text-muted border border-editor-border-light px-3 py-1 rounded-full mb-6 tracking-wide">
-          <span className="w-1.5 h-1.5 rounded-full bg-editor-accent animate-[pulseDot_2s_ease_infinite]" />
-          Browser-native · No install
-        </div>
-
         <h1
-          className="text-[52px] font-extrabold leading-[1.07] tracking-[-2px] mb-5"
+          className="text-[56px] font-bold leading-[1.08] tracking-[-1px] mb-5"
           style={{ fontFamily: "var(--font-geist-sans)" }}
         >
           Photoshop-level editing,{" "}
@@ -48,9 +53,6 @@ export default function HeroSection() {
             className="inline-flex items-center gap-2 text-[14px] font-medium px-6 py-2.5 rounded-lg bg-editor-text text-editor-bg no-underline transition-all hover:opacity-90 hover:-translate-y-px"
           >
             Create free account
-            <span className="w-4 h-4 rounded-full bg-editor-bg inline-flex items-center justify-center text-[10px] text-editor-text">
-              →
-            </span>
           </Link>
           <Link
             href="/editor"
@@ -73,8 +75,10 @@ export default function HeroSection() {
       </div>
 
       {/* Right — animated editor */}
-      <div className="flex-1 min-w-0 animate-[heroRight_0.8s_0.35s_cubic-bezier(0.22,1,0.36,1)_both]">
-        <EditorMockup />
+      <div className="relative flex-1 flex justify-end animate-[heroRight_0.8s_0.35s_cubic-bezier(0.22,1,0.36,1)_both]">
+        <div className="w-full max-w-[850px] pr-10">
+          <EditorMockup />
+        </div>
       </div>
     </section>
   );

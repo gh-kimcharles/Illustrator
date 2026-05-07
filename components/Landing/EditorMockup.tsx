@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const COLORS = [
   { hex: "2563eb", r: 37, g: 99, b: 235, rp: "15%", gp: "39%", bp: "92%" },
@@ -10,18 +10,7 @@ const COLORS = [
   { hex: "7c3aed", r: 124, g: 58, b: 237, rp: "49%", gp: "23%", bp: "93%" },
 ];
 
-const ADJ_BTNS = [
-  "B/C",
-  "Hue/Sat",
-  "Levels",
-  "Curves",
-  "Vibrance",
-  "Posterize",
-  "Invert",
-  "B&W",
-  "Blur",
-  "Sharpen",
-];
+const ADJ_BTNS = ["☀", "◉", "◑", "〜", "⬤", "▤", "✦", "◻", "≋", "◈"];
 const ADJ_NAMES = [
   "Brightness/Contrast",
   "Hue/Saturation",
@@ -125,7 +114,7 @@ export default function EditorMockup() {
 
   return (
     <div
-      className="rounded-xl overflow-hidden border border-editor-border-light text-[11px]"
+      className="w-full max-w-[850px] rounded-xl overflow-hidden border border-editor-border-light text-[11px]"
       style={{ boxShadow: "0 32px 80px rgba(0,0,0,0.6)" }}
     >
       {/* Menubar */}
@@ -213,20 +202,13 @@ export default function EditorMockup() {
         <div className="flex-1 bg-editor-canvas-bg overflow-hidden relative flex items-center justify-center">
           <div className="absolute top-0 left-0 right-0 h-5 bg-editor-panel border-b border-editor-border z-10" />
           <div className="absolute top-0 left-0 bottom-0 w-5 bg-editor-panel border-r border-editor-border z-10" />
-          <div
-            className="bg-white mt-6 ml-6"
-            style={{
-              width: 360,
-              height: 280,
-              boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-            }}
-          >
+          <div className="w-[42vw] max-w-[360px] aspect-[360/280] bg-white mt-6 ml-6">
             <AnimatedCanvas key={drawKey} color={color} />
           </div>
         </div>
 
         {/* Right panels */}
-        <div className="w-[200px] bg-editor-panel border-l border-editor-border flex flex-col overflow-y-auto flex-shrink-0">
+        <div className="w-[22vw] max-w-[200px] min-w-[160px] bg-editor-panel border-l border-editor-border flex flex-col overflow-y-auto flex-shrink-0">
           {/* Color panel */}
           <PanelSection title="Color">
             <div className="mb-1.5 h-6 rounded border border-editor-border-light overflow-hidden">
@@ -287,13 +269,16 @@ export default function EditorMockup() {
             </div>
           </PanelSection>
 
+          {/* Swatches - show only tab */}
+          <PanelSection title="Swatches"></PanelSection>
+
           {/* Adjustments */}
           <PanelSection title="Adjustments">
-            <div className="flex flex-wrap gap-1">
+            <div className="grid grid-cols-5 gap-1">
               {ADJ_BTNS.map((btn, i) => (
                 <div
                   key={btn}
-                  className={`px-1.5 py-1 text-[9.5px] rounded border cursor-default transition-all ${
+                  className={`px-1.5 py-1 text-[9.5px] rounded border cursor-default transition-all flex items-center justify-center ${
                     i === adjIdx
                       ? "bg-editor-accent-subtle border-editor-accent-border text-editor-accent"
                       : "bg-editor-panel-header border-editor-border-light text-editor-text-muted hover:bg-editor-hover hover:text-editor-text"
@@ -385,7 +370,7 @@ export default function EditorMockup() {
       </div>
 
       {/* Statusbar */}
-      <div className="h-[22px] bg-editor-menubar border-t border-editor-border flex items-center px-2.5 gap-4 flex-shrink-0">
+      <div className="h-[30px] bg-editor-menubar border-t border-editor-border flex items-center px-2.5 gap-4 flex-shrink-0">
         {[
           "Zoom: 100%",
           "Canvas: 800 × 600 px",
@@ -411,7 +396,7 @@ function PanelSection({
   children,
 }: {
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   return (
     <div className="border-b border-editor-border flex-shrink-0">
@@ -469,12 +454,7 @@ function ToolBtn({
 // Animated SVG canvas
 function AnimatedCanvas({ color }: { color: (typeof COLORS)[0] }) {
   return (
-    <svg
-      width="360"
-      height="280"
-      viewBox="0 0 360 280"
-      style={{ display: "block" }}
-    >
+    <svg viewBox="0 0 360 280" className="w-full h-full">
       <style>{`
         @keyframes drawStroke {
           from { stroke-dashoffset: 1; opacity: 0; }

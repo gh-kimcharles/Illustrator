@@ -26,7 +26,7 @@ function CheckIcon() {
 
 function Bullet({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-2 text-xs text-[var(--text)]">
+    <div className="flex items-center gap-2 text-[16px] text-[var(--text)]">
       <span className="text-[var(--accent)] flex-shrink-0">
         <CheckIcon />
       </span>
@@ -733,46 +733,48 @@ export default function FeaturesSection() {
       `}</style>
 
       <section
-        className="max-w-[960px] mx-auto px-10 py-20"
+        className="max-w-7xl mx-auto px-10 py-20"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
         {/* Section header */}
-        <div className="text-[11px] font-semibold tracking-[.12em] uppercase text-[var(--accent)] mb-3.5">
-          What&apos;s inside
+        <div className="flex items-center justify-center flex-col text-center mb-16">
+          <div className="text-[11px] font-semibold tracking-[.12em] uppercase text-[var(--accent)] mb-3.5">
+            What&apos;s inside
+          </div>
+          <h2
+            className="text-[52px] font-semibold  mb-3"
+            style={{ fontFamily: "var(--font-geist-sans)" }}
+          >
+            Everything a desktop editor has,
+            <br />
+            now in your browser.
+          </h2>
+          <p className="text-[18px] text-[var(--muted)] leading-[1.7] max-w-[480px] font-light mb-[72px]">
+            Illustrator brings professional-grade tools, layers, filters, and
+            cloud workflow — all running natively in your browser with zero
+            install.
+          </p>
         </div>
-        <h2
-          className="text-[36px] font-extrabold tracking-[-1.5px] leading-[1.1] mb-3"
-          style={{ fontFamily: "'Syne', sans-serif" }}
-        >
-          Everything a desktop
-          <br />
-          editor has. In your browser.
-        </h2>
-        <p className="text-[14px] text-[var(--muted)] leading-[1.7] max-w-[480px] font-light mb-[72px]">
-          Built on HTML5 Canvas, Illustrator brings professional-grade tools,
-          layers, filters, and cloud workflow — all running natively in your
-          browser with zero install.
-        </p>
 
         {/* Feature rows */}
-        <div className="flex flex-col gap-20">
+        <div className="flex flex-col gap-16">
           {FEATURE_ROWS.map((feat) => (
             <div
               key={feat.title}
               className={`feat-row flex items-center gap-14 ${feat.flip ? "flex-row-reverse" : ""}`}
             >
               {/* Text block */}
-              <div className="flex-none w-[320px]">
+              <div className="flex-none w-[340px]">
                 <div className="text-[11px] font-semibold tracking-[.1em] uppercase text-[var(--accent)] mb-2.5">
                   {feat.eyebrow}
                 </div>
                 <h3
-                  className="text-[26px] font-extrabold tracking-[-1px] leading-[1.15] mb-3"
-                  style={{ fontFamily: "'Syne', sans-serif" }}
+                  className="text-[36px] font-light tracking-[-1px] leading-[1.15] mb-3"
+                  style={{ fontFamily: "var(--font-geist-sans)" }}
                 >
                   {feat.title}
                 </h3>
-                <p className="text-[13px] text-[var(--muted)] leading-[1.7] font-light mb-[18px]">
+                <p className="text-[16px] text-[var(--muted)] leading-[1.7] font-light mb-[18px]">
                   {feat.desc}
                 </p>
                 <div className="flex flex-col gap-1.5 mb-5">
@@ -783,7 +785,7 @@ export default function FeaturesSection() {
               </div>
 
               {/* Mockup */}
-              {feat.mockup}
+              <div className="flex-1 overflow-hidden">{feat.mockup}</div>
             </div>
           ))}
         </div>

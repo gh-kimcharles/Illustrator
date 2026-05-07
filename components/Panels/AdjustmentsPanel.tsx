@@ -34,7 +34,7 @@ const ADJUSTMENTS: {
   id: OpenModal;
 }[] = [
   { icon: "☀", label: "B/C", id: "brightness" },
-  { icon: "🎨", label: "Hue/Sat", id: "hue" },
+  { icon: "◉", label: "Hue/Sat", id: "hue" },
   { icon: "◑", label: "Levels", id: "levels" },
   { icon: "〜", label: "Curves", id: "curves" },
   { icon: "⬤", label: "Vibrance", id: "vibrance" },
