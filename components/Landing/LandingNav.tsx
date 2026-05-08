@@ -4,10 +4,10 @@ import Link from "next/link";
 
 export default function LandingNav() {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-between px-20 h-16 border-b border-editor-border-light backdrop-blur-md bg-editor-bg/90">
+    <nav className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-between px-25 h-20 border-b border-editor-border-light backdrop-blur-md bg-editor-bg/90">
       <Link
         href="/"
-        className="flex items-center gap-2.5 font-semibold text-base tracking-tight text-editor-text no-underline"
+        className="flex items-center gap-2.5 font-semibold text-base text-[20px] tracking-tight text-editor-text no-underline"
         style={{ fontFamily: "var(--font-geist-sans)" }}
       >
         {/* Logo */}

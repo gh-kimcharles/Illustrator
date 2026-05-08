@@ -321,6 +321,10 @@
   }
 }
 
+.font-serif-inst {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+}
+
 /*
  * EDITOR COMPONENT UTILITIES
  * Reusable classes used across editor components
