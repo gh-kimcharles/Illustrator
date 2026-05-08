@@ -1,5 +1,5 @@
 import Link from "next/link";
-import EditorMockup from "./EditorMockup";
+import EditorMockup from "./Mockups/EditorMockup";
 
 const FEATURE_CHIPS = [
   "HTML5 Canvas",
