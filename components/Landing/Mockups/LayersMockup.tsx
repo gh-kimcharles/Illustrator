@@ -42,7 +42,7 @@ export default function LayersMockup() {
           Normal · 100%
         </span>
       </MmBar>
-      <div className="flex flex-col gap-[3px] p-2">
+      <div className="flex flex-col gap-[3px] p-2 h-75">
         {layers.map((l) => (
           <div
             key={l.label}

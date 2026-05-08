@@ -161,6 +161,19 @@ export default function FeaturesSection() {
         .feat-row:nth-child(4) { animation-delay: 0.15s; }
         .feat-row:nth-child(5) { animation-delay: 0.20s; }
         .feat-row:nth-child(6) { animation-delay: 0.25s; }
+
+        /* Responsive: stack rows on narrow viewports */
+        @media (max-width: 900px) {
+          .feat-row {
+            flex-direction: column !important;
+          }
+          .feat-text-block {
+            width: 100% !important;
+          }
+          .feat-mockup-wrap {
+            width: 100% !important;
+          }
+        }
       `}</style>
 
       <section
@@ -188,38 +201,38 @@ export default function FeaturesSection() {
         </div>
 
         {/* Feature rows */}
-        <div className="flex flex-col gap-16">
-          {FEATURE_ROWS.map((feat) => (
-            <div
-              key={feat.title}
-              className={`feat-row flex items-center gap-14 ${feat.flip ? "flex-row-reverse" : ""}`}
-            >
-              {/* Text block */}
-              <div className="flex-none w-[340px]">
-                <div className="text-[11px] font-semibold tracking-[.1em] uppercase text-[var(--accent)] mb-2.5">
-                  {feat.eyebrow}
-                </div>
-                <h3
-                  className="text-[36px] font-light tracking-[-1px] leading-[1.15] mb-3"
-                  style={{ fontFamily: "var(--font-geist-sans)" }}
-                >
-                  {feat.title}
-                </h3>
-                <p className="text-[16px] text-[var(--muted)] leading-[1.7] font-light mb-[18px]">
-                  {feat.desc}
-                </p>
-                <div className="flex flex-col gap-1.5 mb-5">
-                  {feat.bullets.map((b) => (
-                    <Bullet key={b}>{b}</Bullet>
-                  ))}
-                </div>
+        {FEATURE_ROWS.map((feat) => (
+          <div
+            key={feat.title}
+            className={`feat-row flex items-center justify-center gap-45 py-12 ${feat.flip ? "flex-row-reverse" : ""}`}
+          >
+            {/* Text block */}
+            <div className="feat-text-block flex-none w-[340px]">
+              <div className="text-[11px] font-semibold tracking-[.1em] uppercase text-[var(--accent)] mb-2.5">
+                {feat.eyebrow}
               </div>
-
-              {/* Mockup */}
-              <div className="flex-1 overflow-hidden">{feat.mockup}</div>
+              <h3
+                className="text-[36px] font-light tracking-[-1px] leading-[1.15] mb-3"
+                style={{ fontFamily: "var(--font-geist-sans)" }}
+              >
+                {feat.title}
+              </h3>
+              <p className="text-[16px] text-[var(--muted)] leading-[1.7] font-light mb-[18px]">
+                {feat.desc}
+              </p>
+              <div className="flex flex-col gap-1.5 mb-5">
+                {feat.bullets.map((b) => (
+                  <Bullet key={b}>{b}</Bullet>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
+
+            {/* Mockup — fixed 480px, never grows wider */}
+            <div className="feat-mockup-wrap flex-none w-[480px] overflow-hidden">
+              {feat.mockup}
+            </div>
+          </div>
+        ))}
       </section>
     </>
   );

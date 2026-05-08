@@ -191,7 +191,7 @@ export default function ToolsMockup() {
       <MmBar>
         <span className="text-[10px] text-[var(--muted)]">Tool palette</span>
       </MmBar>
-      <div className="grid grid-cols-4 gap-1 p-2.5">
+      <div className="grid grid-cols-4 gap-1 p-2.5 ">
         {TOOLS.map((t) => (
           <div
             key={t.label}

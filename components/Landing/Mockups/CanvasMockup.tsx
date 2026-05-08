@@ -12,9 +12,9 @@ export default function CanvasMockup() {
         </span>
         <span className="ml-auto text-[10px] text-[var(--muted)]">RGB/8</span>
       </MmBar>
-      <div className="relative bg-[oklch(0.25_0.005_285.823)] h-52 flex items-center justify-center">
-        <div className="bg-white rounded-sm overflow-hidden w-[280px] h-[160px]">
-          <svg width="280" height="160" viewBox="0 0 280 160">
+      <div className="relative bg-[oklch(0.25_0.005_285.823)] h-75 flex items-center justify-center">
+        <div className="bg-white rounded-sm overflow-hidden w-[280px] h-[200px]">
+          {/* <svg width="280" height="160" viewBox="0 0 280 160">
             <rect width="280" height="160" fill="white" />
             <rect
               x="20"
@@ -65,7 +65,7 @@ export default function CanvasMockup() {
               stroke="#e5e7eb"
               strokeWidth=".5"
             />
-          </svg>
+          </svg> */}
         </div>
         <div className="absolute bottom-2 right-2.5 text-[10px] text-[var(--muted)]">
           Zoom: 100%

@@ -17,7 +17,7 @@ export default function FiltersMockup() {
           Adjustments panel
         </span>
       </MmBar>
-      <div className="p-2.5 flex flex-col gap-[5px]">
+      <div className="p-2.5 flex flex-col gap-[12px]">
         {/* Hue — rainbow track */}
         <div className="flex items-center gap-2">
           <span className="text-[10.5px] text-[var(--muted)] w-[88px] flex-shrink-0">
@@ -61,7 +61,7 @@ export default function FiltersMockup() {
           </div>
         ))}
 
-        <div className="flex flex-wrap gap-1 pt-1 border-t border-[var(--border)]">
+        <div className="flex flex-wrap gap-1 pt-3 border-t border-[var(--border)]">
           {tags.map((tag) => (
             <span
               key={tag}
