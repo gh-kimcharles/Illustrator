@@ -26,7 +26,7 @@ export default function LandingNav() {
         </Link>
         <Link
           href="/register"
-          className="text-[14px] font-medium text-white bg-editor-accent px-4 py-1.5 rounded-md transition-all hover:bg-editor-accent-hover hover:-translate-y-px no-underline"
+          className="text-[14px] text-white bg-editor-accent px-4 py-1.5 rounded-md transition-all hover:bg-editor-accent-hover hover:-translate-y-px no-underline"
         >
           Get started for free
         </Link>

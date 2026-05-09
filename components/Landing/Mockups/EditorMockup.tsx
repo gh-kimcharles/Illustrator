@@ -199,11 +199,11 @@ export default function EditorMockup() {
         </div>
 
         {/* Canvas area */}
-        <div className="flex-1 bg-editor-canvas-bg overflow-hidden relative flex items-center justify-center">
+        <div className="flex-1 bg-editor-canvas-bg overflow-hidden relative flex items-center justify-center ">
           <div className="absolute top-0 left-0 right-0 h-5 bg-editor-panel border-b border-editor-border z-10" />
           <div className="absolute top-0 left-0 bottom-0 w-5 bg-editor-panel border-r border-editor-border z-10" />
-          <div className="w-[42vw] max-w-[360px] aspect-[360/280] bg-white mt-6 ml-6">
-            <AnimatedCanvas key={drawKey} color={color} />
+          <div className="w-[42vw] max-w-[360px] aspect-[360/280] bg-white mt-6 ml-6 rounded-md">
+            {/* <AnimatedCanvas key={drawKey} color={color} /> */}
           </div>
         </div>
 

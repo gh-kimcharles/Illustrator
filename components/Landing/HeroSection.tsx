@@ -2,30 +2,121 @@ import Link from "next/link";
 import EditorMockup from "./Mockups/EditorMockup";
 
 const FEATURE_CHIPS = [
-  "HTML5 Canvas",
-  "Layers",
-  "Tools",
-  "Adjustment Filters",
-  "Export PNG",
-  "Cloud save",
-  "Share via link",
+  {
+    label: "HTML5 Canvas",
+    icon: (
+      <svg
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="1" y="1" width="12" height="12" rx="1.5" />
+        <path d="M4 9.5L6.5 5L9 9.5" />
+        <path d="M4.8 8h3.4" />
+      </svg>
+    ),
+  },
+  {
+    label: "Layers",
+    icon: (
+      <svg
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M1 5l6-3 6 3-6 3-6-3Z" />
+        <path d="M1 9l6 3 6-3" />
+      </svg>
+    ),
+  },
+  {
+    label: "Tools",
+    icon: (
+      <svg
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M9 2L12 5L5 12L2 12L2 9L9 2Z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Adjustment Filters",
+    icon: (
+      <svg
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      >
+        <path d="M1 3h12M3 7h8M5 11h4" />
+      </svg>
+    ),
+  },
+  {
+    label: "Export PNG",
+    icon: (
+      <svg
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M7 1v8M4 6l3 3 3-3" />
+        <path d="M2 11h10" />
+      </svg>
+    ),
+  },
+  {
+    label: "Cloud save",
+    icon: (
+      <svg
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M10.5 11H4a2.5 2.5 0 0 1-.4-5 3.5 3.5 0 0 1 6.8-1 2 2 0 0 1 .1 6Z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Share via link",
+    icon: (
+      <svg
+        viewBox="0 0 14 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M5.5 8.5a3 3 0 0 0 4.2 0l1.5-1.5a3 3 0 0 0-4.2-4.2L6 3.8" />
+        <path d="M8.5 5.5a3 3 0 0 0-4.2 0L2.8 7A3 3 0 0 0 7 11.2L8 10.2" />
+      </svg>
+    ),
+  },
 ];
 
 export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex flex-col px-25 pt-14 pb-16 overflow-hidden">
       {/* Main hero row */}
-      {/* Fading checker background */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-full pointer-events-none"
-        aria-hidden="true"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='32' height='32' fill='rgba(255,255,255,0.07)'/%3E%3Crect x='32' y='32' width='32' height='32' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E")`,
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, transparent 0%, black 100%)",
-        }}
-      />
 
       <div className="flex items-center gap-12 flex-1">
         {/* Left */}
@@ -81,22 +172,23 @@ export default function HeroSection() {
       </div>
 
       {/* Featured chips */}
-      <div className="relative z-10 pt-10">
-        {/* <h2
-          className="text-[13px] tracking-[0.18em] text-editor-text-muted/60 mb-4"
+      <div className="relative z-10">
+        <h2
+          className="text-[16px] text-editor-text-muted leading-[1.5] mb-4 max-w-[520px] font-light"
           style={{ fontFamily: "var(--font-geist-sans)" }}
         >
-          Features include
-        </h2> */}
+          Built-in tools
+        </h2>
 
         <div className="flex flex-wrap gap-2">
           {FEATURE_CHIPS.map((chip) => (
             <span
-              key={chip}
-              className="text-[13px] text-editor-text-muted border border-editor-border-light bg-editor-panel/70 backdrop-blur-sm px-3 py-1.5 rounded-md"
+              key={chip.label}
+              className="inline-flex items-center gap-1.5 text-[18px] text-editor-text-muted  backdrop-blur-sm px-3 py-1.5 rounded-md [&_svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:flex-shrink-0 border border-editor-border-light bg-editor-panel"
               style={{ fontFamily: "var(--font-geist-sans)" }}
             >
-              {chip}
+              {chip.icon}
+              {chip.label}
             </span>
           ))}
         </div>
