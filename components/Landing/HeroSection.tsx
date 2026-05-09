@@ -1,5 +1,6 @@
 import Link from "next/link";
 import EditorMockup from "./Mockups/EditorMockup";
+import TopologyBackground from "../ui/TopologyBackground";
 
 const FEATURE_CHIPS = [
   {
@@ -115,11 +116,13 @@ const FEATURE_CHIPS = [
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col px-25 pt-14 pb-16 overflow-hidden">
-      {/* Main hero row */}
+    // bg-transparent lets the TopologyBackground canvas show
+    // still `relative` so the absolute canvas inside is positioned correctly
+    <section className="relative min-h-screen flex flex-col px-25 pt-24 pb-16 overflow-hidden bg-transparent">
+      {/* add: manual implementation of TopologyBackground; no external libraries used */}
+      <TopologyBackground />
 
       <div className="flex items-center gap-12 flex-1">
-        {/* Left */}
         <div
           className="relative flex-none max-w-[650px] animate-[heroLeft_0.8s_0.2s_cubic-bezier(0.22,1,0.36,1)_both]"
           style={{ flex: "0 0 650px" }}
@@ -131,9 +134,7 @@ export default function HeroSection() {
             Desktop-class editing{" "}
             <em
               className="italic font-light"
-              style={{
-                fontFamily: "var(--font-instrument-serif)",
-              }}
+              style={{ fontFamily: "var(--font-instrument-serif)" }}
             >
               right in your browser.
             </em>
@@ -153,7 +154,6 @@ export default function HeroSection() {
             >
               Create free account
             </Link>
-
             <Link
               href="/editor"
               className="inline-flex items-center gap-2 text-[14px] text-editor-text-muted px-6 py-2.5 rounded-lg border border-editor-border-light no-underline transition-all hover:text-editor-text hover:border-white/25"
@@ -163,7 +163,6 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Right */}
         <div className="relative flex-1 flex justify-end animate-[heroRight_0.8s_0.35s_cubic-bezier(0.22,1,0.36,1)_both]">
           <div className="w-full max-w-[850px] pr-10">
             <EditorMockup />
@@ -171,7 +170,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Featured chips */}
       <div className="relative z-10">
         <h2
           className="text-[16px] text-editor-text-muted leading-[1.5] mb-4 max-w-[520px] font-light"
@@ -179,12 +177,11 @@ export default function HeroSection() {
         >
           Built-in tools
         </h2>
-
         <div className="flex flex-wrap gap-2">
           {FEATURE_CHIPS.map((chip) => (
             <span
               key={chip.label}
-              className="inline-flex items-center gap-1.5 text-[18px] text-editor-text-muted  backdrop-blur-sm px-3 py-1.5 rounded-md [&_svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:flex-shrink-0 border border-editor-border-light bg-editor-panel"
+              className="inline-flex items-center gap-1.5 text-[18px] text-editor-text-muted backdrop-blur-sm px-3 py-1.5 rounded-md [&_svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:flex-shrink-0 border border-editor-border-light bg-editor-panel"
               style={{ fontFamily: "var(--font-geist-sans)" }}
             >
               {chip.icon}
