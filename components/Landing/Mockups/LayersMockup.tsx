@@ -35,7 +35,7 @@ export default function LayersMockup() {
   return (
     <div className="feat-mockup">
       <MmBar>
-        <span className="text-[10px] text-[var(--muted)] font-semibold uppercase tracking-[.08em]">
+        <span className="text-[10px] text-[var(--editor-text-muted)] font-semibold uppercase tracking-[.08em]">
           Layers
         </span>
         <span className="ml-auto text-[10px] text-[var(--muted)]">
