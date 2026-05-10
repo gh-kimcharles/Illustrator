@@ -7,11 +7,10 @@ export default function LandingNav() {
     <nav className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-between px-25 h-20 border-b border-editor-border-light backdrop-blur-md bg-transparent">
       <Link
         href="/"
-        className="flex items-center gap-2.5 font-semibold text-base text-[20px] tracking-tight text-editor-text no-underline"
-        style={{ fontFamily: "var(--font-geist-sans)" }}
+        className="flex items-center gap-2.5 font-semibold font-rethink-sans text-base text-[20px] tracking-tight text-editor-text no-underline"
       >
         {/* Logo */}
-        <div className="w-9 h-full flex items-center justify-center bg-[oklch(0.10_0.05_240)] text-editor-accent text-[11px] font-bold tracking-wide flex-shrink-0">
+        <div className="w-9 h-full flex items-center justify-center font-bold bg-[oklch(0.10_0.05_240)] text-editor-accent text-[11px] tracking-wide flex-shrink-0">
           Ill
         </div>
         Illustrator

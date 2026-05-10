@@ -127,36 +127,27 @@ export default function HeroSection() {
           className="relative flex-none max-w-[650px] animate-[heroLeft_0.8s_0.2s_cubic-bezier(0.22,1,0.36,1)_both]"
           style={{ flex: "0 0 650px" }}
         >
-          <h1
-            className="text-[56px] font-semibold leading-[1.2] tracking-[-1px] mb-5"
-            style={{ fontFamily: "var(--font-geist-sans)" }}
-          >
-            Desktop-class editing{" "}
-            <em
-              className="italic font-light"
-              style={{ fontFamily: "var(--font-instrument-serif)" }}
-            >
+          <h1 className="text-[56px] font-semibold font-rethink-sans leading-[1.2] tracking-[-1px] mb-5">
+            Desktop-class editing,{" "}
+            <em className="italic font-light font-instrument-serif">
               right in your browser.
             </em>
           </h1>
 
-          <p
-            className="text-[24px] text-editor-text-muted leading-[1.5] mb-8 max-w-[520px] font-light"
-            style={{ fontFamily: "var(--font-geist-sans)" }}
-          >
+          <p className="text-[24px] font-inter font-light text-editor-text-muted mb-8 max-w-[520px]">
             Everything you need to edit, made accessible for everyone.
           </p>
 
           <div className="flex gap-3 items-center">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 text-[14px] font-medium px-6 py-2.5 rounded-lg bg-editor-text text-editor-bg no-underline transition-all hover:opacity-90 hover:-translate-y-px"
+              className="inline-flex items-center gap-2 text-[16px] font-medium px-6 py-2.5 rounded-lg bg-editor-text text-editor-bg no-underline transition-all hover:opacity-90 hover:-translate-y-px"
             >
               Create free account
             </Link>
             <Link
               href="/editor"
-              className="inline-flex items-center gap-2 text-[14px] text-editor-text-muted px-6 py-2.5 rounded-lg border border-editor-border-light no-underline transition-all hover:text-editor-text hover:border-white/25"
+              className="inline-flex items-center gap-2 text-[16px] text-editor-text-muted px-6 py-2.5 rounded-lg border border-editor-border-light no-underline transition-all hover:text-editor-text hover:border-white/25"
             >
               Try without account
             </Link>
@@ -171,18 +162,14 @@ export default function HeroSection() {
       </div>
 
       <div className="relative z-10">
-        <h2
-          className="text-[16px] text-editor-text-muted leading-[1.5] mb-4 max-w-[520px] font-light"
-          style={{ fontFamily: "var(--font-geist-sans)" }}
-        >
+        <h2 className="text-[16px] font-inter font-light text-editor-text-muted leading-[1.5] mb-4 max-w-[520px]">
           Built-in tools
         </h2>
         <div className="flex flex-wrap gap-2">
           {FEATURE_CHIPS.map((chip) => (
             <span
               key={chip.label}
-              className="inline-flex items-center gap-1.5 text-[18px] text-editor-text-muted backdrop-blur-sm px-3 py-1.5 rounded-md [&_svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:flex-shrink-0 border border-editor-border-light bg-editor-panel"
-              style={{ fontFamily: "var(--font-geist-sans)" }}
+              className="inline-flex items-center gap-1.5 text-[18px] font-inter text-editor-text-muted pr-5 py-1.5 rounded-md [&_svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:flex-shrink-0"
             >
               {chip.icon}
               {chip.label}
