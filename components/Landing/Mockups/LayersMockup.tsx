@@ -35,10 +35,10 @@ export default function LayersMockup() {
   return (
     <div className="feat-mockup">
       <MmBar>
-        <span className="text-[10px] text-[var(--muted)] font-semibold uppercase tracking-[.08em]">
+        <span className="text-[10px] text-[var(--editor-text-muted)] font-semibold uppercase tracking-[.08em]">
           Layers
         </span>
-        <span className="ml-auto text-[10px] text-[var(--muted)]">
+        <span className="ml-auto text-[10px] text-[var(--editor-text-muted)]">
           Normal · 100%
         </span>
       </MmBar>
@@ -48,18 +48,20 @@ export default function LayersMockup() {
             key={l.label}
             className={`flex items-center gap-[7px] px-[7px] py-[5px] rounded-[5px] border text-[11px] ${
               l.active
-                ? "bg-[var(--accent-s)] border-[var(--accent-b)] text-[var(--text)]"
-                : "bg-[var(--ph)] border-transparent text-[var(--muted)]"
+                ? "bg-[var(--editor-accent-subtle)] border-[var(--editor-accent-border)] text-[var(--editor-text)]"
+                : "bg-[var(--editor-panel-header)] border-transparent text-[var(--editor-text-muted)]"
             }`}
           >
             <div
-              className="w-5 h-5 rounded-[3px] border border-[var(--bl)] flex-shrink-0"
+              className="w-5 h-5 rounded-[3px] border border-[var(--editor-border-light)] flex-shrink-0"
               style={{ background: l.bg }}
             />
             <span>{l.label}</span>
             <span
-              className={`ml-auto text-[10px] bg-[var(--input)] px-[5px] py-[2px] rounded-[3px] ${
-                l.locked ? "text-[var(--dis)]" : "text-[var(--muted)]"
+              className={`ml-auto text-[10px] bg-[var(--editor-input-bg)] px-[5px] py-[2px] rounded-[3px] ${
+                l.locked
+                  ? "text-[var(--editor-text-disabled)]"
+                  : "text-[var(--editor-text-muted)]"
               }`}
             >
               {l.mode}
@@ -67,11 +69,11 @@ export default function LayersMockup() {
           </div>
         ))}
       </div>
-      <div className="flex gap-[3px] px-2 py-1.5 border-t border-[var(--border)]">
+      <div className="flex gap-[3px] px-2 py-1.5 border-t border-[var(--editor-border)]">
         {["+", "↑", "↓", "🗑"].map((icon) => (
           <div
             key={icon}
-            className="flex-1 h-[22px] flex items-center justify-center bg-[var(--ph)] border border-[var(--bl)] rounded text-xs text-[var(--muted)]"
+            className="flex-1 h-[22px] flex items-center justify-center bg-[var(--editor-panel-header)] border border-[var(--editor-border-light)] rounded text-xs text-[var(--editor-text-muted)]"
           >
             {icon}
           </div>

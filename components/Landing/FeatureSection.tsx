@@ -6,11 +6,10 @@ import FiltersMockup from "./Mockups/FiltersMockup";
 import CloudMockup from "./Mockups/CloudMockup";
 import ExportMockup from "./Mockups/ExportMockup";
 
-// ─── Shared primitives ───────────────────────────────────────────────────────
-
+// Shared primitives
 export function MmBar({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-7 bg-[var(--ph)] border-b border-[var(--border)] flex items-center px-2.5 gap-1.5">
+    <div className="h-7 bg-[var(--editor-panel-header)] border-b border-[var(--editor-border)] flex items-center px-2.5 gap-1.5">
       {children}
     </div>
   );
@@ -32,8 +31,8 @@ function CheckIcon() {
 
 function Bullet({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-2 text-[16px] text-[var(--text)]">
-      <span className="text-[var(--accent)] flex-shrink-0">
+    <div className="flex items-center gap-2 text-[16px] text-[var(--editor-text)]">
+      <span className="text-[var(--editor-accent)] flex-shrink-0">
         <CheckIcon />
       </span>
       {children}
@@ -41,11 +40,10 @@ function Bullet({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ─── Mockups ─────────────────────────────────────────────────────────────────
+// Mockups
 // refactor: separates components for each mockup (/Mockups/*.tsx)
 
-// ─── Feature row data ─────────────────────────────────────────────────────────
-
+// Feature row data
 interface FeatureRow {
   eyebrow: string;
   title: string;
@@ -119,81 +117,21 @@ const FEATURE_ROWS: FeatureRow[] = [
   },
 ];
 
-// ─── Main component ───────────────────────────────────────────────────────────
-
 export default function FeaturesSection() {
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
-
-        :root {
-          --ph:      oklch(0.21 0.006 285.885);
-          --input:   oklch(0.16 0.005 285.823);
-          --accent:  oklch(0.55 0.18 240);
-          --accent-s:oklch(0.55 0.18 240 / 15%);
-          --accent-b:oklch(0.55 0.18 240 / 35%);
-          --text:    oklch(0.985 0 0);
-          --muted:   oklch(0.705 0.015 286.067);
-          --dis:     oklch(0.439 0 0);
-          --border:  oklch(1 0 0 / 8%);
-          --bl:      oklch(1 0 0 / 13%);
-        }
-
-        .feat-mockup {
-          flex: 1;
-          min-width: 0;
-          background: oklch(0.18 0.005 285.823);
-          border: 1px solid var(--bl);
-          border-radius: 14px;
-          overflow: hidden;
-        }
-
-        @keyframes featSlideIn {
-          from { opacity: 0; transform: translateY(16px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .feat-row { animation: featSlideIn 0.5s ease both; }
-        .feat-row:nth-child(1) { animation-delay: 0.00s; }
-        .feat-row:nth-child(2) { animation-delay: 0.05s; }
-        .feat-row:nth-child(3) { animation-delay: 0.10s; }
-        .feat-row:nth-child(4) { animation-delay: 0.15s; }
-        .feat-row:nth-child(5) { animation-delay: 0.20s; }
-        .feat-row:nth-child(6) { animation-delay: 0.25s; }
-
-        /* Responsive: stack rows on narrow viewports */
-        @media (max-width: 900px) {
-          .feat-row {
-            flex-direction: column !important;
-          }
-          .feat-text-block {
-            width: 100% !important;
-          }
-          .feat-mockup-wrap {
-            width: 100% !important;
-          }
-        }
-      `}</style>
-
-      <section
-        className="max-w-7xl mx-auto px-10 py-20"
-        style={{ fontFamily: "'DM Sans', sans-serif" }}
-      >
+      <section className="max-w-7xl mx-auto px-10 py-20 font-sans">
         {/* Section header */}
         <div className="flex items-center justify-center flex-col text-center mb-16">
-          <div className="text-[11px] font-semibold tracking-[.12em] uppercase text-[var(--accent)] mb-3.5">
-            What&apos;s inside
+          <div className="text-[14px] tracking-[.12em] font-inter uppercase text-[var(--editor-accent)] py-1.5 px-3 mb-3.5 border rounded-lg border-[var(--editor-accent)] bg-editor-panel">
+            Meet Illustrator
           </div>
-          <h2
-            className="text-[52px] font-semibold  mb-3"
-            style={{ fontFamily: "var(--font-geist-sans)" }}
-          >
+          <h2 className="text-[52px] font-semibold font-rethink-sans mb-3">
             Everything a desktop editor has,
             <br />
             now in your browser.
           </h2>
-          <p className="text-[18px] text-[var(--muted)] leading-[1.7] max-w-[480px] font-light mb-[72px]">
+          <p className="text-[18px] text-[var(--editor-text-muted)] leading-[1.7] max-w-[480px] font-inter font-light mb-[72px]">
             Illustrator brings professional-grade tools, layers, filters, and
             cloud workflow — all running natively in your browser with zero
             install.
@@ -204,20 +142,17 @@ export default function FeaturesSection() {
         {FEATURE_ROWS.map((feat) => (
           <div
             key={feat.title}
-            className={`feat-row flex items-center justify-center gap-45 py-12 ${feat.flip ? "flex-row-reverse" : ""}`}
+            className={`feat-row flex items-center justify-center gap-45 py-20 ${feat.flip ? "flex-row-reverse" : ""}`}
           >
             {/* Text block */}
             <div className="feat-text-block flex-none w-[340px]">
-              <div className="text-[11px] font-semibold tracking-[.1em] uppercase text-[var(--accent)] mb-2.5">
+              <div className="text-[14px] font-inter font-medium tracking-[.1em] text-[var(--editor-accent)] mb-2.5">
                 {feat.eyebrow}
               </div>
-              <h3
-                className="text-[36px] font-light tracking-[-1px] leading-[1.15] mb-3"
-                style={{ fontFamily: "var(--font-geist-sans)" }}
-              >
+              <h3 className="text-[42px] font-rethink-sans font-light tracking-[-1px] leading-[1.15] mb-3">
                 {feat.title}
               </h3>
-              <p className="text-[16px] text-[var(--muted)] leading-[1.7] font-light mb-[18px]">
+              <p className="text-[18px] font-inter text-[var(--editor-text-muted)] leading-[1.7] font-light mb-[18px]">
                 {feat.desc}
               </p>
               <div className="flex flex-col gap-1.5 mb-5">
@@ -227,7 +162,7 @@ export default function FeaturesSection() {
               </div>
             </div>
 
-            {/* Mockup — fixed 480px, never grows wider */}
+            {/* Mockup features */}
             <div className="feat-mockup-wrap flex-none w-[480px] overflow-hidden">
               {feat.mockup}
             </div>

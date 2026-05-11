@@ -189,7 +189,9 @@ export default function ToolsMockup() {
   return (
     <div className="feat-mockup">
       <MmBar>
-        <span className="text-[10px] text-[var(--muted)]">Tool palette</span>
+        <span className="text-[10px] text-[var(--editor-text-muted)]">
+          Tool palette
+        </span>
       </MmBar>
       <div className="grid grid-cols-4 gap-1 p-2.5 ">
         {TOOLS.map((t) => (
@@ -197,8 +199,8 @@ export default function ToolsMockup() {
             key={t.label}
             className={`aspect-square flex flex-col items-center justify-center gap-1 rounded-[6px] border text-[9px] cursor-default [&_svg]:w-4 [&_svg]:h-4 ${
               t.active
-                ? "bg-[var(--accent-s)] border-[var(--accent-b)] text-[var(--accent)]"
-                : "bg-[var(--ph)] border-transparent text-[var(--muted)]"
+                ? "bg-[var(--editor-accent-subtle)] border-[var(--editor-accent-border)] text-[var(--editor-accent)]"
+                : "bg-[var(--editor-panel-header)] border-transparent text-[var(--editor-text-muted)]"
             }`}
           >
             {t.icon}

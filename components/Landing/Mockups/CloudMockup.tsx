@@ -9,22 +9,26 @@ export default function CloudMockup() {
   return (
     <div className="feat-mockup">
       <MmBar>
-        <span className="text-[10px] text-[var(--muted)]">My projects</span>
-        <span className="ml-auto text-[10px] text-[var(--accent)]">+ New</span>
+        <span className="text-[10px] text-[var(--editor-text-muted)]">
+          My projects
+        </span>
+        <span className="ml-auto text-[10px] text-[var(--editor-accent)]">
+          + New
+        </span>
       </MmBar>
       <div className="p-4 flex flex-col gap-2.5">
         {files.map((f) => (
           <div
             key={f.name}
-            className="flex items-center gap-[9px] px-[9px] py-[7px] bg-[var(--ph)] rounded-[6px] border border-[var(--bl)]"
+            className="flex items-center gap-[9px] px-[9px] py-[7px] bg-[var(--editor-panel-header)] rounded-[6px] border border-[var(--editor-border-light)]"
           >
-            <div className="w-7 h-7 bg-[var(--accent-s)] border border-[var(--accent-b)] rounded-[5px] flex items-center justify-center flex-shrink-0">
+            <div className="w-7 h-7 bg-[var(--editor-accent-subtle)] border border-[var(--editor-accent-border)] rounded-[5px] flex items-center justify-center flex-shrink-0">
               <svg
                 width="14"
                 height="14"
                 viewBox="0 0 14 14"
                 fill="none"
-                stroke="var(--accent)"
+                stroke="var(--editor-accent)"
                 strokeWidth="1.3"
                 strokeLinecap="round"
               >
@@ -33,18 +37,22 @@ export default function CloudMockup() {
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[11px] text-[var(--text)]">{f.name}</div>
-              <div className="text-[10px] text-[var(--muted)]">{f.meta}</div>
+              <div className="text-[11px] text-[var(--editor-text)]">
+                {f.name}
+              </div>
+              <div className="text-[10px] text-[var(--editor-muted)]">
+                {f.meta}
+              </div>
             </div>
           </div>
         ))}
-        <div className="flex items-center gap-1.5 bg-[var(--input)] border border-[var(--bl)] rounded-[6px] px-2.5 py-[6px] text-[10.5px] text-[var(--muted)]">
+        <div className="flex items-center gap-1.5 bg-[var(--editor-input-bg)] border border-[var(--editor-border-light)] rounded-[6px] px-2.5 py-[6px] text-[10.5px] text-[var(--editor-text-muted)]">
           <svg
             width="12"
             height="12"
             viewBox="0 0 12 12"
             fill="none"
-            stroke="var(--accent)"
+            stroke="var(--editor-accent)"
             strokeWidth="1.2"
             strokeLinecap="round"
           >
@@ -55,7 +63,7 @@ export default function CloudMockup() {
           <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
             illustr.app/share/xK92mP4
           </span>
-          <button className="bg-[var(--accent)] text-white border-none text-[10px] px-2 py-[3px] rounded cursor-default flex-shrink-0">
+          <button className="bg-[var(--editor-accent)] text-white border-none text-[10px] px-2 py-[3px] rounded cursor-default flex-shrink-0">
             Copy
           </button>
         </div>
