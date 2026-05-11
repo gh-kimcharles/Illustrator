@@ -7,7 +7,6 @@ import CloudMockup from "./Mockups/CloudMockup";
 import ExportMockup from "./Mockups/ExportMockup";
 
 // Shared primitives
-
 export function MmBar({ children }: { children: React.ReactNode }) {
   return (
     <div className="h-7 bg-[var(--editor-panel-header)] border-b border-[var(--editor-border)] flex items-center px-2.5 gap-1.5">

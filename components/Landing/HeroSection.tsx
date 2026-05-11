@@ -119,7 +119,8 @@ export default function HeroSection() {
     // bg-transparent lets the TopologyBackground canvas show
     // still `relative` so the absolute canvas inside is positioned correctly
     <section className="relative min-h-screen flex flex-col px-25 pt-24 pb-16 overflow-hidden bg-transparent">
-      {/* add: manual implementation of TopologyBackground; no external libraries used */}
+      {/* update: vanta implementation */}
+      {/* https://www.vantajs.com/?effect=topology#(backgroundAlpha:1,backgroundColor:#09090b,color:#71717a,gyroControls:!f,minHeight:200,minWidth:200,mouseControls:!t,scale:1,scaleMobile:1,touchControls:!t) */}
       <TopologyBackground />
 
       <div className="flex items-center gap-12 flex-1">
