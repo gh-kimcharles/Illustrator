@@ -47,18 +47,18 @@ const LoginPage = () => {
           <div className="inline-flex items-center justify-center w-12 h-12 bg-[oklch(0.10_0.05_240)] text-editor-accent text-xl font-bold mb-3">
             Ill
           </div>
-          <h1 className="text-xl font-semibold text-editor-text">
+          <h1 className="text-xl font-semibold text-editor-text font-inter">
             Sign in to Illustrator
           </h1>
           <p className="text-[13px] text-editor-text-muted mt-1">
-            Welcome back
+            Enter your email below to login to your account
           </p>
         </div>
 
         {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="bg-editor-panel border border-editor-border p-6 space-y-4"
+          className="bg-editor-panel border border-editor-border rounded-lg p-6"
         >
           {error && (
             <div className="bg-editor-danger-subtle border border-editor-danger/30 text-editor-danger text-[12px] px-3 py-2">
@@ -66,8 +66,8 @@ const LoginPage = () => {
             </div>
           )}
 
-          <div className="space-y-1">
-            <label className="text-[11px] text-editor-text-muted uppercase tracking-wide">
+          <div className="space-y-1 mb-6">
+            <label className=" block text-[13px] text-editor-text tracking-wide mb-2.5">
               Email
             </label>
             <input
@@ -75,40 +75,52 @@ const LoginPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full editor-input px-3 py-2 text-[13px]"
+              className="w-full editor-input px-3 py-2 text-[13px] rounded-md"
               placeholder="you@example.com"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[11px] text-editor-text-muted uppercase tracking-wide">
-              Password
-            </label>
+          <div className="space-y-1 mb-6">
+            <div className="flex justify-between  mb-2.5">
+              <label className="block text-[13px] text-editor-text tracking-wide">
+                Password
+              </label>
+              <button className="text-[13px] text-editor-text tracking-wide hover:underline underline-offset-4">
+                Forgot your password?
+              </button>
+            </div>
+
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full editor-input px-3 py-2 text-[13px]"
-              placeholder="••••••••"
+              className="w-full editor-input px-3 py-2 text-[13px] rounded-md"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-editor-accent hover:bg-editor-accent-hover text-white py-2 text-[13px] font-medium transition-colors disabled:opacity-60"
+            className="w-full bg-editor-accent hover:bg-editor-accent-hover text-white py-2 text-[13px] font-medium transition-colors disabled:opacity-60 rounded-md mb-2.5"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
-        </form>
 
-        <p className="text-center text-[12px] text-editor-text-muted mt-4">
-          No account?{" "}
-          <Link href="/register" className="text-editor-accent hover:underline">
-            Create one
-          </Link>
-        </p>
+          <button className="w-full text-white py-2 text-[13px] font-medium rounded-md border border-editor-border">
+            Login with Google
+          </button>
+
+          <p className="text-center text-[13px] text-editor-text-muted mt-4">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="text-editor-accent hover:underline"
+            >
+              Sign up
+            </Link>
+          </p>
+        </form>
       </div>
     </div>
   );
