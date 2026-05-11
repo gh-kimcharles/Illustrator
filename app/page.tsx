@@ -6,6 +6,7 @@ import LandingNav from "@/components/Landing/LandingNav";
 
 export default function LandingPage() {
   return (
+    // ref: https://mues.ai/
     <div className="min-h-screen bg-editor-bg text-editor-text overflow-x-hidden">
       <LandingNav />
       <main>
