@@ -20,7 +20,8 @@ A simple web-based photo editor inspired by Photoshop, built without third-party
 | p7.1  | Tool tests                                                       | done        |
 | p8    | UI polish                                                        | on progress |
 | p8.1  | Landing page                                                     | done        |
-| p8.1  | Auth page                                                        | on progress |
+| p8.2  | Auth page                                                        | done        |
+| p8.3  | Editor & Canvas                                                  | on progress |
 | p\*   | Deployment (Neon)                                                |             |
 
 ## Author
