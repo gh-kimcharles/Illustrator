@@ -1,15 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { formatDate } from "@/utils";
 import { NewProjectButton } from "./NewProjectButton";
 import { ProjectCard } from "./ProjectCard";
+import { ProjectListView } from "./ProjectListView";
 
-type Project = {
+export type Project = {
   id: string;
   name: string;
   thumbnail: string | null;
@@ -104,94 +101,6 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: "name", label: "Name" },
   { key: "created", label: "Date created" },
 ];
-
-// List view
-function ProjectListView({ projects }: { projects: Project[] }) {
-  return (
-    <div className="border border-editor-border rounded overflow-hidden">
-      {/* Header */}
-      <div className="grid grid-cols-[auto_1fr_120px_120px_100px] gap-4 px-4 py-2 bg-editor-panel-header border-b border-editor-border">
-        {["", "Name", "Modified", "Created", ""].map((h, i) => (
-          <span
-            key={i}
-            className="text-[11px] font-semibold uppercase tracking-wide text-editor-text-muted"
-          >
-            {h}
-          </span>
-        ))}
-      </div>
-      {/* Rows */}
-      {projects.map((project) => (
-        <ProjectListRow key={project.id} project={project} />
-      ))}
-    </div>
-  );
-}
-
-function ProjectListRow({ project }: { project: Project }) {
-  const router = useRouter();
-  const [busy, setBusy] = useState(false);
-
-  async function handleDelete() {
-    if (!confirm(`Delete "${project.name}"? This cannot be undone.`)) return;
-    setBusy(true);
-    await fetch(`/api/projects/${project.id}`, { method: "DELETE" });
-    router.refresh();
-  }
-
-  return (
-    <Link
-      href={`/editor?projectId=${project.id}`}
-      className="grid grid-cols-[auto_1fr_120px_120px_100px] gap-4 px-4 py-2.5 border-b border-editor-border last:border-0 hover:bg-editor-hover transition-colors items-center group"
-    >
-      {/* Thumb */}
-      <div className="w-10 h-7 bg-editor-canvas-bg rounded overflow-hidden flex-shrink-0 border border-editor-border-light">
-        {project.thumbnail ? (
-          <Image
-            src={project.thumbnail}
-            alt={project.name}
-            width={40}
-            height={28}
-            className="object-cover w-full h-full"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-[10px] text-editor-text-disabled">
-            🖼
-          </div>
-        )}
-      </div>
-
-      {/* Name */}
-      <span className="text-[13px] text-editor-text truncate">
-        {project.name}
-      </span>
-
-      {/* Modified */}
-      <span className="text-[12px] text-editor-text-muted">
-        {formatDate(project.updatedAt)}
-      </span>
-
-      {/* Created */}
-      <span className="text-[12px] text-editor-text-muted">
-        {formatDate(project.createdAt)}
-      </span>
-
-      {/* Actions */}
-      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            handleDelete();
-          }}
-          disabled={busy}
-          className="text-[11px] px-2 py-0.5 border border-transparent text-editor-text-disabled hover:border-editor-danger/30 hover:text-editor-danger hover:bg-editor-danger-subtle transition-colors rounded"
-        >
-          Delete
-        </button>
-      </div>
-    </Link>
-  );
-}
 
 export function DashboardClient({
   projects,
@@ -475,13 +384,12 @@ export function DashboardClient({
                 <div className="w-16 h-16 bg-editor-panel border border-editor-border flex items-center justify-center mb-4 rounded">
                   <span className="text-2xl text-editor-text-muted">🖼</span>
                 </div>
-                <p className="text-editor-text font-medium mb-1">
+                <p className="text-editor-text font-inter font-medium mb-1">
                   No projects yet
                 </p>
                 <p className="text-[13px] text-editor-text-muted mb-4">
                   Create your first project to get started
                 </p>
-                <NewProjectButton />
               </div>
             ) : viewMode === "grid" ? (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
