@@ -62,7 +62,7 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
   const formattedDate = formatDate(project.updatedAt);
 
   return (
-    <div className="group bg-editor-panel border border-editor-border hover:border-editor-border-light transition-colors">
+    <div className="group bg-editor-panel border border-editor-border hover:border-editor-border-light rounded-lg transition-colors overflow-hidden">
       {/* Thumbnail */}
       <Link href={`/editor?projectId=${project.id}`}>
         <div className="relative aspect-video bg-editor-canvas-bg overflow-hidden">
@@ -80,27 +80,31 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
           )}
           {/* Hover overlay */}
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <span className="text-white text-[12px] font-medium">Open</span>
+            <span className="text-white text-[12px] font-medium font-inter">
+              Open
+            </span>
           </div>
+        </div>
+
+        <div className="p-3 pb-3">
+          <p className="text-[13px] text-editor-text font-inter font-medium truncate mb-0.5">
+            {project.name}
+          </p>
+          <p className="text-[12px] text-editor-text-muted mb-3">
+            {formattedDate}
+          </p>
         </div>
       </Link>
 
       {/* Info + actions */}
-      <div className="p-3">
-        <p className="text-[13px] text-editor-text font-medium truncate mb-0.5">
-          {project.name}
-        </p>
-        <p className="text-[11px] text-editor-text-muted mb-3">
-          {formattedDate}
-        </p>
-
+      <div className="px-3 pb-3">
         <div className="flex items-center gap-1.5">
           {/* Share toggle */}
           <button
             onClick={handleToggleShare}
             disabled={busy}
             title={isShared ? "Disable sharing" : "Enable sharing"}
-            className={`text-[10px] px-2 py-1 border transition-colors ${
+            className={`text-[11px] px-2 py-1 border transition-colors rounded ${
               isShared
                 ? "border-editor-accent/40 text-editor-accent bg-editor-accent-subtle"
                 : "border-editor-border-light text-editor-text-muted hover:bg-editor-hover"
@@ -109,14 +113,14 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
             {isShared ? "Shared" : "Share"}
           </button>
 
-          {/* Copy link — only when shared */}
+          {/* Copy link; only when shared */}
           {isShared && shareToken && (
             <button
               onClick={handleCopyLink}
               title="Copy share link"
-              className="text-[10px] px-2 py-1 border border-editor-border-light text-editor-text-muted hover:bg-editor-hover transition-colors"
+              className="text-[11px] px-2 py-1 border border-editor-border-light text-editor-text-muted hover:bg-editor-hover transition-colors rounded"
             >
-              {copied ? "Copied!" : "Copy link"}
+              {copied ? "Copied" : "Copy link"}
             </button>
           )}
 
@@ -128,7 +132,7 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
             onClick={handleDelete}
             disabled={busy}
             title="Delete project"
-            className="text-[10px] px-2 py-1 border border-transparent text-editor-text-disabled hover:border-editor-danger/30 hover:text-editor-danger hover:bg-editor-danger-subtle transition-colors"
+            className="text-[11px] px-2 py-1 border border-transparent text-editor-text-disabled hover:border-editor-danger/30 hover:text-editor-danger hover:bg-editor-danger-subtle transition-colors rounded"
           >
             Delete
           </button>
