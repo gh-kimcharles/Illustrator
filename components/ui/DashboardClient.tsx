@@ -1,10 +1,11 @@
 "use client";
 
-import { formatDate } from "@/utils";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { formatDate } from "@/utils";
 import { NewProjectButton } from "./NewProjectButton";
 import { ProjectCard } from "./ProjectCard";
 
@@ -104,7 +105,7 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: "created", label: "Date created" },
 ];
 
-// ── List view ──────────────────────────────────────────────────────────────
+// List view
 function ProjectListView({ projects }: { projects: Project[] }) {
   return (
     <div className="border border-editor-border rounded overflow-hidden">
@@ -238,6 +239,10 @@ export function DashboardClient({
     return sortAsc ? cmp : -cmp;
   });
 
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/login" });
+  };
+
   const initials = userName
     ? userName
         .split(" ")
@@ -250,7 +255,7 @@ export function DashboardClient({
   return (
     <div className="h-screen flex flex-col bg-editor-bg text-editor-text overflow-hidden">
       {/* Top bar */}
-      <header className="h-11 bg-editor-menubar border-b border-editor-border flex items-center px-3 gap-3 flex-shrink-0">
+      <header className="h-15 bg-editor-menubar border-b border-editor-border flex items-center px-3 gap-3 flex-shrink-0">
         {/* Logo */}
         <div className="w-7 h-7 flex items-center justify-center bg-[oklch(0.10_0.05_240)] text-editor-accent text-[12px] font-bold rounded-sm flex-shrink-0">
           Ill
@@ -263,14 +268,14 @@ export function DashboardClient({
           <span className="text-[12px] text-editor-text-muted hidden sm:block">
             {userEmail}
           </span>
-          <Link
-            href="/api/auth/signout"
+          <button
             className="text-[12px] text-editor-text-muted hover:text-editor-text transition-colors"
+            onClick={handleSignOut}
           >
             Sign out
-          </Link>
+          </button>
           {/* Avatar */}
-          <div className="w-7 h-7 rounded-full bg-editor-accent flex items-center justify-center text-white text-[11px] font-semibold flex-shrink-0">
+          <div className="w-7 h-7 rounded bg-editor-accent flex items-center justify-center text-white text-[11px] font-semibold flex-shrink-0">
             {initials}
           </div>
         </div>
@@ -278,19 +283,26 @@ export function DashboardClient({
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-44 bg-editor-panel border-r border-editor-border flex flex-col flex-shrink-0 overflow-y-auto">
+        <aside className="w-56  flex flex-col flex-shrink-0 overflow-y-auto py-6.5 px-4.5">
           {/* New file */}
-          <div className="p-3">
+          <div className="flex flex-col gap-2.5">
             <NewProjectButton />
+            <button className="w-full px-3 py-1.5 flex items-center justify-center border border-editor-border-light rounded-md text-[13px] font-inter text-editor-text hover:bg-editor-hover transition-colors">
+              Open
+            </button>
+          </div>
+
+          <div className=" py-3">
+            <hr className="border-editor-border" />
           </div>
 
           {/* Nav */}
-          <nav className="flex flex-col px-2 gap-0.5">
+          <nav className="flex flex-col gap-0.5">
             {NAV_ITEMS.map(({ key, label, icon }) => (
               <button
                 key={key}
                 onClick={() => setActiveNav(key)}
-                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] transition-colors text-left w-full ${
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[12px] transition-colors text-left w-full ${
                   activeNav === key
                     ? "bg-editor-accent-subtle text-editor-accent"
                     : "text-editor-text-muted hover:bg-editor-hover hover:text-editor-text"
@@ -306,152 +318,158 @@ export function DashboardClient({
         {/* Main content */}
         <main className="flex-1 flex flex-col overflow-hidden">
           {/* Toolbar */}
-          <div className="h-10 border-b border-editor-border flex items-center px-4 gap-3 flex-shrink-0 bg-editor-panel">
-            {/* Section title */}
-            <h1 className="text-[13px] font-semibold text-editor-text mr-2">
-              {sectionTitle[activeNav]}
-            </h1>
+          <div className="flex items-center justify-between flex-shrink-0 py-6.5 px-25">
+            {/* Left */}
+            <div className="flex flex-col gap-2">
+              {/* Title */}
+              <h1 className="text-[16px] font-inter font-semibold text-editor-text">
+                {sectionTitle[activeNav]}
+              </h1>
 
-            {/* Sort dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setSortOpen((v) => !v)}
-                className="flex items-center gap-1.5 text-[12px] text-editor-text-muted hover:text-editor-text transition-colors border border-transparent hover:border-editor-border-light px-2 py-0.5 rounded"
-              >
-                Sort: {SORT_OPTIONS.find((s) => s.key === sortKey)?.label}
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </button>
-              {sortOpen && (
-                <div className="absolute top-full left-0 mt-1 w-36 bg-editor-panel border border-editor-border-light rounded shadow-lg z-20">
-                  {SORT_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.key}
-                      onClick={() => {
-                        setSortKey(opt.key);
-                        setSortOpen(false);
-                      }}
-                      className={`w-full text-left px-3 py-1.5 text-[12px] transition-colors hover:bg-editor-hover ${
-                        sortKey === opt.key
-                          ? "text-editor-accent"
-                          : "text-editor-text-muted"
-                      }`}
+              {/* Sort controls */}
+              <div className="flex items-center gap-2">
+                {/* Sort dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => setSortOpen((v) => !v)}
+                    className="flex items-center gap-1.5 text-[12px] text-editor-text-muted hover:text-editor-text transition-colors"
+                  >
+                    Sort:{" "}
+                    <span className="font-semibold">
+                      {SORT_OPTIONS.find((s) => s.key === sortKey)?.label}
+                    </span>
+                    <svg
+                      width="10"
+                      height="10"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
                     >
-                      {opt.label}
-                    </button>
-                  ))}
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </button>
+
+                  {sortOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-36 bg-editor-panel border border-editor-border-light rounded shadow-lg z-20">
+                      {SORT_OPTIONS.map((opt) => (
+                        <button
+                          key={opt.key}
+                          onClick={() => {
+                            setSortKey(opt.key);
+                            setSortOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-1.5 text-[12px] transition-colors hover:bg-editor-hover ${
+                            sortKey === opt.key
+                              ? "text-editor-accent"
+                              : "text-editor-text-muted"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
+
+                {/* Sort direction */}
+                <button
+                  onClick={() => setSortAsc((v) => !v)}
+                  title={sortAsc ? "Ascending" : "Descending"}
+                  className="text-editor-text-muted hover:text-editor-text transition-colors"
+                >
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    style={{ transform: sortAsc ? "scaleY(-1)" : undefined }}
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <polyline points="19 12 12 19 5 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
-            {/* Sort direction */}
-            <button
-              onClick={() => setSortAsc((v) => !v)}
-              title={sortAsc ? "Ascending" : "Descending"}
-              className="text-editor-text-muted hover:text-editor-text transition-colors"
-            >
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                style={{ transform: sortAsc ? "scaleY(-1)" : undefined }}
-              >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <polyline points="19 12 12 19 5 12" />
-              </svg>
-            </button>
-
-            <div className="flex-1" />
-
-            {/* Filter input */}
-            <div className="relative">
-              <svg
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-editor-text-disabled"
-                width="11"
-                height="11"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <input
-                type="text"
-                value={filterText}
-                onChange={(e) => setFilterText(e.target.value)}
-                placeholder="Filter Recent Files"
-                className="editor-input pl-6 pr-3 py-1 text-[11px] rounded w-40 placeholder:text-editor-text-disabled"
-              />
-            </div>
-
-            {/* View toggle */}
-            <div className="flex items-center border border-editor-border-light rounded overflow-hidden">
-              <button
-                onClick={() => setViewMode("list")}
-                title="List view"
-                className={`w-7 h-7 flex items-center justify-center transition-colors ${
-                  viewMode === "list"
-                    ? "bg-editor-accent-subtle text-editor-accent"
-                    : "text-editor-text-muted hover:bg-editor-hover"
-                }`}
-              >
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
+            {/* Right */}
+            <div className="flex flex-col items-end gap-2">
+              {/* View toggle */}
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`w-7 h-7 flex items-center justify-center transition-colors rounded ${
+                    viewMode === "list"
+                      ? "bg-editor-accent-subtle text-editor-accent"
+                      : "text-editor-text-muted hover:bg-editor-hover"
+                  }`}
                 >
-                  <line x1="8" y1="6" x2="21" y2="6" />
-                  <line x1="8" y1="12" x2="21" y2="12" />
-                  <line x1="8" y1="18" x2="21" y2="18" />
-                  <line x1="3" y1="6" x2="3.01" y2="6" />
-                  <line x1="3" y1="12" x2="3.01" y2="12" />
-                  <line x1="3" y1="18" x2="3.01" y2="18" />
-                </svg>
-              </button>
-              <button
-                onClick={() => setViewMode("grid")}
-                title="Grid view"
-                className={`w-7 h-7 flex items-center justify-center transition-colors ${
-                  viewMode === "grid"
-                    ? "bg-editor-accent-subtle text-editor-accent"
-                    : "text-editor-text-muted hover:bg-editor-hover"
-                }`}
-              >
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    {" "}
+                    <line x1="8" y1="6" x2="21" y2="6" />{" "}
+                    <line x1="8" y1="12" x2="21" y2="12" />{" "}
+                    <line x1="8" y1="18" x2="21" y2="18" />{" "}
+                    <line x1="3" y1="6" x2="3.01" y2="6" />{" "}
+                    <line x1="3" y1="12" x2="3.01" y2="12" />{" "}
+                    <line x1="3" y1="18" x2="3.01" y2="18" />{" "}
+                  </svg>
+                </button>
+
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`w-7 h-7 flex items-center justify-center transition-colors rounded ${
+                    viewMode === "grid"
+                      ? "bg-editor-accent-subtle text-editor-accent"
+                      : "text-editor-text-muted hover:bg-editor-hover"
+                  }`}
                 >
-                  <rect x="3" y="3" width="7" height="7" />
-                  <rect x="14" y="3" width="7" height="7" />
-                  <rect x="3" y="14" width="7" height="7" />
-                  <rect x="14" y="14" width="7" height="7" />
-                </svg>
-              </button>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    {" "}
+                    <rect x="3" y="3" width="7" height="7" />{" "}
+                    <rect x="14" y="3" width="7" height="7" />{" "}
+                    <rect x="3" y="14" width="7" height="7" />{" "}
+                    <rect x="14" y="14" width="7" height="7" />{" "}
+                  </svg>
+                </button>
+              </div>
+
+              {/* Filter */}
+              <div className="flex items-center gap-2 w-54">
+                <span className="text-[12px] font-semibold text-editor-text-muted whitespace-nowrap">
+                  Filter
+                </span>
+
+                <div className="flex-1 border-b border-editor-border-light focus-within:border-editor-text-muted transition-colors">
+                  <input
+                    type="text"
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                    placeholder="Filer Recent Files"
+                    className="w-full bg-transparent text-[11px] py-0.5 outline-none text-editor-text placeholder:text-editor-text-disabled placeholder:italic"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Content area */}
-          <div className="flex-1 overflow-y-auto p-5">
+          <div className="flex-1 overflow-y-auto px-25 py-6">
             {filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 text-center">
                 <div className="w-16 h-16 bg-editor-panel border border-editor-border flex items-center justify-center mb-4 rounded">
