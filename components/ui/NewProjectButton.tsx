@@ -2,17 +2,17 @@
 
 import { useRouter } from "next/navigation";
 
-// new project button
-// navigates to the editor with no projectId - creates a fresh canvas
-export function NewProjectButton() {
+export function NewProjectButton({ compact }: { compact?: boolean }) {
   const router = useRouter();
 
   return (
     <button
       onClick={() => router.push("/editor")}
-      className="bg-editor-accent hover:bg-editor-accent-hover text-white px-4 py-2 text-[13px] font-medium transition-colors"
+      className={`bg-editor-accent hover:bg-editor-accent-hover text-white text-[12px] font-medium transition-colors rounded ${
+        compact ? "px-3 py-1.5" : "w-full px-3 py-2"
+      }`}
     >
-      + New Project
+      + New file
     </button>
   );
 }
