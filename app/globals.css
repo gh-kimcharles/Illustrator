@@ -369,7 +369,7 @@
   }
 
   .editor-tool-btn-active {
-    @apply bg-editor-accent-subtle border-editor-accent-border text-editor-accent;
+    @apply bg-editor-border-light border-editor-border-light text-editor-text;
   }
 
   /* Input fields inside panels */
