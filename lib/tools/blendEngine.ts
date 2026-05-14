@@ -11,10 +11,11 @@ function clamp01(v: number): number {
 // returns blended value for a single channel (0-1) given mode;
 // returns null for modes - fall back to normal for modes that aren't implemented YET
 function blendChannel(mode: BlendMode, s: number, b: number): number | null {
+  if (mode === "normal") return s; // explicit: source before alpha composite
   if (mode === "multiply") return blendMultiply(s, b);
   if (mode === "darken") return blendDarken(s, b);
   if (mode === "color-burn") return blendColorBurn(s, b);
-  return null;
+  return null; // unimplemented -> fallback to normal
 }
 
 /* Compositor */
@@ -44,17 +45,17 @@ function blendPixel(
     const bC = backdrop[i + c] / 255;
 
     const blended = blendChannel(mode, sC, bC);
-    // null = unimplemented mode, fall back to normal
 
+    // null = unimplemented mode, fall back to normal
     const mixed = blended !== null ? blended : sC;
 
     // alpha-composite the blended source over the backdrop
     const result = outA === 0 ? 0 : (mixed * sA + bC * bA * (1 - sA)) / outA;
 
-    out[i + 3] = Math.round(clamp01(outA) * 255);
+    out[i + c] = Math.round(clamp01(result) * 255); // channel
   }
 
-  out[i + 3] = Math.round(clamp01(outA) * 255);
+  out[i + 3] = Math.round(clamp01(outA) * 255); // alpha
 }
 
 export function compositeWithBlendMode(
@@ -64,14 +65,6 @@ export function compositeWithBlendMode(
 ): ImageData {
   const len = srcData.data.length;
   const out = new ImageData(srcData.width, srcData.height);
-
-  if (mode === "normal") {
-    // normal: standard source-over, no per-pixel math needed
-    for (let i = 0; i < len; i += 4) {
-      blendPixel("normal", srcData.data, backdropData.data, out.data, i);
-    }
-    return out;
-  }
 
   for (let i = 0; i < len; i += 4) {
     blendPixel(mode, srcData.data, backdropData.data, out.data, i);

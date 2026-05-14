@@ -45,6 +45,7 @@ export const CanvasArea = () => {
   } = useEditorStore();
 
   const displayRef = useRef<HTMLCanvasElement>(null); // composited display
+  const offscreenRef = useRef<OffscreenCanvas | null>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null); // selection dashes
   const containerRef = useRef<HTMLDivElement>(null); // outer scrollable container
   const textareaRef = useRef<HTMLTextAreaElement>(null); // for text input focus
@@ -117,7 +118,18 @@ export const CanvasArea = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    compositeLayers(ctx, layers, canvasSize);
+    const { width, height } = canvasSize;
+
+    // recreate only when size changes
+    if (
+      !offscreenRef.current ||
+      offscreenRef.current.width !== width ||
+      offscreenRef.current.height !== height
+    ) {
+      offscreenRef.current = new OffscreenCanvas(width, height);
+    }
+
+    compositeLayers(ctx, layers, canvasSize, offscreenRef.current);
   }, [layers, canvasSize]);
 
   const onMouseMove = useCallback(

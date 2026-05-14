@@ -12,5 +12,6 @@ function clamp01(v: number): number {
 
 export function blendColorBurn(s: number, b: number): number {
   if (s === 0) return 0;
+  if (b === 1) return 1; // add: white background -> white
   return clamp01(1 - (1 - b) / s);
 }

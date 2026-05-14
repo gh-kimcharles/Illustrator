@@ -1,4 +1,5 @@
 import { CanvasSize, Layer } from "@/types";
+import { compositeWithBlendMode } from "../tools/blendEngine";
 
 /* Create layer */
 export function makeLayer(
@@ -41,25 +42,63 @@ export function makeBackgroundLayer(size: CanvasSize): Layer {
 
 /* Compositor */
 // merge all visible layer on the canvas (bottom to top); called after every event
+// update: merges all visible  layers bottom to top using per-pixel blending
+// each layer will now blended onto the running backdrop using blendMode + opacity
 export function compositeLayers(
   displayCtx: CanvasRenderingContext2D,
   layers: Layer[],
   size: CanvasSize,
+  outCanvas?: OffscreenCanvas,
 ): void {
+  const { width, height } = size;
+
+  // transparent backdrop
+  let backdropData = new ImageData(width, height);
+
   // Clear display canvas first
-  displayCtx.clearRect(0, 0, size.width, size.height);
+  // displayCtx.clearRect(0, 0, size.width, size.height);
 
   // Paint layer from bottom to top
   for (const layer of layers) {
     if (!layer.visible || !layer.canvas) continue;
 
-    displayCtx.save();
-    displayCtx.globalAlpha = layer.opacity / 100;
-    displayCtx.globalCompositeOperation =
-      layer.blendMode as GlobalCompositeOperation;
-    displayCtx.drawImage(layer.canvas, layer.offsetX, layer.offsetY);
-    displayCtx.restore();
+    // displayCtx.save();
+    // displayCtx.globalAlpha = layer.opacity / 100;
+    // displayCtx.globalCompositeOperation =
+    //   layer.blendMode as GlobalCompositeOperation;
+    // displayCtx.drawImage(layer.canvas, layer.offsetX, layer.offsetY);
+    // displayCtx.restore();
+
+    //  read the current layer's pixels
+    const srcCtx = layer.canvas.getContext("2d");
+    if (!srcCtx) continue;
+    const srcData = srcCtx.getImageData(0, 0, width, height);
+
+    // apply layer opacity to source alpha before blending
+    if (layer.opacity < 100) {
+      const factor = layer.opacity / 100;
+      for (let i = 3; i < srcData.data.length; i += 4) {
+        srcData.data[i] = Math.round(srcData.data[i] * factor);
+      }
+    }
+
+    // blend source onto current backdrop -> new backdrop
+    backdropData = compositeWithBlendMode(
+      layer.blendMode,
+      srcData,
+      backdropData,
+    );
   }
+
+  // update: after backdropData through all layers, update displayCtx
+  displayCtx.clearRect(0, 0, width, height);
+  // const outCanvas = new OffscreenCanvas(width, height);
+
+  const target = outCanvas ?? new OffscreenCanvas(width, height);
+  const outCtx = target.getContext("2d");
+  if (!outCtx) return;
+  outCtx.putImageData(backdropData, 0, 0);
+  displayCtx.drawImage(target, 0, 0);
 }
 
 /* Snapshot */
