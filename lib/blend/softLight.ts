@@ -1,4 +1,4 @@
-import { BlendModeDescriptor } from "../BlendModes";
+import { BlendModeDescriptor } from "../../components/Panels/BlendModes";
 
 export const softLight: BlendModeDescriptor = {
   value: "soft-light",

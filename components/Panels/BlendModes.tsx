@@ -16,7 +16,7 @@ import {
   softLight,
   screen,
   difference,
-} from "./modes";
+} from "../../lib/blend";
 
 export interface BlendModeDescriptor {
   value: BlendMode;
@@ -68,7 +68,7 @@ const GROUP_ORDER: BlendModeGroup[] = [
   "Component",
 ];
 
-export interface BlendModeGroup_Entry {
+export interface BlendModeGroupEntry {
   group: BlendModeGroup;
   modes: BlendModeDescriptor[];
 }
@@ -79,8 +79,8 @@ export const FlatBlendModes = (): BlendModeDescriptor[] => {
 };
 
 // flat list for cases that don't need grouping
-export const GroupedBlendModes = (): BlendModeGroup_Entry[] => {
-  return GROUP_ORDER.reduce<BlendModeGroup_Entry[]>((acc, group) => {
+export const GroupedBlendModes = (): BlendModeGroupEntry[] => {
+  return GROUP_ORDER.reduce<BlendModeGroupEntry[]>((acc, group) => {
     const modes = ALL_MODES.filter((m) => m.group === group);
     if (modes.length > 0) acc.push({ group, modes });
     return acc;
