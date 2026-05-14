@@ -2,27 +2,11 @@
 
 import { useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
-import type { BlendMode } from "@/types";
 import { IconButton, Panel, Select, Slider } from "@/components/ui";
+import { GroupedBlendModes } from "./BlendModes";
 
-const BLEND_MODES: { value: BlendMode; label: string }[] = [
-  { value: "normal", label: "Normal" },
-  { value: "multiply", label: "Multiply" },
-  { value: "screen", label: "Screen" },
-  { value: "overlay", label: "Overlay" },
-  { value: "darken", label: "Darken" },
-  { value: "lighten", label: "Lighten" },
-  { value: "color-dodge", label: "Color Dodge" },
-  { value: "color-burn", label: "Color Burn" },
-  { value: "hard-light", label: "Hard Light" },
-  { value: "soft-light", label: "Soft Light" },
-  { value: "difference", label: "Difference" },
-  { value: "exclusion", label: "Exclusion" },
-  { value: "hue", label: "Hue" },
-  { value: "saturation", label: "Saturation" },
-  { value: "color", label: "Color" },
-  { value: "luminosity", label: "Luminosity" },
-];
+// update: use GroupedBlendModes from ./BlendModes; separated concerns for layers and blend modes
+const BLEND_MODES = GroupedBlendModes();
 
 const LayersPanel = () => {
   const {
@@ -61,7 +45,7 @@ const LayersPanel = () => {
         <Select
           value={activeLayer?.blendMode ?? "normal"}
           onChange={(v) => activeLayer && setLayerBlendMode(activeLayer.id, v)}
-          options={BLEND_MODES}
+          groups={BLEND_MODES}
         />
 
         {/* Opacity */}
