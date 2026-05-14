@@ -213,7 +213,7 @@ export function DashboardClient({
                 onClick={() => setActiveNav(key)}
                 className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[12px] transition-colors text-left w-full ${
                   activeNav === key
-                    ? "bg-editor-accent-subtle text-editor-accent"
+                    ? "bg-editor-border-light text-white"
                     : "text-editor-text-muted hover:bg-editor-hover hover:text-editor-text"
                 }`}
               >
@@ -311,8 +311,8 @@ export function DashboardClient({
                   onClick={() => setViewMode("list")}
                   className={`w-7 h-7 flex items-center justify-center transition-colors rounded ${
                     viewMode === "list"
-                      ? "bg-editor-accent-subtle text-editor-accent"
-                      : "text-editor-text-muted hover:bg-editor-hover"
+                      ? "bg-editor-border-light text-editor-accent"
+                      : "text-   hover:bg-editor-hover"
                   }`}
                 >
                   <svg

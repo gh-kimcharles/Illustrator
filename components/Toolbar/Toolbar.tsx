@@ -196,7 +196,7 @@ const Toolbar = () => {
     useEditorStore();
 
   return (
-    <div className="w-11 bg-editor-toolbar border-r border-editor-border flex flex-col items-center py-1 gap-px flex-shrink-0 overflow-y-auto">
+    <div className="bg-editor-toolbar border-r border-editor-border flex flex-col items-center p-1.5 gap-px flex-shrink-0">
       {tools.map((tool, i) => {
         if (tool === "separator") {
           return (
