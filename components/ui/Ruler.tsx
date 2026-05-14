@@ -13,6 +13,7 @@ export function RulerH({ width }: { width: number }) {
           fontSize: 9,
           color: "var(--editor-text-muted)",
           bottom: 2,
+          zIndex: 10,
         }}
       >
         {i}
@@ -29,6 +30,7 @@ export function RulerH({ width }: { width: number }) {
         background: "var(--editor-panel-header)",
         borderBottom: "1px solid var(--editor-border)",
         overflow: "hidden",
+        zIndex: 10,
       }}
     >
       {ticks}
@@ -49,6 +51,7 @@ export function RulerV({ height }: { height: number }) {
           color: "var(--editor-text-muted)",
           right: 2,
           writingMode: "vertical-rl",
+          zIndex: 10,
         }}
       >
         {i}
@@ -66,6 +69,7 @@ export function RulerV({ height }: { height: number }) {
         background: "var(--editor-panel-header)",
         borderRight: "1px solid var(--editor-border)",
         overflow: "hidden",
+        zIndex: 10,
       }}
     >
       {ticks}
