@@ -5,3 +5,8 @@ export const exclusion: BlendModeDescriptor = {
   label: "Exclusion",
   group: "Difference",
 };
+
+// softer version of difference
+export function blendExclusion(s: number, b: number): number {
+  return s + b - 2 * s * b;
+}

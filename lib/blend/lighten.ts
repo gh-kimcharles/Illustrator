@@ -5,3 +5,7 @@ export const lighten: BlendModeDescriptor = {
   label: "Lighten",
   group: "Lighten",
 };
+
+export function blendLighten(s: number, b: number): number {
+  return s > b ? s : b;
+}

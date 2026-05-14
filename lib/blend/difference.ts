@@ -5,3 +5,7 @@ export const difference: BlendModeDescriptor = {
   label: "Difference",
   group: "Difference",
 };
+
+export function blendDifference(s: number, b: number): number {
+  return Math.abs(s - b);
+}
