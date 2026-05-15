@@ -20,11 +20,11 @@ A Photoshop-inspired image editor built entirely in the browser. Fully functiona
 | p6.1  | Code docs & tests                                                | done        |
 | p7    | Tools                                                            | done        |
 | p7.1  | Tool tests                                                       | done        |
-| p8    | UI polish                                                        | on progress |
+| p8    | UI polish                                                        | done        |
 | p8.1  | Landing page                                                     | done        |
 | p8.2  | Auth page                                                        | done        |
-| p8.3  | Editor & Canvas                                                  | on progress |
-| p\*   | Deployment (Neon)                                                |             |
+| p8.3  | Dashboard, Editor & Canvas                                       | partial     |
+| p\*   | Deployment (Neon)                                                | on progress |
 
 ## Features
 
