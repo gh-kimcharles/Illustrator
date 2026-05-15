@@ -7,11 +7,11 @@ import { ProjectCard } from "./ProjectCard";
 import { ProjectListView } from "./ProjectListView";
 import {
   ArrowDownOutline,
-  Bars3Outline,
+  BurgerOutline,
   ChevronDownOutline,
   ClockOutline,
   DocumentOutline,
-  Squares2x2Outline,
+  SquaresOutline,
   TrashOutline,
   UsersOutline,
 } from "@/assets/icons";
@@ -258,7 +258,7 @@ export function DashboardClient({
                       : "text-   hover:bg-editor-hover"
                   }`}
                 >
-                  <Bars3Outline size={16} />
+                  <BurgerOutline size={16} />
                 </button>
 
                 <button
@@ -269,7 +269,7 @@ export function DashboardClient({
                       : "text-editor-text-muted hover:bg-editor-hover"
                   }`}
                 >
-                  <Squares2x2Outline size={16} />
+                  <SquaresOutline size={16} />
                 </button>
               </div>
 

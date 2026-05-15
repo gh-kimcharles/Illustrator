@@ -4,7 +4,7 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export const Squares2x2Outline = ({
+export const SquaresOutline = ({
   size = 24,
   className,
   ...props

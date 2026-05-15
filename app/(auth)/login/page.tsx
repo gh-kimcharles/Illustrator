@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 import TopologyBackground from "@/components/ui/TopologyBackground";
 import EditorMockup from "@/components/Landing/Mockups/EditorMockup";
 import { EyeOutline, EyeSlashOutline } from "@/assets/icons";
-import { GoogleLogo } from "@/assets/logos/google-logo";
+import { GoogleLogo } from "@/assets/logos/GoogleLogo";
 
 const EyeIcon = ({ show }: { show: boolean }) => {
   return show ? (

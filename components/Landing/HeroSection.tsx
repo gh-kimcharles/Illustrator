@@ -7,7 +7,7 @@ import {
   InboxArrowDownSolid,
   LinkSolid,
   RectangleGroupSolid,
-  Square3Stack3dSolid,
+  SquareStackSolid,
   WrenchScrewdriverSolid,
 } from "@/assets/icons";
 
@@ -18,7 +18,7 @@ const FEATURE_CHIPS = [
   },
   {
     label: "Layers",
-    icon: <Square3Stack3dSolid />,
+    icon: <SquareStackSolid />,
   },
   {
     label: "Tools",

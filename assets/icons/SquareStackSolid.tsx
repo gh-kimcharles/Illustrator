@@ -4,7 +4,7 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export const Square3Stack3dSolid = ({
+export const SquareStackSolid = ({
   size = 24,
   className,
   ...props
