@@ -1,3 +1,18 @@
+export { ArrowDownOutline } from "./arrow-down-outline";
+
+export { ChevronDownOutline } from "./chevron-down-outline";
+
+export { Squares2x2Outline } from "./squares-2x2-outline";
+
+export { Bars3Outline } from "./bars-3-outline";
+
+export { TrashOutline } from "./trash-outline";
+
+export { UsersOutline } from "./users-outline";
+export { DocumentOutline } from "./document-outline";
+
+export { ClockOutline } from "./clock-outline";
+
 export { LinkSolid } from "./link-solid";
 
 export { CloudArrowDownSolid } from "./cloud-arrow-down-solid";

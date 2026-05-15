@@ -5,6 +5,16 @@ import { signOut } from "next-auth/react";
 import { NewProjectButton } from "./NewProjectButton";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectListView } from "./ProjectListView";
+import {
+  ArrowDownOutline,
+  Bars3Outline,
+  ChevronDownOutline,
+  ClockOutline,
+  DocumentOutline,
+  Squares2x2Outline,
+  TrashOutline,
+  UsersOutline,
+} from "@/assets/icons";
 
 export type Project = {
   id: string;
@@ -24,75 +34,22 @@ const NAV_ITEMS: { key: NavSection; label: string; icon: React.ReactNode }[] = [
   {
     key: "recent",
     label: "Recent",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
-      </svg>
-    ),
+    icon: <ClockOutline size={16} />,
   },
   {
     key: "yours",
     label: "Your files",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
-        <polyline points="13 2 13 9 20 9" />
-      </svg>
-    ),
+    icon: <DocumentOutline size={16} />,
   },
   {
     key: "shared",
     label: "Shared with you",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
+    icon: <UsersOutline size={16} />,
   },
   {
     key: "deleted",
     label: "Deleted",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <polyline points="3 6 5 6 21 6" />
-        <path d="M19 6l-1 14H6L5 6" />
-        <path d="M10 11v6" />
-        <path d="M14 11v6" />
-        <path d="M9 6V4h6v2" />
-      </svg>
-    ),
+    icon: <TrashOutline size={16} />,
   },
 ];
 
@@ -247,16 +204,10 @@ export function DashboardClient({
                     <span className="font-semibold">
                       {SORT_OPTIONS.find((s) => s.key === sortKey)?.label}
                     </span>
-                    <svg
-                      width="10"
-                      height="10"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
+                    <ChevronDownOutline
+                      size={10}
+                      className="text-editor-text"
+                    />
                   </button>
 
                   {sortOpen && (
@@ -285,20 +236,12 @@ export function DashboardClient({
                 <button
                   onClick={() => setSortAsc((v) => !v)}
                   title={sortAsc ? "Ascending" : "Descending"}
-                  className="text-editor-text-muted hover:text-editor-text transition-colors"
+                  className="text-editor-text hover:text-editor-text transition-colors"
                 >
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    style={{ transform: sortAsc ? "scaleY(-1)" : undefined }}
-                  >
-                    <line x1="12" y1="5" x2="12" y2="19" />
-                    <polyline points="19 12 12 19 5 12" />
-                  </svg>
+                  <ArrowDownOutline
+                    size={12}
+                    className={sortAsc ? "rotate-180" : ""}
+                  />
                 </button>
               </div>
             </div>
@@ -315,22 +258,7 @@ export function DashboardClient({
                       : "text-   hover:bg-editor-hover"
                   }`}
                 >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    {" "}
-                    <line x1="8" y1="6" x2="21" y2="6" />{" "}
-                    <line x1="8" y1="12" x2="21" y2="12" />{" "}
-                    <line x1="8" y1="18" x2="21" y2="18" />{" "}
-                    <line x1="3" y1="6" x2="3.01" y2="6" />{" "}
-                    <line x1="3" y1="12" x2="3.01" y2="12" />{" "}
-                    <line x1="3" y1="18" x2="3.01" y2="18" />{" "}
-                  </svg>
+                  <Bars3Outline size={16} />
                 </button>
 
                 <button
@@ -341,20 +269,7 @@ export function DashboardClient({
                       : "text-editor-text-muted hover:bg-editor-hover"
                   }`}
                 >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    {" "}
-                    <rect x="3" y="3" width="7" height="7" />{" "}
-                    <rect x="14" y="3" width="7" height="7" />{" "}
-                    <rect x="3" y="14" width="7" height="7" />{" "}
-                    <rect x="14" y="14" width="7" height="7" />{" "}
-                  </svg>
+                  <Squares2x2Outline size={16} />
                 </button>
               </div>
 
