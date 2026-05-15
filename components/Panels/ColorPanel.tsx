@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { hexToRgb, rgbToCss, rgbToHex } from "@/utils/color";
 import { Panel, Slider } from "@/components/ui";
-import { HashOutline, SwapOutline } from "@/assets/icons/tools";
+import { HashIcon, SwapIcon } from "@/assets/icons/tools";
 
 const SWATCHES = [
   "#000000",
@@ -117,7 +117,7 @@ const ColorPanel = () => {
               }}
             />
             <span className="absolute bottom-0 left-0 text-[8px] text-editor-text-muted leading-none z-20">
-              <SwapOutline size={9} />
+              <SwapIcon size={9} />
             </span>
           </div>
 
@@ -140,7 +140,7 @@ const ColorPanel = () => {
         {/* Hex */}
         <div className="flex items-center gap-1.5">
           <span className="text-[10px] text-editor-text-muted">
-            <HashOutline size={12} />
+            <HashIcon size={12} />
           </span>
           <input
             value={hexInput}

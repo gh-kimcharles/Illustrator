@@ -4,7 +4,7 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export const FillOutline = ({ size = 16, className, ...props }: IconProps) => {
+export const FillIcon = ({ size = 16, className, ...props }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -1,27 +1,27 @@
-export { HashOutline } from "./hash-outline";
+export { HashIcon } from "./HashIcon";
 
-export { SwapOutline } from "./swap-outline";
+export { SwapIcon } from "./SwapIcon";
 
-export { ShapeOutline } from "./shape-outline";
+export { ShapeIcon } from "./ShapeIcon";
 
-export { HandSolid } from "./hand-solid";
+export { HandIcon } from "./HandIcon";
 
-export { ZoomOutline } from "./zoom-outline";
+export { ZoomIcon } from "./ZoomIcon";
 
-export { TextOutline } from "./text-outline";
+export { TextIcon } from "./TextIcon";
 
-export { FillOutline } from "./fill-outline";
+export { FillIcon } from "./FillIcon";
 
-export { EraserOutline } from "./eraser-outline";
+export { EraserIcon } from "./EraserIcon";
 
-export { BrushOutline } from "./brush-outline";
+export { BrushIcon } from "./BrushIcon";
 
-export { EyedropperOutline } from "./eyedropper-outline";
+export { EyedropperIcon } from "./EyedropperIcon";
 
-export { CropOutline } from "./crop-outline";
+export { CropIcon } from "./CropIcon";
 
-export { LassoOutline } from "./lasso-outline";
+export { LassoIcon } from "./LassoIcon";
 
-export { SelectionOutline } from "./selection-outline";
+export { SelectionIcon } from "./SelectionIcon";
 
-export { MoveOutline } from "./move-outline";
+export { MoveIcon } from "./MoveIcon";

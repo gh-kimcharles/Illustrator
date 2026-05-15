@@ -5,19 +5,19 @@ import { ToolName } from "@/types";
 import { rgbToCss } from "@/utils/color";
 import { ToolButton } from "@/components/ui";
 import {
-  BrushOutline,
-  CropOutline,
-  EraserOutline,
-  EyedropperOutline,
-  FillOutline,
-  HandSolid,
-  LassoOutline,
-  MoveOutline,
-  SelectionOutline,
-  TextOutline,
-  ShapeOutline,
-  ZoomOutline,
-  SwapOutline,
+  BrushIcon,
+  CropIcon,
+  EraserIcon,
+  EyedropperIcon,
+  FillIcon,
+  HandIcon,
+  LassoIcon,
+  MoveIcon,
+  SelectionIcon,
+  TextIcon,
+  ShapeIcon,
+  ZoomIcon,
+  SwapIcon,
 } from "@/assets/icons/tools";
 
 interface ToolDef {
@@ -32,77 +32,77 @@ const tools: (ToolDef | "separator")[] = [
     id: "Move",
     shortcut: "V",
     label: "Move",
-    icon: <MoveOutline strokeWidth={1.6} />,
+    icon: <MoveIcon strokeWidth={1.6} />,
   },
   {
     id: "Marquee",
     shortcut: "M",
     label: "Rectangular Marquee",
-    icon: <SelectionOutline />,
+    icon: <SelectionIcon />,
   },
   {
     id: "Lasso",
     shortcut: "L",
     label: "Lasso",
-    icon: <LassoOutline />,
+    icon: <LassoIcon />,
   },
   "separator",
   {
     id: "Crop",
     shortcut: "C",
     label: "Crop",
-    icon: <CropOutline />,
+    icon: <CropIcon />,
   },
   {
     id: "Eyedropper",
     shortcut: "I",
     label: "Eyedropper",
-    icon: <EyedropperOutline />,
+    icon: <EyedropperIcon />,
   },
   "separator",
   {
     id: "Brush",
     shortcut: "B",
     label: "Brush",
-    icon: <BrushOutline />,
+    icon: <BrushIcon />,
   },
   {
     id: "Eraser",
     shortcut: "E",
     label: "Eraser",
-    icon: <EraserOutline />,
+    icon: <EraserIcon />,
   },
   {
     id: "Fill",
     shortcut: "G",
     label: "Paint Bucket",
-    icon: <FillOutline />,
+    icon: <FillIcon />,
   },
   "separator",
   {
     id: "Text",
     shortcut: "T",
     label: "Text",
-    icon: <TextOutline />,
+    icon: <TextIcon />,
   },
   {
     id: "Shape",
     shortcut: "U",
     label: "Shape",
-    icon: <ShapeOutline />,
+    icon: <ShapeIcon />,
   },
   "separator",
   {
     id: "Zoom",
     shortcut: "Z",
     label: "Zoom",
-    icon: <ZoomOutline strokeWidth={1.6} />,
+    icon: <ZoomIcon strokeWidth={1.6} />,
   },
   {
     id: "Hand",
     shortcut: "H",
     label: "Hand",
-    icon: <HandSolid />,
+    icon: <HandIcon />,
   },
 ];
 
@@ -158,7 +158,7 @@ const Toolbar = () => {
         />
         {/* Swap indicator */}
         <span className="absolute bottom-0 left-0 text-[8px] text-editor-text-muted leading-none z-20">
-          <SwapOutline size={9} />
+          <SwapIcon size={9} />
         </span>
       </div>
     </div>

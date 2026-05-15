@@ -4,7 +4,7 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export const SwapOutline = ({ size = 16, className, ...props }: IconProps) => {
+export const BrushIcon = ({ size = 16, className, ...props }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,10 +19,9 @@ export const SwapOutline = ({ size = 16, className, ...props }: IconProps) => {
       className={className}
       {...props}
     >
-      <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-      <path d="M3 3v5h5" />
-      <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-      <path d="M16 16h5v5" />
+      <path d="m11 10 3 3" />
+      <path d="M6.5 21A3.5 3.5 0 1 0 3 17.5a2.62 2.62 0 0 1-.708 1.792A1 1 0 0 0 3 21z" />
+      <path d="M9.969 17.031 21.378 5.624a1 1 0 0 0-3.002-3.002L6.967 14.031" />
     </svg>
   );
 };

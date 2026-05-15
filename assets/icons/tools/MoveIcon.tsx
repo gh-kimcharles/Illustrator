@@ -4,7 +4,7 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export const HashOutline = ({ size = 16, className, ...props }: IconProps) => {
+export const MoveIcon = ({ size = 16, className, ...props }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,11 +19,12 @@ export const HashOutline = ({ size = 16, className, ...props }: IconProps) => {
       className={className}
       {...props}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5"
-      />
+      <path d="M12 2v20" />
+      <path d="m15 19-3 3-3-3" />
+      <path d="m19 9 3 3-3 3" />
+      <path d="M2 12h20" />
+      <path d="m5 9-3 3 3 3" />
+      <path d="m9 5 3-3 3 3" />
     </svg>
   );
 };

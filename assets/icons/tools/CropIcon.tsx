@@ -4,7 +4,7 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export const LassoOutline = ({ size = 16, className, ...props }: IconProps) => {
+export const CropIcon = ({ size = 16, className, ...props }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,9 +19,8 @@ export const LassoOutline = ({ size = 16, className, ...props }: IconProps) => {
       className={className}
       {...props}
     >
-      <path d="M3.704 14.467a10 8 0 1 1 3.115 2.375" />
-      <path d="M7 22a5 5 0 0 1-2-3.994" />
-      <circle cx="5" cy="16" r="2" />
+      <path d="M6 2v14a2 2 0 0 0 2 2h14" />
+      <path d="M18 22V8a2 2 0 0 0-2-2H2" />
     </svg>
   );
 };

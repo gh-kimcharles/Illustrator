@@ -4,7 +4,7 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export const SelectionOutline = ({
+export const SelectionIcon = ({
   size = 16,
   className,
   ...props

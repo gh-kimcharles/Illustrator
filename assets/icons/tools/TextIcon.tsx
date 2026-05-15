@@ -4,7 +4,7 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export const MoveOutline = ({ size = 16, className, ...props }: IconProps) => {
+export const TextIcon = ({ size = 16, className, ...props }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,12 +19,9 @@ export const MoveOutline = ({ size = 16, className, ...props }: IconProps) => {
       className={className}
       {...props}
     >
-      <path d="M12 2v20" />
-      <path d="m15 19-3 3-3-3" />
-      <path d="m19 9 3 3-3 3" />
-      <path d="M2 12h20" />
-      <path d="m5 9-3 3 3 3" />
-      <path d="m9 5 3-3 3 3" />
+      <path d="M12 4v16" />
+      <path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2" />
+      <path d="M9 20h6" />
     </svg>
   );
 };
