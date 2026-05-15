@@ -1,3 +1,9 @@
+export { HashOutline } from "./hash-outline";
+
+export { SwapOutline } from "./swap-outline";
+
+export { ShapeOutline } from "./shape-outline";
+
 export { HandSolid } from "./hand-solid";
 
 export { ZoomOutline } from "./zoom-outline";

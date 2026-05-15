@@ -15,9 +15,10 @@ import {
   MoveOutline,
   SelectionOutline,
   TextOutline,
+  ShapeOutline,
   ZoomOutline,
+  SwapOutline,
 } from "@/assets/icons/tools";
-import { ShapeOutline } from "@/assets/icons/tools/shape-outline";
 
 interface ToolDef {
   id: ToolName;
@@ -157,7 +158,7 @@ const Toolbar = () => {
         />
         {/* Swap indicator */}
         <span className="absolute bottom-0 left-0 text-[8px] text-editor-text-muted leading-none z-20">
-          ↺
+          <SwapOutline size={9} />
         </span>
       </div>
     </div>

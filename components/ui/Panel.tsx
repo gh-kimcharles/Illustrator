@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDownOutline } from "@/assets/icons";
 import { cn } from "@/utils";
 import { useState } from "react";
 
@@ -22,15 +23,13 @@ export function Panel({
     <div className={cn("editor-panel-section", className)}>
       <button onClick={() => setOpen(!open)} className="editor-panel-header">
         <span className="editor-panel-title">{title}</span>
-        <span
-          className="text-[10px] text-editor-text-muted transition-transform duration-150"
-          style={{
-            display: "inline-block",
-            transform: open ? "rotate(0deg)" : "rotate(-90deg)",
-          }}
-        >
-          ▾
-        </span>
+
+        <ChevronDownOutline
+          size={12}
+          className={`text-editor-text-muted ${
+            open ? "rotate-0" : "rotate-270"
+          }`}
+        />
       </button>
 
       {open && <div className="p-2.5">{children}</div>}
