@@ -1,3 +1,5 @@
+// ref: https://heroicons.com/outline
+// naming: [icon]-[variant]
 export { EyeSlashOutline } from "./eye-slash-outline";
 export { EyeOutline } from "./eye-outline";
 export { ArrowDownOutline } from "./arrow-down-outline";
