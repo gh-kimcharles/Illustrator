@@ -1,6 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  BrushIcon,
+  CropIcon,
+  EraserIcon,
+  FillIcon,
+  LassoIcon,
+  LockIcon,
+  MoveIcon,
+  SelectionIcon,
+  ShapeIcon,
+  TextIcon,
+  VisibleIcon,
+} from "@/assets/icons/tools";
+import {
+  BlackAndWhiteIcon,
+  BlurIcon,
+  BrightnessContrastIcon,
+  CurvesIcon,
+  HueSaturationIcon,
+  InvertIcon,
+  LevelsIcon,
+  PosterizeIcon,
+  SharpenIcon,
+  VibranceIcon,
+} from "@/assets/icons/adjustments";
+import { SWATCHES } from "@/components/Panels/ColorPanel";
 
 const COLORS = [
   { hex: "2563eb", r: 37, g: 99, b: 235, rp: "15%", gp: "39%", bp: "92%" },
@@ -10,7 +36,19 @@ const COLORS = [
   { hex: "7c3aed", r: 124, g: 58, b: 237, rp: "49%", gp: "23%", bp: "93%" },
 ];
 
-const ADJ_BTNS = ["☀", "◉", "◑", "〜", "⬤", "▤", "✦", "◻", "≋", "◈"];
+const ADJ_BTNS: { icon: React.ReactNode; label: string }[] = [
+  { icon: <BrightnessContrastIcon />, label: "B/C" },
+  { icon: <HueSaturationIcon />, label: "Hue/Sat" },
+  { icon: <LevelsIcon />, label: "Levels" },
+  { icon: <CurvesIcon />, label: "Curves" },
+  { icon: <VibranceIcon />, label: "Vibrance" },
+  { icon: <PosterizeIcon />, label: "Posterize" },
+  { icon: <InvertIcon />, label: "Invert" },
+  { icon: <BlackAndWhiteIcon />, label: "B&W" },
+  { icon: <BlurIcon />, label: "Blur" },
+  { icon: <SharpenIcon />, label: "Sharpen" },
+];
+
 const ADJ_NAMES = [
   "Brightness/Contrast",
   "Hue/Saturation",
@@ -159,33 +197,33 @@ export default function EditorMockup() {
         {/* Toolbar */}
         <div className="w-10 bg-editor-toolbar border-r border-editor-border flex flex-col items-center py-1.5 gap-0.5 flex-shrink-0">
           <ToolBtn active={toolIdx === 0} title="Move">
-            <MoveIcon />
+            <MoveIcon size={14} />
           </ToolBtn>
           <ToolBtn title="Marquee">
-            <MarqueeIcon />
+            <SelectionIcon size={14} />
           </ToolBtn>
           <ToolBtn title="Lasso">
-            <LassoIcon />
+            <LassoIcon size={14} />
           </ToolBtn>
           <div className="w-5 h-px bg-editor-border-light my-1" />
           <ToolBtn active={toolIdx === 1} title="Brush">
-            <BrushIcon />
+            <BrushIcon size={14} />
           </ToolBtn>
           <ToolBtn title="Eraser">
-            <EraserIcon />
+            <EraserIcon size={14} />
           </ToolBtn>
-          <ToolBtn title="Clone">
-            <CloneIcon />
+          <ToolBtn title="Fill">
+            <FillIcon size={14} />
           </ToolBtn>
           <div className="w-5 h-px bg-editor-border-light my-1" />
           <ToolBtn title="Crop">
-            <CropIcon />
+            <CropIcon size={14} />
           </ToolBtn>
           <ToolBtn title="Text">
-            <TextIcon />
+            <TextIcon size={14} />
           </ToolBtn>
           <ToolBtn title="Shape">
-            <ShapeIcon />
+            <ShapeIcon size={14} />
           </ToolBtn>
           <div className="w-5 h-px bg-editor-border-light my-1" />
           {/* Foreground/Background color */}
@@ -269,22 +307,33 @@ export default function EditorMockup() {
             </div>
           </PanelSection>
 
-          {/* Swatches - show only tab */}
-          <PanelSection title="Swatches"></PanelSection>
+          {/* Swatches */}
+          <PanelSection title="Swatches">
+            <div className="grid grid-cols-10 gap-0.5">
+              {SWATCHES.map((swatch) => (
+                <div
+                  key={swatch}
+                  title={swatch}
+                  className="aspect-square w-full rounded border border-transparent hover:border-white hover:scale-110 transition-transform"
+                  style={{ background: swatch }}
+                />
+              ))}
+            </div>
+          </PanelSection>
 
           {/* Adjustments */}
           <PanelSection title="Adjustments">
             <div className="grid grid-cols-5 gap-1">
               {ADJ_BTNS.map((btn, i) => (
                 <div
-                  key={btn}
+                  key={btn.label}
                   className={`px-1.5 py-1 text-[9.5px] rounded border cursor-default transition-all flex items-center justify-center ${
                     i === adjIdx
                       ? "bg-editor-accent-subtle border-editor-accent-border text-editor-accent"
                       : "bg-editor-panel-header border-editor-border-light text-editor-text-muted hover:bg-editor-hover hover:text-editor-text"
                   }`}
                 >
-                  {btn}
+                  {btn.icon}
                 </div>
               ))}
             </div>
@@ -350,7 +399,11 @@ export default function EditorMockup() {
                     {layer.name}
                   </span>
                   <span className="text-[11px] text-editor-text-muted">
-                    {layer.locked ? "🔒" : "◉"}
+                    {layer.locked ? (
+                      <LockIcon size={12} />
+                    ) : (
+                      <VisibleIcon size={12} />
+                    )}
                   </span>
                 </div>
               ))}
@@ -389,8 +442,7 @@ export default function EditorMockup() {
   );
 }
 
-// ── Sub-components ──────────────────────────────────────────────────────────
-
+/* Sub-components */
 function PanelSection({
   title,
   children,
@@ -450,155 +502,3 @@ function ToolBtn({
     </div>
   );
 }
-
-// Animated SVG canvas
-function AnimatedCanvas({ color }: { color: (typeof COLORS)[0] }) {
-  return (
-    <svg viewBox="0 0 360 280" className="w-full h-full">
-      <style>{`
-        @keyframes drawStroke {
-          from { stroke-dashoffset: 1; opacity: 0; }
-          to   { stroke-dashoffset: 0; opacity: 1; }
-        }
-        .stroke-1 { animation: drawStroke 1.2s 0.1s cubic-bezier(0.4,0,0.2,1) both; }
-        .stroke-2 { animation: drawStroke 1.2s 0.7s cubic-bezier(0.4,0,0.2,1) both; }
-        .stroke-3 { animation: drawStroke 1.2s 1.3s cubic-bezier(0.4,0,0.2,1) both; }
-        .blob     { animation: blobFade  0.8s 1.6s ease both; }
-        @keyframes blobFade { from { opacity: 0; } to { opacity: 0.18; } }
-      `}</style>
-
-      {/* Blob behind strokes */}
-      <ellipse
-        className="blob"
-        cx="185"
-        cy="140"
-        rx="70"
-        ry="45"
-        fill={`#${color.hex}`}
-        opacity={0}
-      />
-
-      {STROKE_DEFS.map((s, i) => (
-        <path
-          key={i}
-          className={`stroke-${i + 1}`}
-          d={s.attrs.d}
-          stroke={i === 0 ? `#${color.hex}` : s.attrs.stroke}
-          strokeWidth={s.attrs.strokeWidth}
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          pathLength={1}
-          strokeDasharray={1}
-          strokeDashoffset={1}
-          opacity={0}
-        />
-      ))}
-    </svg>
-  );
-}
-
-// ── Toolbar Icons ────────────────────────────────────────────────────────────
-const ic = (d: string) => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 14 14"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.3"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d={d} />
-  </svg>
-);
-const MoveIcon = () =>
-  ic(
-    "M7 1v12M1 7h12M7 1L5 3M7 1L9 3M7 13L5 11M7 13L9 11M1 7L3 5M1 7L3 9M13 7L11 5M13 7L11 9",
-  );
-const EraserIcon = () => ic("M2 11L7 3L12 8L8 12H2");
-const TextIcon = () => ic("M3 3h8M7 3v8M5 11h4");
-const BrushIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 14 14"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.2"
-    strokeLinejoin="round"
-  >
-    <path d="M9 2L12 5L5 12C4 12.5 2.5 12.5 2 12C1.5 11.5 1.5 10 2 9L9 2Z" />
-  </svg>
-);
-const MarqueeIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <rect
-      x="1.5"
-      y="1.5"
-      width="11"
-      height="11"
-      rx="1"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeDasharray="2 1.5"
-    />
-  </svg>
-);
-const LassoIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 14 14"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.2"
-    strokeLinecap="round"
-  >
-    <path d="M7 2C4 2 2 4 2 6.5C2 9 4 11 7 11C10 11 12 9 12 6.5" />
-    <path d="M12 6.5L11 9L10 8" strokeLinejoin="round" />
-  </svg>
-);
-const CloneIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 14 14"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.2"
-  >
-    <circle cx="5" cy="5" r="3" />
-    <path d="M9 9L12 12" strokeLinecap="round" />
-    <circle cx="9" cy="9" r="2" />
-  </svg>
-);
-const CropIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 14 14"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.3"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M1 5H10V12" />
-    <path d="M5 2V9H12" />
-  </svg>
-);
-const ShapeIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <rect
-      x="2"
-      y="2"
-      width="10"
-      height="10"
-      rx="1.5"
-      stroke="currentColor"
-      strokeWidth="1.2"
-    />
-  </svg>
-);

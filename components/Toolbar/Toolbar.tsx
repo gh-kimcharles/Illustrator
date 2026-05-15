@@ -4,6 +4,21 @@ import { useEditorStore } from "@/store/useEditorStore";
 import { ToolName } from "@/types";
 import { rgbToCss } from "@/utils/color";
 import { ToolButton } from "@/components/ui";
+import {
+  BrushIcon,
+  CropIcon,
+  EraserIcon,
+  EyedropperIcon,
+  FillIcon,
+  HandIcon,
+  LassoIcon,
+  MoveIcon,
+  SelectionIcon,
+  TextIcon,
+  ShapeIcon,
+  ZoomIcon,
+  SwapIcon,
+} from "@/assets/icons/tools";
 
 interface ToolDef {
   id: ToolName;
@@ -17,177 +32,77 @@ const tools: (ToolDef | "separator")[] = [
     id: "Move",
     shortcut: "V",
     label: "Move",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-        <path d="M8 1l2 3H9v3h3V6l3 2-3 2V9h-3v3h1L8 15l-2-3h1V9H4v1L1 8l3-2v1h3V4H6L8 1z" />
-      </svg>
-    ),
+    icon: <MoveIcon strokeWidth={1.6} />,
   },
   {
     id: "Marquee",
     shortcut: "M",
     label: "Rectangular Marquee",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <rect x="1" y="1" width="12" height="12" strokeDasharray="2 1.5" />
-      </svg>
-    ),
+    icon: <SelectionIcon />,
   },
   {
     id: "Lasso",
     shortcut: "L",
     label: "Lasso",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path
-          d="M7 2C3 2 1 4 1 7c0 3 2 5 5 5 2 0 4-1 5-3l2 1"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
+    icon: <LassoIcon />,
   },
   "separator",
   {
     id: "Crop",
     shortcut: "C",
     label: "Crop",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path d="M3 1v10h10M1 3h10v10" strokeLinecap="round" />
-      </svg>
-    ),
+    icon: <CropIcon />,
   },
   {
     id: "Eyedropper",
     shortcut: "I",
     label: "Eyedropper",
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-        <path d="M11 2a2 2 0 010 2.8L6.4 9.4 4 10l.6-2.4L9.2 3A2 2 0 0111 2zM2 11l1.5 1.5-1 .5-.5-1L2 11z" />
-      </svg>
-    ),
+    icon: <EyedropperIcon />,
   },
   "separator",
   {
     id: "Brush",
     shortcut: "B",
     label: "Brush",
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-        <path d="M10 2l2 2L5 11c-1 1-3 1-3 1s0-2 1-3L10 2zM3 11a1 1 0 001 1 1 1 0 001-1 1 1 0 00-1-1 1 1 0 00-1 1z" />
-      </svg>
-    ),
+    icon: <BrushIcon />,
   },
   {
     id: "Eraser",
     shortcut: "E",
     label: "Eraser",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path
-          d="M2 10L8 4l4 4-3 3H2zM6 12h6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    ),
+    icon: <EraserIcon />,
   },
   {
     id: "Fill",
     shortcut: "G",
     label: "Paint Bucket",
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-        <path d="M2 9L7 2l5 5-3 3H2zm9 2a1.5 1.5 0 01-1.5-1.5c0-.8.7-1.5 1.5-2.5.8 1 1.5 1.7 1.5 2.5A1.5 1.5 0 0111 11z" />
-      </svg>
-    ),
+    icon: <FillIcon />,
   },
   "separator",
   {
     id: "Text",
     shortcut: "T",
     label: "Text",
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-        <path d="M2 3h10v2H9v6H5V5H2V3z" />
-      </svg>
-    ),
+    icon: <TextIcon />,
   },
   {
     id: "Shape",
     shortcut: "U",
     label: "Shape",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <rect x="2" y="2" width="10" height="10" rx="1" />
-      </svg>
-    ),
+    icon: <ShapeIcon />,
   },
   "separator",
   {
     id: "Zoom",
     shortcut: "Z",
     label: "Zoom",
-    icon: (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <circle cx="6" cy="6" r="4" />
-        <line x1="9" y1="9" x2="13" y2="13" />
-        <line x1="4" y1="6" x2="8" y2="6" />
-        <line x1="6" y1="4" x2="6" y2="8" />
-      </svg>
-    ),
+    icon: <ZoomIcon strokeWidth={1.6} />,
   },
   {
     id: "Hand",
     shortcut: "H",
     label: "Hand",
-    icon: (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-        <path d="M6 1a1 1 0 011 1v4h.5a1 1 0 011 1v.5h.5a1 1 0 011 1V9h.5a1 1 0 011 1v1.5A3 3 0 019.5 14H6a3 3 0 01-3-3V7.5a1 1 0 011-1H5V2a1 1 0 011-1z" />
-      </svg>
-    ),
+    icon: <HandIcon />,
   },
 ];
 
@@ -243,7 +158,7 @@ const Toolbar = () => {
         />
         {/* Swap indicator */}
         <span className="absolute bottom-0 left-0 text-[8px] text-editor-text-muted leading-none z-20">
-          ↺
+          <SwapIcon size={9} />
         </span>
       </div>
     </div>

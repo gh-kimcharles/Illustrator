@@ -1,116 +1,44 @@
 import Link from "next/link";
 import EditorMockup from "./Mockups/EditorMockup";
 import TopologyBackground from "../ui/TopologyBackground";
+import {
+  AdjustmentsHorizontalSolid,
+  CloudArrowDownSolid,
+  InboxArrowDownSolid,
+  LinkSolid,
+  RectangleGroupSolid,
+  SquareStackSolid,
+  WrenchScrewdriverSolid,
+} from "@/assets/icons";
 
 const FEATURE_CHIPS = [
   {
     label: "HTML5 Canvas",
-    icon: (
-      <svg
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="1" y="1" width="12" height="12" rx="1.5" />
-        <path d="M4 9.5L6.5 5L9 9.5" />
-        <path d="M4.8 8h3.4" />
-      </svg>
-    ),
+    icon: <RectangleGroupSolid />,
   },
   {
     label: "Layers",
-    icon: (
-      <svg
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M1 5l6-3 6 3-6 3-6-3Z" />
-        <path d="M1 9l6 3 6-3" />
-      </svg>
-    ),
+    icon: <SquareStackSolid />,
   },
   {
     label: "Tools",
-    icon: (
-      <svg
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M9 2L12 5L5 12L2 12L2 9L9 2Z" />
-      </svg>
-    ),
+    icon: <WrenchScrewdriverSolid />,
   },
   {
     label: "Adjustment Filters",
-    icon: (
-      <svg
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-      >
-        <path d="M1 3h12M3 7h8M5 11h4" />
-      </svg>
-    ),
+    icon: <AdjustmentsHorizontalSolid />,
   },
   {
     label: "Export PNG",
-    icon: (
-      <svg
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M7 1v8M4 6l3 3 3-3" />
-        <path d="M2 11h10" />
-      </svg>
-    ),
+    icon: <InboxArrowDownSolid />,
   },
   {
     label: "Cloud save",
-    icon: (
-      <svg
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M10.5 11H4a2.5 2.5 0 0 1-.4-5 3.5 3.5 0 0 1 6.8-1 2 2 0 0 1 .1 6Z" />
-      </svg>
-    ),
+    icon: <CloudArrowDownSolid />,
   },
   {
     label: "Share via link",
-    icon: (
-      <svg
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M5.5 8.5a3 3 0 0 0 4.2 0l1.5-1.5a3 3 0 0 0-4.2-4.2L6 3.8" />
-        <path d="M8.5 5.5a3 3 0 0 0-4.2 0L2.8 7A3 3 0 0 0 7 11.2L8 10.2" />
-      </svg>
-    ),
+    icon: <LinkSolid />,
   },
 ];
 

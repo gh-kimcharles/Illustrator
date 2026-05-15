@@ -14,6 +14,18 @@ import {
   Vibrance,
   Curves,
 } from "./adjustments";
+import {
+  BlackAndWhiteIcon,
+  BlurIcon,
+  BrightnessContrastIcon,
+  CurvesIcon,
+  HueSaturationIcon,
+  InvertIcon,
+  LevelsIcon,
+  PosterizeIcon,
+  SharpenIcon,
+  VibranceIcon,
+} from "@/assets/icons/adjustments";
 
 type OpenModal =
   | "brightness"
@@ -29,20 +41,20 @@ type OpenModal =
   | null;
 
 const ADJUSTMENTS: {
-  icon: string;
+  icon: React.ReactNode;
   label: string;
   id: OpenModal;
 }[] = [
-  { icon: "☀", label: "B/C", id: "brightness" },
-  { icon: "◉", label: "Hue/Sat", id: "hue" },
-  { icon: "◑", label: "Levels", id: "levels" },
-  { icon: "〜", label: "Curves", id: "curves" },
-  { icon: "⬤", label: "Vibrance", id: "vibrance" },
-  { icon: "▤", label: "Posterize", id: "posterize" },
-  { icon: "◈", label: "Invert", id: "invert" },
-  { icon: "◻", label: "B&W", id: "grayscale" },
-  { icon: "≋", label: "Blur", id: "blur" },
-  { icon: "◈", label: "Sharpen", id: "sharpen" },
+  { icon: <BrightnessContrastIcon />, label: "B/C", id: "brightness" },
+  { icon: <HueSaturationIcon />, label: "Hue/Sat", id: "hue" },
+  { icon: <LevelsIcon />, label: "Levels", id: "levels" },
+  { icon: <CurvesIcon />, label: "Curves", id: "curves" },
+  { icon: <VibranceIcon />, label: "Vibrance", id: "vibrance" },
+  { icon: <PosterizeIcon />, label: "Posterize", id: "posterize" },
+  { icon: <InvertIcon />, label: "Invert", id: "invert" },
+  { icon: <BlackAndWhiteIcon />, label: "B&W", id: "grayscale" },
+  { icon: <BlurIcon />, label: "Blur", id: "blur" },
+  { icon: <SharpenIcon />, label: "Sharpen", id: "sharpen" },
 ];
 
 const AdjustmentsPanel = () => {
@@ -79,9 +91,6 @@ const AdjustmentsPanel = () => {
             </button>
           ))}
         </div>
-        <p className="text-[10px] text-editor-text-disabled mt-2 italic">
-          Adjustments arrive in Phase 4
-        </p>
       </Panel>
 
       {/* modals */}

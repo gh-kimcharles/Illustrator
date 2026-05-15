@@ -11,7 +11,7 @@ export default function CTASection() {
         </h2>
         <p className="text-[15px] text-editor-text-muted leading-[1.7] font-light font-inter">
           Open your browser, create an account, and start editing. Your files
-          live in the cloud — available from any device, any time.
+          live in the cloud, available from any device, any time.
         </p>
         <div className="flex gap-3 mt-8 flex-wrap">
           <Link
