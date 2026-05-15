@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { IconButton, Panel, Select, Slider } from "@/components/ui";
 import { GroupedBlendModes } from "./BlendModes";
+import { LockIcon, NonVisibleIcon, VisibleIcon } from "@/assets/icons/tools";
 
 // update: use GroupedBlendModes from ./BlendModes; separated concerns for layers and blend modes
 const BLEND_MODES = GroupedBlendModes();
@@ -100,9 +101,13 @@ const LayersPanel = () => {
               title={layer.visible ? "Hide layer" : "Show layer"}
             >
               {layer.visible ? (
-                <span className="text-editor-text-muted">👁</span>
+                <span className="text-editor-text-muted">
+                  <VisibleIcon size={12} />
+                </span>
               ) : (
-                <span className="text-editor-text-disabled">○</span>
+                <span className="text-editor-text-disabled">
+                  <NonVisibleIcon size={12} />
+                </span>
               )}
             </button>
 
@@ -137,8 +142,8 @@ const LayersPanel = () => {
             )}
 
             {layer.locked && (
-              <span className="text-[10px] text-editor-text-disabled flex-shrink-0">
-                🔒
+              <span className="text-editor-text-muted flex-shrink-0">
+                <LockIcon size={12} />
               </span>
             )}
           </div>

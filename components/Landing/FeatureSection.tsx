@@ -57,7 +57,7 @@ const FEATURE_ROWS: FeatureRow[] = [
   {
     eyebrow: "Foundation",
     title: "HTML5 Canvas rendering engine",
-    desc: "Every pixel is rendered on a native HTML5 Canvas element — blazing fast, no plugins, no WebAssembly overhead. Supports 800×600 up to 4K canvases.",
+    desc: "Every pixel is rendered on a native HTML5 Canvas element - fast, no plugins, no overhead. Supports 800×600 up to 4K canvases.",
     bullets: [
       "Pixel-perfect rendering",
       "Configurable canvas size",
@@ -68,7 +68,7 @@ const FEATURE_ROWS: FeatureRow[] = [
   {
     eyebrow: "Compositing",
     title: "Non-destructive layer compositing",
-    desc: "Stack unlimited layers with full blend mode support — Normal, Multiply, Screen, Overlay and more. Lock, hide, reorder, merge, and group with precision.",
+    desc: "Supports layers with full blend mode support - Normal, Multiply, Screen, Overlay and more. Lock, hide, reorder, merge, and group with precision.",
     bullets: ["Unlimited layers", "Blend modes", "Per-layer opacity"],
     mockup: <LayersMockup />,
     flip: true,
@@ -76,7 +76,7 @@ const FEATURE_ROWS: FeatureRow[] = [
   {
     eyebrow: "Tools",
     title: "12 professional editing tools",
-    desc: "Every tool you'd reach for — from the precision of the Marquee to the fluidity of the Brush. Includes Move, Lasso, Crop, Eyedropper, Fill, Text, Shape, Zoom, and Hand.",
+    desc: "Every tool you'd reach for from the precision of the Marquee to the fluidity of the Brush. Includes Move, Lasso, Crop, Eyedropper, Fill, Text, Shape, Zoom, and Hand.",
     bullets: [
       "Selection & transform",
       "Drawing & painting",
@@ -87,7 +87,7 @@ const FEATURE_ROWS: FeatureRow[] = [
   {
     eyebrow: "Filters & Adjustments",
     title: "10 real-time image adjustments",
-    desc: "Apply professional color corrections and effects on any layer — non-destructively. Brightness/Contrast, Hue/Saturation, Curves, Levels, B&W, Vibrance, Posterize, Invert, Sharpen, and Blur.",
+    desc: "Apply professional color corrections and effects on any layer, non-destructively. Brightness/Contrast, Hue/Saturation, Curves, Levels, B&W, Vibrance, Posterize, Invert, Sharpen, and Blur.",
     bullets: ["Non-destructive", "Live preview", "Stack multiple adjustments"],
     mockup: <FiltersMockup />,
     flip: true,
@@ -95,7 +95,7 @@ const FEATURE_ROWS: FeatureRow[] = [
   {
     eyebrow: "Cloud",
     title: "Save, sync, and share instantly",
-    desc: "Your projects live in the cloud. Pick up where you left off from any device. Share a live link with anyone — they can view or fork your project without an account.",
+    desc: "Your projects live in the cloud. Pick up where you left off from any device. Share a live link with anyone, they can view or fork your project without an account.",
     bullets: [
       "Auto-save on every action",
       "Shareable link",
@@ -133,7 +133,7 @@ export default function FeaturesSection() {
           </h2>
           <p className="text-[18px] text-[var(--editor-text-muted)] leading-[1.7] max-w-[480px] font-inter font-light mb-[72px]">
             Illustrator brings professional-grade tools, layers, filters, and
-            cloud workflow — all running natively in your browser with zero
+            cloud workflow. All running natively in your browser with zero
             install.
           </p>
         </div>

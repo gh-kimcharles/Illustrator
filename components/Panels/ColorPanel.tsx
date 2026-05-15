@@ -6,7 +6,7 @@ import { hexToRgb, rgbToCss, rgbToHex } from "@/utils/color";
 import { Panel, Slider } from "@/components/ui";
 import { HashIcon, SwapIcon } from "@/assets/icons/tools";
 
-const SWATCHES = [
+export const SWATCHES = [
   "#000000",
   "#1a1a1a",
   "#333333",

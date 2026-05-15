@@ -8,7 +8,7 @@ export default function CanvasMockup() {
         <div className="w-2 h-2 rounded-full bg-[#febc2e]" />
         <div className="w-2 h-2 rounded-full bg-[#28c840]" />
         <span className="text-[10px] text-[var(--editor-text-muted)] ml-1.5">
-          Canvas — 800 × 600 px
+          Canvas (800 × 600 px)
         </span>
         <span className="ml-auto text-[10px] text-[var(--editor-text-muted)]">
           RGB/8

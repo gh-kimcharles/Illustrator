@@ -1,3 +1,9 @@
+export { LockIcon } from "./LockIcon";
+
+export { NonVisibleIcon } from "./NonVisibleIcon";
+
+export { VisibleIcon } from "./VisibleIcon";
+
 export { HashIcon } from "./HashIcon";
 
 export { SwapIcon } from "./SwapIcon";
