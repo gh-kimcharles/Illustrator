@@ -1,11 +1,10 @@
-import { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireSessionService } from "@/lib/services/auth.service";
 import {
   createProjectService,
   getUserProjectsService,
 } from "@/lib/services/project.service";
-import { createProjectSchema } from "@/lib/validations/project.validation";
+import { createProjectSchema } from "@/lib/validations/project.validator";
 import { ZodError } from "zod";
 
 // get all projects
@@ -17,12 +16,7 @@ export async function GET() {
 
     return NextResponse.json({ projects }, { status: 200 });
   } catch (err) {
-    if (err instanceof ZodError) {
-      return NextResponse.json(
-        { error: err.issues[0].message, fields: err.flatten().fieldErrors },
-        { status: 422 },
-      );
-    }
+    // update: remove ZodError since there is no parse call
 
     if (err instanceof Error && err.message === "Unauthorized") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

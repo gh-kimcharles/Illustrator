@@ -6,7 +6,6 @@ import {
   ProjectForbiddenError,
   ProjectNotFoundError,
 } from "@/lib/services/project.service";
-import { ZodError } from "zod";
 
 type ContextRoute = { params: Promise<{ id: string }> };
 
@@ -26,12 +25,7 @@ export async function POST(_req: NextRequest, { params }: ContextRoute) {
       { status: 200 },
     );
   } catch (err) {
-    if (err instanceof ZodError) {
-      return NextResponse.json(
-        { error: err.issues[0].message, fields: err.flatten().fieldErrors },
-        { status: 422 },
-      );
-    }
+    // update: remove ZodError since there is no parse call
 
     if (err instanceof ProjectNotFoundError) {
       return NextResponse.json({ error: err.message }, { status: 404 });
@@ -62,12 +56,7 @@ export async function DELETE(_req: NextRequest, { params }: ContextRoute) {
 
     return NextResponse.json({ message: "Sharing disabled" }, { status: 200 });
   } catch (err) {
-    if (err instanceof ZodError) {
-      return NextResponse.json(
-        { error: err.issues[0].message, fields: err.flatten().fieldErrors },
-        { status: 422 },
-      );
-    }
+    // update: remove ZodError since there is no parse call
 
     if (err instanceof ProjectNotFoundError) {
       return NextResponse.json({ error: err.message }, { status: 404 });

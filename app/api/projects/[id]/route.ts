@@ -7,7 +7,7 @@ import {
   ProjectNotFoundError,
   updateProjectService,
 } from "@/lib/services/project.service";
-import { updateProjectSchema } from "@/lib/validations/project.validation";
+import { updateProjectSchema } from "@/lib/validations/project.validator";
 import { ZodError } from "zod";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -22,12 +22,7 @@ export async function GET(_req: NextRequest, { params }: RouteContext) {
 
     return NextResponse.json({ project }, { status: 200 });
   } catch (err) {
-    if (err instanceof ZodError) {
-      return NextResponse.json(
-        { error: err.issues[0].message, fields: err.flatten().fieldErrors },
-        { status: 422 },
-      );
-    }
+    // update: remove ZodError since there is no parse call
 
     if (err instanceof ProjectNotFoundError) {
       return NextResponse.json({ error: err.message }, { status: 404 });
@@ -96,12 +91,7 @@ export async function DELETE(_req: NextRequest, { params }: RouteContext) {
 
     return NextResponse.json({ message: "Project deleted" }, { status: 200 });
   } catch (err) {
-    if (err instanceof ZodError) {
-      return NextResponse.json(
-        { error: err.issues[0].message, fields: err.flatten().fieldErrors },
-        { status: 422 },
-      );
-    }
+    // update: remove ZodError since there is no parse call
 
     if (err instanceof ProjectNotFoundError) {
       return NextResponse.json({ error: err.message }, { status: 404 });
