@@ -3,7 +3,7 @@ import { prisma } from "../db/prisma";
 import {
   CreateProjectSchema,
   UpdateProjectSchema,
-} from "../validations/project.validation";
+} from "../validations/project.validator";
 import { Prisma } from "@prisma/client";
 
 // type errors

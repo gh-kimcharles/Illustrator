@@ -31,7 +31,7 @@ export async function registerService(input: RegisterSchemaType) {
   // create user
   const user = await prisma.user.create({
     data: {
-      name: name || null,
+      name: name ?? null,
       email,
       password: hashedPassword,
     },
