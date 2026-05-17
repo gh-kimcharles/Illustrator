@@ -1,77 +1,66 @@
 import { NextRequest } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/db/prisma";
 import { NextResponse } from "next/server";
+import { requireSessionService } from "@/lib/services/auth.service";
+import {
+  createProjectService,
+  getUserProjectsService,
+} from "@/lib/services/project.service";
+import { createProjectSchema } from "@/lib/validations/project.validation";
+import { ZodError } from "zod";
 
 // get all projects
 // GET /api/projects
 export async function GET() {
-  const session = await getServerSession(authOptions);
+  try {
+    const session = await requireSessionService(); // catch: Unauthorized
+    const projects = await getUserProjectsService(session.user.id); // no catch
 
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized " }, { status: 401 });
+    return NextResponse.json({ projects }, { status: 200 });
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return NextResponse.json(
+        { error: err.issues[0].message, fields: err.flatten().fieldErrors },
+        { status: 422 },
+      );
+    }
+
+    if (err instanceof Error && err.message === "Unauthorized") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    console.error("[projects GET] unexpected error:", err);
+    return NextResponse.json(
+      { error: "Something went wrong. Please try again." },
+      { status: 500 },
+    );
   }
-
-  const projects = await prisma.project.findMany({
-    where: { userId: session.user.id },
-    orderBy: { updatedAt: "desc" },
-    select: {
-      id: true,
-      name: true,
-      thumbnail: true,
-      isShared: true,
-      shareToken: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
-
-  return NextResponse.json({ projects });
 }
 
 // create new project
 // POST /api/projects
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
-  }
-
   try {
+    const session = await requireSessionService(); // catch: Unauthorized
     const body = await req.json();
-    const { name, thumbnail, data } = body;
-
-    if (!data) {
-      return NextResponse.json(
-        { error: "Project data is required" },
-        { status: 400 },
-      );
-    }
-
-    const project = await prisma.project.create({
-      data: {
-        userId: session.user.id,
-        name: name || "Untitled Project",
-        thumbnail: thumbnail || null,
-        data,
-      },
-      select: {
-        id: true,
-        name: true,
-        thumbnail: true,
-        createdAt: true,
-        updatedAt: true,
-        // exclude data
-      },
-    });
+    const input = createProjectSchema.parse(body);
+    const project = await createProjectService(session.user.id, input); // no catch
 
     return NextResponse.json({ project }, { status: 201 });
   } catch (err) {
-    console.error("[projects POST] error:", err);
+    if (err instanceof ZodError) {
+      return NextResponse.json(
+        { error: err.issues[0].message, fields: err.flatten().fieldErrors },
+        { status: 422 },
+      );
+    }
+
+    if (err instanceof Error && err.message === "Unauthorized") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    console.error("[projects POST] unexpected error:", err);
     return NextResponse.json(
-      { error: "Failed to save project" },
+      { error: "Something went wrong. Please try again." },
       { status: 500 },
     );
   }
