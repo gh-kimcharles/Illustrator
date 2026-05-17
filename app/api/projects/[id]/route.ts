@@ -1,93 +1,81 @@
-// helper
-// returns the project if it exists and belong to the current user,
-
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { requireSessionService } from "@/lib/services/auth.service";
+import {
+  deleteProjectService,
+  getProjectByIdService,
+  ProjectForbiddenError,
+  ProjectNotFoundError,
+  updateProjectService,
+} from "@/lib/services/project.service";
+import { updateProjectSchema } from "@/lib/validations/project.validator";
+import { ZodError } from "zod";
 
-// else null if not
-async function getOwnedProject(id: string, userId: string) {
-  const project = await prisma.project.findUnique({
-    where: { id },
-  });
-
-  if (!project)
-    return {
-      project: null,
-      error: "Not found",
-      status: 404,
-    };
-
-  if (project.userId !== userId)
-    return {
-      project: null,
-      error: "Forbidden",
-      status: 403,
-    };
-
-  return { project, error: null, status: 200 };
-}
+type RouteContext = { params: Promise<{ id: string }> };
 
 // load project
 // GET /api/projects/:id
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
+export async function GET(_req: NextRequest, { params }: RouteContext) {
+  try {
+    const session = await requireSessionService(); // catch: Unauthorized
+    const { id } = await params;
+    const project = await getProjectByIdService(id, session.user.id); // catch: ProjectNotFoundError | ProjectForbiddenError
+
+    return NextResponse.json({ project }, { status: 200 });
+  } catch (err) {
+    // update: remove ZodError since there is no parse call
+
+    if (err instanceof ProjectNotFoundError) {
+      return NextResponse.json({ error: err.message }, { status: 404 });
+    }
+    if (err instanceof ProjectForbiddenError) {
+      return NextResponse.json({ error: err.message }, { status: 403 });
+    }
+    if (err instanceof Error && err.message === "Unauthorized") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    console.error("[projects/:id GET] unexpected error: ", err);
+    return NextResponse.json(
+      {
+        error: "Something went wrong. Please try again.",
+      },
+      { status: 500 },
+    );
   }
-
-  const { id } = await params;
-  const { project, error, status } = await getOwnedProject(id, session.user.id);
-  if (error) return NextResponse.json({ error }, { status });
-
-  return NextResponse.json({ project });
 }
 
 // update project
 // PATCH /api/projects/:id
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
-  }
-
-  const { id } = await params;
-  const { project, error, status } = await getOwnedProject(id, session.user.id);
-  if (error) return NextResponse.json({ error }, { status });
-
+export async function PATCH(req: NextRequest, { params }: RouteContext) {
   try {
+    const session = await requireSessionService(); // catch: Unauthorized
     const body = await req.json();
+    const { id } = await params;
+    const input = updateProjectSchema.parse(body);
+    const project = await updateProjectService(id, session.user.id, input); // catch: ProjectNotFoundError | ProjectForbiddenError
 
-    // allow only specific fields to be updated, excludes userId
-    const { name, thumbnail, data } = body;
-
-    const updated = await prisma.project.update({
-      where: { id: project!.id },
-      data: {
-        ...(name !== undefined && { name }),
-        ...(thumbnail !== undefined && { thumbnail }),
-        ...(data !== undefined && { data }),
-      },
-      select: {
-        id: true,
-        name: true,
-        thumbnail: true,
-        updatedAt: true,
-      },
-    });
-
-    return NextResponse.json({ project: updated });
+    return NextResponse.json({ project }, { status: 200 });
   } catch (err) {
-    console.error("[projects PATCH] error:", err);
+    if (err instanceof ZodError) {
+      return NextResponse.json(
+        { error: err.issues[0].message, fields: err.flatten().fieldErrors },
+        { status: 422 },
+      );
+    }
+
+    if (err instanceof ProjectNotFoundError) {
+      return NextResponse.json({ error: err.message }, { status: 404 });
+    }
+    if (err instanceof ProjectForbiddenError) {
+      return NextResponse.json({ error: err.message }, { status: 403 });
+    }
+    if (err instanceof Error && err.message === "Unauthorized") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    console.error("[projects/:id PATCH] unexpected error:", err);
     return NextResponse.json(
-      { error: "Failed to update project" },
+      { error: "Something went wrong. Please try again." },
       { status: 500 },
     );
   }
@@ -95,20 +83,31 @@ export async function PATCH(
 
 // delete project
 // DELETE /api/projects/:id
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export async function DELETE(_req: NextRequest, { params }: RouteContext) {
+  try {
+    const session = await requireSessionService(); // catch: Unauthorized
+    const { id } = await params;
+    await deleteProjectService(id, session.user.id); // catch: ProjectNotFoundError | ProjectForbiddenError
+
+    return NextResponse.json({ message: "Project deleted" }, { status: 200 });
+  } catch (err) {
+    // update: remove ZodError since there is no parse call
+
+    if (err instanceof ProjectNotFoundError) {
+      return NextResponse.json({ error: err.message }, { status: 404 });
+    }
+    if (err instanceof ProjectForbiddenError) {
+      return NextResponse.json({ error: err.message }, { status: 403 });
+    }
+
+    if (err instanceof Error && err.message === "Unauthorized") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    console.error("[projects/:id DELETE] unexpected error: ", err);
+    return NextResponse.json(
+      { error: "Something went wrong. Please try again." },
+      { status: 500 },
+    );
   }
-
-  const { id } = await params;
-  const { project, error, status } = await getOwnedProject(id, session.user.id);
-  if (error) return NextResponse.json({ error }, { status });
-
-  await prisma.project.delete({ where: { id: project!.id } });
-
-  return NextResponse.json({ message: "Project deleted" }, { status: 200 });
 }

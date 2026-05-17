@@ -14,8 +14,9 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // DATABASE_URL from .evn
+  // update: migrated to neon
   url = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // User
