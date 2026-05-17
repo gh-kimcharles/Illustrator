@@ -1,5 +1,3 @@
-// handle new user registration with email + password
-
 import { NextRequest, NextResponse } from "next/server";
 import {
   EmailConflictError,
@@ -14,7 +12,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const input = registerSchema.parse(body);
-    const user = await registerService(input); // service
+    const user = await registerService(input); // catch: EmailConflictError
 
     return NextResponse.json(
       { user, message: "Account created successfully" },
@@ -32,7 +30,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: err.message }, { status: 409 });
     }
 
-    // unknown
     console.error("[register] unexpected error:", err);
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
