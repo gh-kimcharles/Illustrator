@@ -69,17 +69,17 @@ export async function DELETE(_req: NextRequest, { params }: ContextRoute) {
       );
     }
 
+    if (err instanceof ProjectNotFoundError) {
+      return NextResponse.json({ error: err.message }, { status: 404 });
+    }
     if (err instanceof ProjectForbiddenError) {
       return NextResponse.json({ error: err.message }, { status: 403 });
     }
     if (err instanceof Error && err.message === "Unauthorized") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (err instanceof Error && err.message === "Unauthorized") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
 
-    console.log("[projects/:id/share DELETE] unexpected error: ", err);
+    console.error("[projects/:id/share DELETE] unexpected error: ", err);
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
       { status: 500 },

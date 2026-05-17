@@ -18,7 +18,7 @@ export async function GET(_req: NextRequest, { params }: RouteContext) {
   try {
     const session = await requireSessionService(); // catch: Unauthorized
     const { id } = await params;
-    const project = await getProjectByIdService(session.user.id, id); // catch: ProjectNotFoundError | ProjectForbiddenError
+    const project = await getProjectByIdService(id, session.user.id); // catch: ProjectNotFoundError | ProjectForbiddenError
 
     return NextResponse.json({ project }, { status: 200 });
   } catch (err) {
@@ -54,9 +54,9 @@ export async function GET(_req: NextRequest, { params }: RouteContext) {
 export async function PATCH(req: NextRequest, { params }: RouteContext) {
   try {
     const session = await requireSessionService(); // catch: Unauthorized
-    const body = req.json();
+    const body = await req.json();
     const { id } = await params;
-    const input = await updateProjectSchema.parse(body);
+    const input = updateProjectSchema.parse(body);
     const project = await updateProjectService(id, session.user.id, input); // catch: ProjectNotFoundError | ProjectForbiddenError
 
     return NextResponse.json({ project }, { status: 200 });
