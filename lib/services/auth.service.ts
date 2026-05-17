@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../db/prisma";
 import { RegisterSchemaType } from "../validations/auth.validator";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth";
 
 // type errors the controller
 export class EmailConflictError extends Error {
@@ -43,4 +45,11 @@ export async function registerService(input: RegisterSchemaType) {
   });
 
   return user;
+}
+
+// session
+export async function requireSessionService() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error("Unauthorized");
+  return session;
 }
