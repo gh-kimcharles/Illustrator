@@ -1,8 +1,8 @@
 import { randomBytes } from "crypto";
 import { prisma } from "../db/prisma";
 import {
-  CreateProjectSchema,
-  UpdateProjectSchema,
+  CreateProjectSchemaType,
+  UpdateProjectSchemaType,
 } from "../validations/project.validator";
 import { Prisma } from "@prisma/client";
 
@@ -64,7 +64,7 @@ export async function getProjectByIdService(id: string, userId: string) {
 
 export async function createProjectService(
   userId: string,
-  input: CreateProjectSchema,
+  input: CreateProjectSchemaType,
 ) {
   return prisma.project.create({
     data: {
@@ -80,7 +80,7 @@ export async function createProjectService(
 export async function updateProjectService(
   id: string,
   userId: string,
-  input: UpdateProjectSchema,
+  input: UpdateProjectSchemaType,
 ) {
   await getProjectOwner(id, userId);
 
@@ -124,7 +124,7 @@ export async function enableSharingService(id: string, userId: string) {
 export async function disableSharingService(id: string, userId: string) {
   await getProjectOwner(id, userId);
 
-  await prisma.project.update({
+  return prisma.project.update({
     where: { id },
     data: { isShared: false, shareToken: null },
   });
