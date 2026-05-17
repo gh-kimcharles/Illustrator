@@ -24,7 +24,9 @@ A Photoshop-inspired image editor built entirely in the browser. Fully functiona
 | p8.1  | Landing page                                                     | done        |
 | p8.2  | Auth page                                                        | done        |
 | p8.3  | Dashboard, Editor & Canvas                                       | partial     |
-| p\*   | Deployment (Neon)                                                | on progress |
+| p\*   | Deployment (Neon) -                                              | done        |
+| p\*.- | Services & Validation (Zod)                                      | done        |
+| p\*.- | Migrate NextAuth to BetterAuth                                   | on progress |
 
 ## Features
 
